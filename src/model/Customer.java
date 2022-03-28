@@ -6,6 +6,7 @@ public class Customer {
     private int id;
     private String firstName;
     private String lastName;
+    private final String fullName;
     private String address;
     private int postalCode;
     private String city;
@@ -17,6 +18,8 @@ public class Customer {
         this.address = address;
         this.postalCode = postalCode;
         this.city = city;
+        this.fullName = firstName + " " + lastName;
+
     }
 
     public Customer(int id, String firstName, String lastName, String address, int postalCode, String city) {
@@ -26,6 +29,7 @@ public class Customer {
         this.address = address;
         this.postalCode = postalCode;
         this.city = city;
+        this.fullName = firstName + " " + lastName;
     }
 
     public int getId() {
@@ -82,5 +86,9 @@ public class Customer {
 
     public void setSaleOrders(ArrayList<SaleOrder> saleOrders) {
         this.saleOrders = saleOrders;
+    }
+
+    public String getFullName() {
+        return fullName;
     }
 }

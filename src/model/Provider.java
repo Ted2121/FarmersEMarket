@@ -3,6 +3,7 @@ package model;
 import java.util.ArrayList;
 
 public class Provider {
+    private final String fullName;
     private int id;
     private String firstName;
     private String lastName;
@@ -14,12 +15,14 @@ public class Provider {
         this.firstName = firstName;
         this.lastName = lastName;
         this.city = city;
+        this.fullName = firstName + " " + lastName;
     }
 
     public Provider(String firstName, String lastName, String city) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.city = city;
+        this.fullName = firstName + " " + lastName;
     }
 
     public int getId() {
@@ -60,5 +63,9 @@ public class Provider {
 
     public void setPurchaseOrders(ArrayList<PurchaseOrder> purchaseOrders) {
         this.purchaseOrders = purchaseOrders;
+    }
+
+    public String getFullName() {
+        return fullName;
     }
 }
