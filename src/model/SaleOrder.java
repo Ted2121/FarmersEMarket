@@ -1,26 +1,27 @@
 package model;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class SaleOrder {
     private int id;
-    private String orderDate;
+    private String orderDateTime;
     private int FK_Customer;
+    // price is the total amount
+    // price = the sum of all lineItems(productPrice * quantity) in the order
     private double price;
     private ArrayList<LineItem> lineItems;
     private Customer customer;
 
-    public SaleOrder(String orderDate, double price, Customer customer) {
-        this.orderDate = LocalDateTime.now().format(HelperClassForModel.getFormat());
+    public SaleOrder(double price, Customer customer) {
+        this.orderDateTime = LocalDateTime.now().format(HelperClassForModel.getFormat());
         this.price = price;
         this.customer = customer;
     }
 
-    public SaleOrder(int id, String orderDate, double price, Customer customer) {
+    public SaleOrder(int id, double price, Customer customer) {
         this.id = id;
-        this.orderDate = LocalDateTime.now().format(HelperClassForModel.getFormat());
+        this.orderDateTime = LocalDateTime.now().format(HelperClassForModel.getFormat());
         this.price = price;
         this.customer = customer;
     }
@@ -33,12 +34,12 @@ public class SaleOrder {
         this.id = id;
     }
 
-    public String getOrderDate() {
-        return orderDate;
+    public String getOrderDateTime() {
+        return orderDateTime;
     }
 
-    public void setOrderDate(String orderDate) {
-        this.orderDate = orderDate;
+    public void setOrderDateTime(String orderDateTime) {
+        this.orderDateTime = orderDateTime;
     }
 
     public int getFK_Customer() {
