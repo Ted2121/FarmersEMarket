@@ -40,6 +40,7 @@ public class Customer {
         this.id = id;
     }
 
+    // use the full name instead where possible
     public String getFirstName() {
         return firstName;
     }
