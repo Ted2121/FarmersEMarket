@@ -1,5 +1,6 @@
 package db_access.DaoInterfaces;
 
+import model.Customer;
 import model.Provider;
 
 import java.sql.SQLException;
@@ -11,4 +12,5 @@ public interface ProviderDao {
     int createProvider(Provider objectToInsert) throws SQLException;
     boolean updateProvider(Provider objectToUpdate) throws SQLException;
     boolean deleteProvider(Provider objectToDelete) throws SQLException;
+    Provider findProviderByFullName(String fullName) throws SQLException;
 }
