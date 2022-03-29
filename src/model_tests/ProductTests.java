@@ -1,12 +1,11 @@
 package model_tests;
 
 import model.Product;
+import model.Product.WeightCategory;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import model.Product.*;
 import org.junit.jupiter.api.TestInstance;
-
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

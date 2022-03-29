@@ -1,4 +1,6 @@
 package db_access;
 
-public class ProductDaoImplementation {
+import db_access.DaoInterfaces.ProductDao;
+
+public class ProductDaoImplementation implements ProductDao {
 }

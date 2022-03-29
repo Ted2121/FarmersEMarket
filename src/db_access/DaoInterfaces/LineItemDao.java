@@ -13,6 +13,6 @@ public interface LineItemDao {
     ArrayList<LineItem> findLineItemsByProduct(Product product) throws SQLException;
     ArrayList<LineItem> findAllLineItems() throws SQLException;
     boolean createLineItem(LineItem objectToInsert) throws SQLException;
-    boolean updateLineItem(LineItem objectToUpdate) throws SQLException;
-    boolean deleteLineItem(LineItem objectToDelete) throws SQLException;
+    void updateLineItem(LineItem objectToUpdate) throws SQLException;
+    void deleteLineItem(LineItem objectToDelete) throws SQLException;
 }

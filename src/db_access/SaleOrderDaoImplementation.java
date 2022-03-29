@@ -1,4 +1,6 @@
 package db_access;
 
-public class SaleOrderDaoImplementation {
+import db_access.DaoInterfaces.SaleOrderDao;
+
+public class SaleOrderDaoImplementation implements SaleOrderDao {
 }

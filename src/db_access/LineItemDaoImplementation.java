@@ -1,4 +1,6 @@
 package db_access;
 
-public class LineItemDaoImplementation {
+import db_access.DaoInterfaces.LineItemDao;
+
+public class LineItemDaoImplementation implements LineItemDao {
 }

@@ -1,4 +1,6 @@
 package db_access;
 
-public class StorageDaoImplementation {
+import db_access.DaoInterfaces.StorageDao;
+
+public class StorageDaoImplementation implements StorageDao {
 }

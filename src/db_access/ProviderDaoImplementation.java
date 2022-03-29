@@ -1,4 +1,6 @@
 package db_access;
 
-public class ProviderDaoImplementation {
+import db_access.DaoInterfaces.ProviderDao;
+
+public class ProviderDaoImplementation implements ProviderDao {
 }

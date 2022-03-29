@@ -11,6 +11,6 @@ public interface SaleOrderDao {
     ArrayList<SaleOrder> findAllSaleOrders() throws SQLException;
     ArrayList<SaleOrder> findSaleOrdersByCustomer(Customer customer) throws SQLException;
     int createSaleOrder(SaleOrder objectToInsert) throws SQLException;
-    boolean updateSaleOrder(SaleOrder objectToUpdate) throws SQLException;
-    boolean deleteSaleOrder(SaleOrder objectToDelete) throws SQLException;
+    void updateSaleOrder(SaleOrder objectToUpdate) throws SQLException;
+    void deleteSaleOrder(SaleOrder objectToDelete) throws SQLException;
 }

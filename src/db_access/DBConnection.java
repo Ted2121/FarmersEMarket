@@ -8,12 +8,12 @@ import java.sql.DriverManager;
 public class DBConnection {
 
 
-    private static final String  driver = "jdbc:sqlserver://hildur.ucn.dk:1433";;
+    private static final String  driver = "jdbc:sqlserver://hildur.ucn.dk:1433";
     private static final String  databaseName = ";databaseName=CSC-CSD-S212_10407008";
 
-    private static String userName = ";user=CSC-CSD-S212_10407008";
-    private static String password = ";password=Password1!";
-    private static String encryption = ";encrypt=false;";
+    private static final String userName = ";user=CSC-CSD-S212_10407008";
+    private static final String password = ";password=Password1!";
+    private static final String encryption = ";encrypt=false;";
 
     private DatabaseMetaData dma;
     private static Connection con;

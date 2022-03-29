@@ -1,4 +1,4 @@
 package db_access;
 
-public class DaoFactory {
+public class DaoFactory{
 }
