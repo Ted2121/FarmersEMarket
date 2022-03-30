@@ -3,19 +3,13 @@ package model;
 public class LineItem {
     private int quantity;
     private Product product;
-    private SaleOrder saleOrder;
-    private PurchaseOrder purchaseOrder;
+    private Order order;
 
-    public LineItem(int quantity, Product product, SaleOrder saleOrder) {
+
+    public LineItem(int quantity, Product product, Order order) {
         this.quantity = quantity;
         this.product = product;
-        this.saleOrder = saleOrder;
-    }
-
-    public LineItem(int quantity, Product product, PurchaseOrder purchaseOrder) {
-        this.quantity = quantity;
-        this.product = product;
-        this.purchaseOrder = purchaseOrder;
+        this.order = order;
     }
 
     public LineItem(int quantity, Product product) {
@@ -39,19 +33,11 @@ public class LineItem {
         this.product = product;
     }
 
-    public SaleOrder getSaleOrder() {
-        return saleOrder;
+    public Order getOrder() {
+        return order;
     }
 
-    public void setSaleOrder(SaleOrder saleOrder) {
-        this.saleOrder = saleOrder;
-    }
-
-    public PurchaseOrder getPurchaseOrder() {
-        return purchaseOrder;
-    }
-
-    public void setPurchaseOrder(PurchaseOrder purchaseOrder) {
-        this.purchaseOrder = purchaseOrder;
+    public void setOrder(Order order) {
+        this.order = order;
     }
 }
