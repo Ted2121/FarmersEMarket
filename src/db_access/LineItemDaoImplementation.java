@@ -30,7 +30,7 @@ public class LineItemDaoImplementation implements LineItemDao {
         // TODO we should maybe use a factory to create model objects
         Product product = productDao.getProductById(rs.getInt("Id"));
 
-        SaleOrder saleOrder = saleOrderDao.findSaleOrderById(rs.getInt("PK_FK_SaleOrder"));
+        //SaleOrder saleOrder = saleOrderDao.findSaleOrderById(rs.getInt("PK_FK_SaleOrder"));
         LineItem builtObject= null;
 
             builtObject = new LineItem(rs.getInt("quantity"), product, saleOrder);
@@ -114,17 +114,17 @@ public class LineItemDaoImplementation implements LineItemDao {
         return retrievedLineItemList;
     }
 
-    @Override
-    public boolean createLineItem(LineItem objectToInsert) throws SQLException {
-        String sqlInsertLineItemStatement = "INSERT INTO LineItem(PK_FK_Product, PK_FK_SaleOrder, quantity) "
-                + "VALUES (?,?,?)";
-        PreparedStatement preparedInsertLineItemStatement = dbCon.prepareStatement(sqlInsertLineItemStatement);
-        preparedInsertLineItemStatement.setInt(1, objectToInsert.getProduct().getId());
-        preparedInsertLineItemStatement.setInt(2, objectToInsert.getOrder().getId());
-        preparedInsertLineItemStatement.setInt(3, objectToInsert.getQuantity());
-        preparedInsertLineItemStatement.executeUpdate();
-        return true;
-    }
+//    @Override
+//    public boolean createLineItem(LineItem objectToInsert) throws SQLException {
+//        String sqlInsertLineItemStatement = "INSERT INTO LineItem(PK_FK_Product, PK_FK_SaleOrder, quantity) "
+//                + "VALUES (?,?,?)";
+//        PreparedStatement preparedInsertLineItemStatement = dbCon.prepareStatement(sqlInsertLineItemStatement);
+//        preparedInsertLineItemStatement.setInt(1, objectToInsert.getProduct().getId());
+//        preparedInsertLineItemStatement.setInt(2, objectToInsert.getOrder().getId());
+//        preparedInsertLineItemStatement.setInt(3, objectToInsert.getQuantity());
+//        preparedInsertLineItemStatement.executeUpdate();
+//        return true;
+//    }
 
     @Override
     public void updateLineItem(LineItem objectToUpdate) throws SQLException {
