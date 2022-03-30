@@ -18,6 +18,11 @@ public class LineItem {
         this.purchaseOrder = purchaseOrder;
     }
 
+    public LineItem(int quantity, Product product) {
+        this.quantity = quantity;
+        this.product = product;
+    }
+
     public int getQuantity() {
         return quantity;
     }
