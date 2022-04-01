@@ -1,16 +1,16 @@
 package db_access.DaoInterfaces;
 
 import model.Product;
-import model.Storage;
+import model.ProductInformation;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 
 public interface StorageDao {
-    int createStorage(Storage objectToInsert) throws SQLException;
-    void updateStorage(Storage objectToUpdate) throws SQLException;
-    void deleteStorage(Storage objectToDelete) throws SQLException;
-    ArrayList<Storage> findAllTuples() throws SQLException;
-    Storage findTupleByProduct(Product product) throws SQLException;
-    Storage findTupleByProductId(int id) throws SQLException;
+    int createStorage(ProductInformation objectToInsert) throws SQLException;
+    void updateStorage(ProductInformation objectToUpdate) throws SQLException;
+    void deleteStorage(ProductInformation objectToDelete) throws SQLException;
+    ArrayList<ProductInformation> findAllTuples() throws SQLException;
+    ProductInformation findTupleByProduct(Product product) throws SQLException;
+    ProductInformation findTupleByProductId(int id) throws SQLException;
 }
