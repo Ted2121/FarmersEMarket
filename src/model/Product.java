@@ -6,7 +6,6 @@ public class Product {
     private double purchasingPrice;
     private double sellingPrice;
     public enum WeightCategory{ONE, FIVE, TEN}
-    private WeightCategory weightCategoryOption;
     private int weightCategory;
 
 
@@ -14,14 +13,11 @@ public class Product {
         this.name = name;
         this.purchasingPrice = purchasingPrice;
         this.sellingPrice = sellingPrice;
-        this.weightCategoryOption = weightCategoryOption;
         switch (weightCategoryOption){
             case ONE -> this.weightCategory = 1;
             case FIVE -> this.weightCategory = 5;
             case TEN -> this.weightCategory = 10;
         }
-
-
     }
 
     public Product(int id, String name, double purchasingPrice, double sellingPrice, WeightCategory weightCategoryOption) {
@@ -29,7 +25,6 @@ public class Product {
         this.name = name;
         this.purchasingPrice = purchasingPrice;
         this.sellingPrice = sellingPrice;
-        this.weightCategoryOption = weightCategoryOption;
         switch (weightCategoryOption) {
             case ONE -> this.weightCategory = 1;
             case FIVE -> this.weightCategory = 5;

@@ -8,6 +8,7 @@ public class Provider {
     private String firstName;
     private String lastName;
     private String city;
+    // this array list contains the history of purchase orders of one provider
     private ArrayList<PurchaseOrder> purchaseOrders;
 
     public Provider(int id, String firstName, String lastName, String city) {
