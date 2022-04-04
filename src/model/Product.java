@@ -97,4 +97,12 @@ public class Product {
     public void setSellingPrice(double sellingPrice) {
         this.sellingPrice = sellingPrice;
     }
+
+    public String getUnit() {
+        return unit.name();
+    }
+
+    public void setUnit(Unit unit) {
+        this.unit = unit;
+    }
 }
