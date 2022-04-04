@@ -2,6 +2,7 @@ package model_tests;
 
 import model.Product;
 import model.Product.WeightCategory;
+import model.Product.Unit;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -15,7 +16,7 @@ public class ProductTests {
 
     @BeforeAll
     public void setUp(){
-        product = new Product("test", 1.4, 1.5, WeightCategory.ONE);
+        product = new Product("test", 1.4, 1.5, WeightCategory.ONE, Unit.KG);
     }
 
     // something weird going on here, 2nd test should fail but doesn't

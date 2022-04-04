@@ -2,17 +2,20 @@ package model;
 
 public class Product {
     private int id;
-    private String name;
+    private String productName;
     private double purchasingPrice;
     private double sellingPrice;
+    public enum Unit{L, KG}
+    private Unit unit;
     public enum WeightCategory{ONE, FIVE, TEN}
     private int weightCategory;
 
 
-    public Product(String name, double purchasingPrice, double sellingPrice, WeightCategory weightCategoryOption) {
-        this.name = name;
+    public Product(String productName, double purchasingPrice, double sellingPrice, WeightCategory weightCategoryOption, Unit unit) {
+        this.productName = productName;
         this.purchasingPrice = purchasingPrice;
         this.sellingPrice = sellingPrice;
+        this.unit = unit;
         switch (weightCategoryOption){
             case ONE -> this.weightCategory = 1;
             case FIVE -> this.weightCategory = 5;
@@ -20,11 +23,12 @@ public class Product {
         }
     }
 
-    public Product(int id, String name, double purchasingPrice, double sellingPrice, WeightCategory weightCategoryOption) {
+    public Product(int id, String productName, double purchasingPrice, double sellingPrice, WeightCategory weightCategoryOption, Unit unit) {
         this.id = id;
-        this.name = name;
+        this.productName = productName;
         this.purchasingPrice = purchasingPrice;
         this.sellingPrice = sellingPrice;
+        this.unit = unit;
         switch (weightCategoryOption) {
             case ONE -> this.weightCategory = 1;
             case FIVE -> this.weightCategory = 5;
@@ -32,17 +36,19 @@ public class Product {
         }
     }
 
-    public Product(String name, double purchasingPrice, double sellingPrice) {
-        this.name = name;
+    public Product(String productName, double purchasingPrice, double sellingPrice, Unit unit) {
+        this.productName = productName;
         this.purchasingPrice = purchasingPrice;
         this.sellingPrice = sellingPrice;
+        this.unit = unit;
     }
 
-    public Product(int id, String name, double purchasingPrice, double sellingPrice) {
+    public Product(int id, String productName, double purchasingPrice, double sellingPrice, Unit unit) {
         this.id = id;
-        this.name = name;
+        this.productName = productName;
         this.purchasingPrice = purchasingPrice;
         this.sellingPrice = sellingPrice;
+        this.unit = unit;
     }
 
 
@@ -68,12 +74,12 @@ public class Product {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getProductName() {
+        return productName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setProductName(String productName) {
+        this.productName = productName;
     }
 
     public double getPurchasingPrice() {
