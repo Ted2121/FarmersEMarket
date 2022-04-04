@@ -6,7 +6,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public interface ProviderDao {
-    Provider findProviderById(int id) throws SQLException;
+    Provider findProviderById(int providerId) throws SQLException;
     ArrayList<Provider> findAllProviders() throws SQLException;
     int createProvider(Provider objectToInsert) throws SQLException;
     void updateProvider(Provider objectToUpdate) throws SQLException;

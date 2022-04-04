@@ -63,7 +63,7 @@ public class LineItemDaoImplementation implements LineItemDao {
 //    }
 
     @Override
-    public LineItem findLineItemByOrderId(int orderId, int productId) throws SQLException {
+    public LineItem findLineItemByOrderAndProductId(int orderId, int productId) throws SQLException {
         String query = "SELECT * FROM LineItem WHERE PK_FK_Order = ? AND PK_FK_Product = ?";
         PreparedStatement preparedSelectStatement = dbCon.prepareStatement(query);
         preparedSelectStatement.setLong(1, orderId);
@@ -122,6 +122,7 @@ public class LineItemDaoImplementation implements LineItemDao {
         preparedInsertLineItemStatement.setInt(2, objectToInsert.getOrder().getId());
         preparedInsertLineItemStatement.setInt(3, objectToInsert.getQuantity());
         preparedInsertLineItemStatement.executeUpdate();
+        // TODO not implemented
         return true;
     }
 
