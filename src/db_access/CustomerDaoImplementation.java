@@ -7,7 +7,7 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public class CustomerDaoImplementation implements CustomerDao {
-    Connection dbCon = DBConnection.getInstance().getDBcon();
+    Connection dbCon = DBConnection.getInstance().getDBCon();
     ProductDaoImplementation productDao = DaoFactory.getProductDao();
 
     private ArrayList<Customer> buildObjects(ResultSet rs) throws SQLException {

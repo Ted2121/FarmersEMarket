@@ -71,7 +71,7 @@ public class DBConnection {
     }
 
     // Singleton pattern (we use it to not mess up with the UCN server if we make a mistake)
-    public Connection getDBcon()
+    public Connection getDBCon()
     {
         return con;
     }

@@ -13,7 +13,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class LineItemDaoImplementation implements LineItemDao {
-    Connection dbCon = DBConnection.getInstance().getDBcon();
+    Connection dbCon = DBConnection.getInstance().getDBCon();
 
     private ArrayList<LineItem> buildObjects(ResultSet rs) throws SQLException{
         ArrayList<LineItem> LineItemList = new ArrayList<LineItem>();
@@ -122,7 +122,7 @@ public class LineItemDaoImplementation implements LineItemDao {
         preparedInsertLineItemStatement.setInt(2, objectToInsert.getOrder().getId());
         preparedInsertLineItemStatement.setInt(3, objectToInsert.getQuantity());
         preparedInsertLineItemStatement.executeUpdate();
-        // TODO not implemented
+
         return true;
     }
 
