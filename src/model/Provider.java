@@ -6,12 +6,12 @@ public class Provider extends Person{
     // this array list contains the history of purchase orders of one provider
     private ArrayList<PurchaseOrder> purchaseOrders;
 
-    public Provider(int id, String firstName, String lastName, String city) {
-        super(id, firstName, lastName, city);
+    public Provider(int id, String firstName, String lastName, String city, String country) {
+        super(id, firstName, lastName, city, country);
     }
 
-    public Provider(String firstName, String lastName, String city) {
-        super(firstName, lastName, city);
+    public Provider(String firstName, String lastName, String city, String country) {
+        super(firstName, lastName, city, country);
     }
 
     public ArrayList<PurchaseOrder> getPurchaseOrders() {

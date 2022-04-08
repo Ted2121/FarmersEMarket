@@ -9,15 +9,14 @@ public class Customer extends Person{
     private ArrayList<SaleOrder> saleOrders;
 
 
-    public Customer(int id, String firstName, String lastName, String city, String address, int postalCode) {
-        super(id, firstName, lastName, city);
+    public Customer(String firstName, String lastName, String city, String country, String address, int postalCode) {
+        super(firstName, lastName, city, country);
         this.address = address;
         this.postalCode = postalCode;
-
     }
 
-    public Customer(String firstName, String lastName, String city, String address, int postalCode) {
-        super(firstName, lastName, city);
+    public Customer(int id, String firstName, String lastName, String city, String country, String address, int postalCode) {
+        super(id, firstName, lastName, city, country);
         this.address = address;
         this.postalCode = postalCode;
     }

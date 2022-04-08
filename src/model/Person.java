@@ -6,20 +6,23 @@ public abstract class Person {
     private String lastName;
     private final String fullName;
     private String city;
+    private String country;
 
-    public Person(String firstName, String lastName, String city) {
+    public Person(String firstName, String lastName, String city, String country) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.city = city;
         this.fullName = firstName + " " + lastName;
+        this.country = country;
     }
 
-    public Person(int id, String firstName, String lastName, String city) {
+    public Person(int id, String firstName, String lastName, String city, String country ) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.fullName = firstName + " " + lastName;
         this.city = city;
+        this.country = country;
     }
 
     public int getId() {
