@@ -13,11 +13,11 @@ public abstract class Order {
 
     public Order(int id) {
         this.id = id;
-        this.orderDateTime = LocalDateTime.now().format(HelperClassForModel.getFormat());
+        this.orderDateTime = LocalDateTime.now().format(ModelFactory.getFormat());
     }
 
     public Order() {
-        this.orderDateTime = LocalDateTime.now().format(HelperClassForModel.getFormat());
+        this.orderDateTime = LocalDateTime.now().format(ModelFactory.getFormat());
     }
 
     public int getId() {

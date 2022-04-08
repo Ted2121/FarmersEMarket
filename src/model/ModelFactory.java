@@ -2,9 +2,8 @@ package model;
 
 import java.time.format.DateTimeFormatter;
 
-public class HelperClassForModel {
-
-    private HelperClassForModel(){}
+public class ModelFactory {
+    private ModelFactory(){}
 
     private static final DateTimeFormatter FORMAT = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
 
