@@ -1,15 +1,15 @@
 package db_access.DaoInterfaces;
 
-import model.Provider;
+import model.Person;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 
 public interface ProviderDao {
-    Provider findProviderById(int providerId) throws SQLException;
-    ArrayList<Provider> findAllProviders() throws SQLException;
-    int createProvider(Provider objectToInsert) throws SQLException;
-    void updateProvider(Provider objectToUpdate) throws SQLException;
-    void deleteProvider(Provider objectToDelete) throws SQLException;
-    Provider findProviderByFullName(String fullName) throws SQLException;
+    Person findPersonById(int PersonId) throws SQLException;
+    ArrayList<Person> findAllPersons() throws SQLException;
+    int createPerson(Person objectToInsert) throws SQLException;
+    void updatePerson(Person objectToUpdate) throws SQLException;
+    void deletePerson(Person objectToDelete) throws SQLException;
+    Person findPersonByFullName(String fullName) throws SQLException;
 }
