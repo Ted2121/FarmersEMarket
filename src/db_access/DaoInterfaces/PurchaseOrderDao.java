@@ -1,5 +1,6 @@
 package db_access.DaoInterfaces;
 
+import model.Order;
 import model.Provider;
 import model.PurchaseOrder;
 

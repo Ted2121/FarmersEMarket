@@ -1,7 +1,6 @@
 package db_access.DaoImplementation;
 
 import db_access.DBConnection;
-import db_access.DaoFactory;
 import db_access.DaoInterfaces.CustomerDao;
 import model.Customer;
 import model.ModelFactory;
@@ -25,7 +24,7 @@ public class CustomerDaoImplementation implements CustomerDao {
     }
 
     private Person buildObject(ResultSet rs) throws SQLException {
-        Person builtCustomer = ModelFactory.getCustomer(
+        Person builtCustomer = ModelFactory.getCustomerModel(
                 rs.getInt("PK_idCustomer"),
                 rs.getString("FirstName"),
                 rs.getString("LastName"),
