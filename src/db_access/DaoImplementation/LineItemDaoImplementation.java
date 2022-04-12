@@ -1,5 +1,7 @@
-package db_access;
+package db_access.DaoImplementation;
 
+import db_access.DBConnection;
+import db_access.DaoFactory;
 import db_access.DaoInterfaces.LineItemDao;
 import db_access.DaoInterfaces.ProductDao;
 import db_access.DaoInterfaces.PurchaseOrderDao;
