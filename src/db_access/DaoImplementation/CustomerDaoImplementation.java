@@ -67,10 +67,10 @@ public class CustomerDaoImplementation implements CustomerDao {
         PreparedStatement preparedInsertCustomerStatementWithGeneratedKey = dbCon.prepareStatement(sqlInsertCustomerStatement, Statement.RETURN_GENERATED_KEYS);
         preparedInsertCustomerStatementWithGeneratedKey.setString(1, objectToInsert.getFirstName());
         preparedInsertCustomerStatementWithGeneratedKey.setString(2, objectToInsert.getLastName());
-        preparedInsertCustomerStatementWithGeneratedKey.setString(3, objectToInsert.g);
-        preparedInsertCustomerStatementWithGeneratedKey.setInt(4, objectToInsert.getZipcode());
-        preparedInsertCustomerStatementWithGeneratedKey.setString(5, objectToInsert.getPhoneNo());
-        preparedInsertCustomerStatementWithGeneratedKey.setString(6, objectToInsert.getType());
+        preparedInsertCustomerStatementWithGeneratedKey.setString(3, objectToInsert.getAddress());
+        preparedInsertCustomerStatementWithGeneratedKey.setInt(4, objectToInsert.getPostalCode());
+        preparedInsertCustomerStatementWithGeneratedKey.setString(5, objectToInsert.getCity());
+        preparedInsertCustomerStatementWithGeneratedKey.setString(6, objectToInsert.getCountry());
 
         preparedInsertCustomerStatementWithGeneratedKey.executeUpdate();
         ResultSet tableContainingGenratedIds = preparedInsertCustomerStatementWithGeneratedKey.getGeneratedKeys();
@@ -84,14 +84,15 @@ public class CustomerDaoImplementation implements CustomerDao {
     }
 
     @Override
-    public void updateCustomer(Person objectToUpdate) throws SQLException {
+    public void updateCustomer(Customer objectToUpdate) throws SQLException {
 
     }
 
     @Override
-    public void deleteCustomer(Person objectToDelete) throws SQLException {
+    public void deleteCustomer(Customer objectToDelete) throws SQLException {
 
     }
+
 
     @Override
     public Person findCustomerByFullName(String fullName) throws SQLException {
