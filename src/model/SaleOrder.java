@@ -21,8 +21,7 @@ public class SaleOrder extends Order{
         return FK_Customer;
     }
 
-    public void setFK_Customer(int FK_Customer
-    ) {
+    public void setFK_Customer(int FK_Customer) {
         this.FK_Customer = FK_Customer;
     }
 

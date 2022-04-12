@@ -16,9 +16,8 @@ public class Customer extends Person{
     }
 
     public Customer(int id, String firstName, String lastName, String city, String country, String address, int postalCode) {
-        super(id, firstName, lastName, city, country);
-        this.address = address;
-        this.postalCode = postalCode;
+    	this( firstName,  lastName,  city,  country,  address,  postalCode);
+        super.setId(id);
     }
 
     public String getAddress() {
