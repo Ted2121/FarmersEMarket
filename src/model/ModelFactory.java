@@ -18,9 +18,18 @@ public class ModelFactory {
     public static Person getProviderModel(int id, String firstName, String lastName, String city, String country){
         return new Provider(id, firstName, lastName, city, country);
 }
+    
+    public static Person getProviderModel(String firstName, String lastName, String city, String country){
+        return new Provider(firstName, lastName, city, country);
+}
 
     public static Person getCustomerModel(int id, String firstName, String lastName, String city, String country, String address, int postalCode){
 
          return new Customer(id, firstName, lastName, city, country, address, postalCode);
  }
+    
+    public static Person getCustomerModel(String firstName, String lastName, String city, String country, String address, int postalCode){
+
+        return new Customer(firstName, lastName, city, country, address, postalCode);
+}
 }
