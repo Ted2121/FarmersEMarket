@@ -8,7 +8,7 @@ public abstract class Order {
     private String orderDateTime;
     // price is the total amount
     // price = the sum of all lineItems(productPrice * quantity) in the order
-    private double price;
+    private double orderPrice;
     private ArrayList<LineItem> lineItems;
 
     public Order(int id) {
@@ -36,12 +36,12 @@ public abstract class Order {
         this.orderDateTime = orderDateTime;
     }
 
-    public double getPrice() {
-        return price;
+    public double getOrderPrice() {
+        return orderPrice;
     }
 
-    public void setPrice(double price) {
-        this.price = price;
+    public void setOrderPrice(double orderPrice) {
+        this.orderPrice = orderPrice;
     }
 
     public ArrayList<LineItem> getLineItems() {
