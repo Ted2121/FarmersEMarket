@@ -1,9 +1,13 @@
 package test;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -32,9 +36,41 @@ public class TestCustomerDaoImplementation {
 	}
 	
 	@Test
-	public void TestCustomerFindById() throws SQLException {
+	public void TestFindCustomerById() throws SQLException {
 		Person result = customerDao.findCustomerById(1);
 		assertNotNull("The retrieved object shouldn't be null", result);
+	}
+	
+	@Test
+	public void TestFindAllCustomers() throws SQLException {
+		List<Person> result = customerDao.findAllCustomers();
+		assertFalse("The retrievedArrayList shouldn't be empty", result.isEmpty());
+	}
+	
+	@Test
+	public void TestFindCustomerByFullName() throws SQLException {
+		assertNotNull("The retrieved object shouldn't be null", customerDao.findCustomerByFullName("John Doe"));
+	}
+	
+	@Test
+	public void TestCreateCustomer() throws SQLException {
+		Person testCustomer = ModelFactory.getCustomerModel("James", "Bond", "Wattenscheid", "Great Britain", "testaddress", 321554);
+		generatedIdCreateTest = customerDao.createCustomer((Customer) testCustomer);
+		assertNotNull("The retrieved object shouldn't be null", customerDao.findCustomerById(generatedIdCreateTest));
+	}
+	
+	@Test
+	public void TestDeleteCustomer() throws SQLException {
+		assertNull("Should have deleted the object", customerDao.findCustomerById(objectToDelete.getId()));
+	}
+	
+	@Test
+	public void TestUpdateCustomer() throws SQLException {
+		objectToUpdate.setFirstName("updatedFirstName");
+
+		customerDao.updateCustomer((Customer) objectToUpdate);
+		
+		assertEquals("Should display updatedFirstName", customerDao.findCustomerById(objectToUpdate.getId()).getFirstName());
 	}
 	
 	@AfterClass
