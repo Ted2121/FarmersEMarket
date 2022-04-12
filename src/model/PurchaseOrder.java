@@ -13,9 +13,8 @@ public class PurchaseOrder extends Order{
         this.provider = provider;
     }
 
-    public PurchaseOrder(Provider provider) {
-        super();
-        this.provider = provider;
+    public PurchaseOrder(int id) {
+        super(id);
     }
 
 //    public int getFK_Provider() {
