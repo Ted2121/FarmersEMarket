@@ -1,4 +1,4 @@
-package db_access;
+package db_access.DaoImplementation;
 
 import db_access.DaoInterfaces.CustomerDao;
 import model.Customer;
@@ -8,6 +8,8 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public class CustomerDaoImplementation implements CustomerDao {
+	//TODO
+	
 //    Connection dbCon = DBConnection.getInstance().getDBCon();
 //    ProductDaoImplementation productDao = DaoFactory.getProductDao();
 //
@@ -25,8 +27,8 @@ public class CustomerDaoImplementation implements CustomerDao {
 //        return customer;
 //    }
 //
-//    @Override
-//    public Customer findCustomerById(int id) throws SQLException {
+    @Override
+    public Customer findCustomerById(int id) throws SQLException {
 //        String query = "SELECT * FROM Customer WHERE Id = ?";
 //        PreparedStatement preparedSelectStatement = dbCon.prepareStatement(query);
 //        preparedSelectStatement.setLong(1, id);
@@ -37,10 +39,11 @@ public class CustomerDaoImplementation implements CustomerDao {
 //        }
 //
 //        return retrievedCustomer;
-//    }
+    	return null;
+    }
 //
-//    @Override
-//    public Customer findCustomerByFullName(String fullName) throws SQLException {
+    @Override
+    public Customer findCustomerByFullName(String fullName) throws SQLException {
 //        String query = "SELECT * FROM Customer WHERE [FirstName] = ? AND [LastName] = ?";
 //        PreparedStatement preparedSelectStatement = dbCon.prepareStatement(query);
 //        String[] fullNameAsArray = fullName.split(" ");
@@ -55,20 +58,23 @@ public class CustomerDaoImplementation implements CustomerDao {
 //        }
 //
 //        return retrievedCustomer;
-//    }
+    	return null;
+    }
 //
-//    @Override
-//    public ArrayList<Customer> findAllCustomers() throws SQLException {
+    @Override
+    public ArrayList<Person> findAllCustomers() throws SQLException {
 //        String query = "SELECT * FROM Customer";
 //        PreparedStatement preparedSelectStatement = dbCon.prepareStatement(query);
 //        ResultSet rs = preparedSelectStatement.executeQuery();
 //        ArrayList<Customer> retrievedClothingList = buildObjects(rs);
 //
 //        return retrievedClothingList;
-//    }
+    	return null;
+    }
 //
-//    @Override
-//    public int createCustomer(Customer objectToInsert) throws SQLException {
+    @Override
+    public int createCustomer(Customer objectToInsert) throws SQLException {
+    	
 //        String sqlInsertCustomerStatement = "INSERT INTO Customer(FirstName, LastName, [Address], PostalCode, City)"
 //                + "VALUES(?, ?, ?, ?, ?);";
 //        PreparedStatement preparedInsertCustomerStatementWithGeneratedKey = dbCon.prepareStatement(sqlInsertCustomerStatement, Statement.RETURN_GENERATED_KEYS);
@@ -87,10 +93,11 @@ public class CustomerDaoImplementation implements CustomerDao {
 //        objectToInsert.setId(generatedId);
 //
 //        return generatedId;
-//    }
+    	return 0;
+    }
 //
-//    @Override
-//    public void updateCustomer(Customer objectToUpdate) throws SQLException {
+    @Override
+    public void updateCustomer(Customer objectToUpdate) throws SQLException {
 //        String sqlUpdateCustomerStatement = "UPDATE Customer SET [FirstName]= ?, [LastName]= ?, Address= ?, PostalCode= ?, City= ?";
 //        PreparedStatement preparedUpdateCustomerStatement = dbCon.prepareStatement(sqlUpdateCustomerStatement);
 //        preparedUpdateCustomerStatement.setString(1, objectToUpdate.getFirstName());
@@ -101,15 +108,15 @@ public class CustomerDaoImplementation implements CustomerDao {
 //
 //        preparedUpdateCustomerStatement.execute();
 //
-//    }
+    }
 //
-//    @Override
-//    public void deleteCustomer(Customer objectToDelete) throws SQLException {
+    @Override
+    public void deleteCustomer(Customer objectToDelete) throws SQLException {
 //        String sqlDeleteProductStatement = "DELETE FROM Customer WHERE Id = ?";
 //        PreparedStatement preparedDeleteProductStatement = dbCon.prepareStatement(sqlDeleteProductStatement);
 //        preparedDeleteProductStatement.setInt(1, objectToDelete.getId());
 //        preparedDeleteProductStatement.execute();
-//    }
+    }
 //
 //    @Override
 //    public void setSalesOrderRelatedToThisCustomer(Customer customer) throws SQLException {
