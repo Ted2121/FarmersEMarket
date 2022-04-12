@@ -8,19 +8,19 @@ import model.SaleOrder;
 public class OrderDaoImplementation implements OrderDao{
 
 	@Override
-	public int createOrder(SaleOrder objectToInsert) throws SQLException {
+	public int createOrder(Order objectToInsert) throws SQLException {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
-	public void updateOrder(SaleOrder objectToUpdate) throws SQLException {
+	public void updateOrder(Order objectToUpdate) throws SQLException {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void deleteOrder(SaleOrder objectToDelete) throws SQLException {
+	public void deleteOrder(Order objectToDelete) throws SQLException {
 		// TODO Auto-generated method stub
 		
 	}
