@@ -5,10 +5,11 @@ import model.Person;
 import java.security.Provider;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 public interface ProviderDao {
     Person findPersonById(int PersonId) throws SQLException;
-    ArrayList<Provider> findAllPersons() throws SQLException;
+    List<Person> findAllPersons() throws SQLException;
     int createPerson(Provider objectToInsert) throws SQLException;
     void updatePerson(Provider objectToUpdate) throws SQLException;
     void deletePerson(Provider objectToDelete) throws SQLException;

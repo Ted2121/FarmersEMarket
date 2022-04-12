@@ -5,12 +5,12 @@ import model.PurchaseOrder;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 public interface PurchaseOrderDao {
-    PurchaseOrder findPurchaseOrderById(int purchaseOrderId) throws SQLException;
-    ArrayList<PurchaseOrder> findAllPurchaseOrders() throws SQLException;
-    //TODO do we need this?
-//    ArrayList<PurchaseOrder> findPurchaseOrdersByProvider(Provider provider) throws SQLException;
+    Order findPurchaseOrderById(int purchaseOrderId) throws SQLException;
+    List<Order> findAllPurchaseOrders() throws SQLException;
+
     int createPurchaseOrder(PurchaseOrder objectToInsert) throws SQLException;
     void updatePurchaseOrder(PurchaseOrder objectToUpdate) throws SQLException;
     void deletePurchaseOrder(PurchaseOrder objectToDelete) throws SQLException;
