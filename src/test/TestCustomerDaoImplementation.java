@@ -61,6 +61,7 @@ public class TestCustomerDaoImplementation {
 	
 	@Test
 	public void TestDeleteCustomer() throws SQLException {
+		customerDao.deleteCustomer((Customer) objectToDelete);
 		assertNull("Should have deleted the object", customerDao.findCustomerById(objectToDelete.getId()));
 	}
 	
@@ -70,7 +71,7 @@ public class TestCustomerDaoImplementation {
 
 		customerDao.updateCustomer((Customer) objectToUpdate);
 		
-		assertEquals("Should display updatedFirstName", customerDao.findCustomerById(objectToUpdate.getId()).getFirstName());
+		assertEquals("Should display updatedFirstName", "updatedFirstName", customerDao.findCustomerById(objectToUpdate.getId()).getFirstName());
 	}
 	
 	@AfterClass

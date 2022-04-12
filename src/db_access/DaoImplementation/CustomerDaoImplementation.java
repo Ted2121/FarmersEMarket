@@ -37,7 +37,7 @@ public class CustomerDaoImplementation implements CustomerDao {
 
     @Override
     public Person findCustomerById(int customerId) throws SQLException {
-        String query = "SELECT * FROM Customer WHERE id = ?";
+        String query = "SELECT * FROM Customer WHERE PK_idCustomer = ?";
         PreparedStatement preparedSelectStatement = dbCon.prepareStatement(query);
         preparedSelectStatement.setLong(1, customerId);
         ResultSet rs = preparedSelectStatement.executeQuery();
