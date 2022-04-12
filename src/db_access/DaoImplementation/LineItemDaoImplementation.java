@@ -33,7 +33,7 @@ public class LineItemDaoImplementation implements LineItemDao {
         // TODO we should maybe use a factory to create model objects
 
         Product product;
-        product = productDao.getProductById(rs.getInt("Id"));
+        product = productDao.findProductById(rs.getInt("Id"));
         Order saleOrder = saleOrderDao.findSaleOrderById(rs.getInt("PK_FK_Order"));
         Order purchaseOrder = purchaseOrderDao.findPurchaseOrderById(rs.getInt("PK_FK_Order"));
 
