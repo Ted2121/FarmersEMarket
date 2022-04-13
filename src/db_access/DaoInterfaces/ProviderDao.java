@@ -13,7 +13,7 @@ public interface ProviderDao {
 
     Provider findProviderById(int ProviderId) throws SQLException;
     List<Provider> findAllProviders() throws SQLException;
-    void createProvider(Provider objectToInsert) throws SQLException;
+    int createProvider(Provider objectToInsert) throws SQLException;
     void updateProvider(Provider objectToUpdate) throws SQLException;
     void deleteProvider(Provider objectToDelete) throws SQLException;
     Provider findProviderByFullName(String fullName) throws SQLException;

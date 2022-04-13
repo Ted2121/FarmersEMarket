@@ -55,7 +55,7 @@ public class ProviderDaoImplementation implements ProviderDao {
 	}
 
 	@Override
-	public void createProvider(Provider objectToInsert) throws SQLException {
+	public int createProvider(Provider objectToInsert) throws SQLException {
 		String sqlInsertProviderStatement = "INSERT INTO Provider (FirstName, LastName, Country, City) + VALUES(?,?,?,?)";
 		PreparedStatement preparedInsertProviderStatementWithGeneratedKey = connectionDB.prepareStatement(sqlInsertProviderStatement, Statement.RETURN_GENERATED_KEYS);
 		preparedInsertProviderStatementWithGeneratedKey.setString(1, objectToInsert.getFirstName());
@@ -71,7 +71,7 @@ public class ProviderDaoImplementation implements ProviderDao {
 		}
 		objectToInsert.setId(generatedId);
 		
-
+		return generatedId;
 	}
 
 	@Override
