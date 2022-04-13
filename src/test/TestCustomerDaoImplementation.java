@@ -28,7 +28,7 @@ public class TestCustomerDaoImplementation {
 	static Customer testCustomer;
 	
 	@BeforeClass
-	public static void CreatingTheTupleToDelete () throws SQLException {
+	public static void creatingTheTupleToDelete () throws SQLException {
 		objectToDelete = ModelFactory.getCustomerModel("John", "Doe", "Aalborg", "Denmark", "testaddress", 9000);
 		objectToUpdate = ModelFactory.getCustomerModel("John", "Doe", "Aalborg", "Denmark", "testaddress", 9000);
 		testCustomer = ModelFactory.getCustomerModel("James", "Bond", "Wattenscheid", "Great Britain", "testaddress", 321554);
@@ -37,37 +37,37 @@ public class TestCustomerDaoImplementation {
 	}
 	
 	@Test
-	public void TestFindCustomerById() throws SQLException {
+	public void testFindCustomerById() throws SQLException {
 		Customer result = customerDao.findCustomerById(1);
 		assertNotNull("The retrieved object shouldn't be null", result);
 	}
 	
 	@Test
-	public void TestFindAllCustomers() throws SQLException {
+	public void testFindAllCustomers() throws SQLException {
 		List<Customer> result = customerDao.findAllCustomers();
 		assertFalse("The retrievedArrayList shouldn't be empty", result.isEmpty());
 	}
 	
 	@Test
-	public void TestFindCustomerByFullName() throws SQLException {
+	public void testFindCustomerByFullName() throws SQLException {
 		assertNotNull("The retrieved object shouldn't be null", customerDao.findCustomerByFullName("John Doe"));
 	}
 	
 	@Test
-	public void TestCreateCustomer() throws SQLException {
+	public void testCreateCustomer() throws SQLException {
 
 		generatedIdCreateTest = customerDao.createCustomer(testCustomer);
 		assertNotNull("The retrieved object shouldn't be null", customerDao.findCustomerById(generatedIdCreateTest));
 	}
 	
 	@Test
-	public void TestDeleteCustomer() throws SQLException {
+	public void testDeleteCustomer() throws SQLException {
 		customerDao.deleteCustomer(objectToDelete);
 		assertNull("Should have deleted the object", customerDao.findCustomerById(objectToDelete.getId()));
 	}
 	
 	@Test
-	public void TestUpdateCustomer() throws SQLException {
+	public void testUpdateCustomer() throws SQLException {
 		objectToUpdate.setFirstName("updatedFirstName");
 
 		customerDao.updateCustomer(objectToUpdate);
@@ -76,7 +76,7 @@ public class TestCustomerDaoImplementation {
 	}
 	
 	@AfterClass
-	public static void CleanUp() throws SQLException {
+	public static void cleanUp() throws SQLException {
 		Customer objectToBeCleanedUp = customerDao.findCustomerById(generatedIdCreateTest);
 		customerDao.deleteCustomer(objectToBeCleanedUp);
 		customerDao.deleteCustomer(objectToUpdate);

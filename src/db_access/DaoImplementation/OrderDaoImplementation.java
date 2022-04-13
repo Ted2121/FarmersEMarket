@@ -21,10 +21,10 @@ public class OrderDaoImplementation implements OrderDao{
 		PreparedStatement preparedSqlInsertOrderStatementWithGeneratedKey = connectionDB.prepareStatement(sqlInsertOrderStatement, Statement.RETURN_GENERATED_KEYS) ;
 		
 		preparedSqlInsertOrderStatementWithGeneratedKey.executeUpdate();
-		ResultSet tableContainingGenratedIds = preparedSqlInsertOrderStatementWithGeneratedKey.getGeneratedKeys();
+		ResultSet tableContainingGeneratedIds = preparedSqlInsertOrderStatementWithGeneratedKey.getGeneratedKeys();
 		int generatedId = 0;
-		while(tableContainingGenratedIds.next()) {
-			generatedId = tableContainingGenratedIds.getInt(1);
+		while(tableContainingGeneratedIds.next()) {
+			generatedId = tableContainingGeneratedIds.getInt(1);
 		}
 		System.out.println(">> Order added to the Database");
 		return generatedId;
@@ -38,10 +38,10 @@ public class OrderDaoImplementation implements OrderDao{
 		preparedSqlInsertOrderStatementWithGeneratedKey.setString(2, order.getOrderDateTime());
 		
 		preparedSqlInsertOrderStatementWithGeneratedKey.executeUpdate();
-		ResultSet tableContainingGenratedIds = preparedSqlInsertOrderStatementWithGeneratedKey.getGeneratedKeys();
+		ResultSet tableContainingGeneratedIds = preparedSqlInsertOrderStatementWithGeneratedKey.getGeneratedKeys();
 		int generatedId = 0;
-		while(tableContainingGenratedIds.next()) {
-			generatedId = tableContainingGenratedIds.getInt(1);
+		while(tableContainingGeneratedIds.next()) {
+			generatedId = tableContainingGeneratedIds.getInt(1);
 		}
 		order.setId(generatedId);
 		

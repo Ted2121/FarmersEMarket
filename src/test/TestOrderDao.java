@@ -34,13 +34,13 @@ public class TestOrderDao {
 	}
 	
 	@Test
-	public void TestCreateEmptyOrder() throws SQLException {
+	public void testCreateEmptyOrder() throws SQLException {
 		emptyOrderGeneratedId = orderDao.createEmptyOrder();
 		assertTrue("Should return a generated id > 0", emptyOrderGeneratedId>0);
 	}
 	
 	@Test
-	public void TestCreateNotEmptyOrder() throws SQLException {
+	public void testCreateNotEmptyOrder() throws SQLException {
 		orderDao = DaoFactory.getOrderDao();
 		Customer testCustomer = new Customer("test", "test", "Aalborg","Denmark", "new adress", 5000);
 		SaleOrder testSaleOrder = new SaleOrder(testCustomer);
@@ -50,7 +50,7 @@ public class TestOrderDao {
 	}
 	
 	@Test
-	public void TestUpdateOrder() throws SQLException {
+	public void testUpdateOrder() throws SQLException {
 		
 		double lastPrice = orderToUpdate.getOrderPrice();
 		orderToUpdate.setOrderPrice(28);
@@ -63,7 +63,7 @@ public class TestOrderDao {
 	}
 	
 	@Test
-	public void TestDeleteOrder() throws SQLException {
+	public void testDeleteOrder() throws SQLException {
 		
 		orderDao.deleteOrder(orderToDelete);
 		//TODO Test the updateOrder methods once SaleOrder or PurchaseOrder is done

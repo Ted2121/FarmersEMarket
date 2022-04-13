@@ -61,4 +61,10 @@ public class ModelFactory {
     public static PurchaseOrder getPurchaseOrderModel(int id) {
     	return new PurchaseOrder(id);
     }
+
+    public static SaleOrder getSaleOrderModel(int id) {
+        return new SaleOrder(id);
+    }
+
+
 }

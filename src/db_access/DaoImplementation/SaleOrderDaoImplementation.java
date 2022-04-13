@@ -10,6 +10,7 @@ import java.util.List;
 import db_access.DBConnection;
 import db_access.DaoInterfaces.SaleOrderDao;
 import model.ModelFactory;
+import model.PurchaseOrder;
 import model.SaleOrder;
 
 public class SaleOrderDaoImplementation implements SaleOrderDao {
@@ -19,6 +20,7 @@ public class SaleOrderDaoImplementation implements SaleOrderDao {
 	private List<SaleOrder> buildObjects(ResultSet rs) throws SQLException{
 		List<SaleOrder> SaleOrderList = new ArrayList<>();
 		while(rs.next()) {
+			boolean wasProviderLinked = false;
 			SaleOrderList.add(buildObject(rs));
 		}
 
@@ -26,16 +28,16 @@ public class SaleOrderDaoImplementation implements SaleOrderDao {
 	}
 
 	private SaleOrder buildObject(ResultSet rs) throws SQLException{
-		SaleOrder builtObject = ModelFactory.getSaleOrderModel(rs.getInt("Id"));
+		SaleOrder builtObject = ModelFactory.getSaleOrderModel(rs.getInt("PK_idSaleOrder"));
 
 		return builtObject;
 	}
 
 	@Override
-	public SaleOrder findSaleOrderByCustomerId(int customerId) throws SQLException {
-		String query = "SELECT SaleOrder INNER JOIN Customer ON SaleOrder.FK_Customer = Customer_PK_idCustomer WHERE id = ?";
+	public SaleOrder findSaleOrderById(int saleOrderId) throws SQLException {
+		String query = "SELECT * FROM PurchaseOrder WHERE PK_idSaleOrder = ?";
 		PreparedStatement preparedSelectStatement = con.prepareStatement(query);
-		preparedSelectStatement.setLong(1, customerId);
+		preparedSelectStatement.setLong(1, saleOrderId);
 		ResultSet rs = preparedSelectStatement.executeQuery();
 		SaleOrder retrievedSaleOrder = null;
 		while(rs.next()) {
@@ -46,13 +48,24 @@ public class SaleOrderDaoImplementation implements SaleOrderDao {
 	}
 
 	@Override
-	public ArrayList<SaleOrder> findAllSaleOrders() throws SQLException {
-		return null;
+	public List<SaleOrder> findAllSaleOrders() throws SQLException {
+		String query = "SELECT * FROM SaleOrder";
+		PreparedStatement preparedSelectStatement = con.prepareStatement(query);
+
+		ResultSet rs = preparedSelectStatement.executeQuery();
+		List<SaleOrder> retrievedSaleOrderList = buildObjects(rs);
+
+		return retrievedSaleOrderList;
 	}
 
 	@Override
-	public int createSaleOrder(SaleOrder objectToInsert) throws SQLException {
-		return 0;
+	public void createSaleOrder(SaleOrder objectToInsert) throws SQLException {
+		String sqlInsertOrderStatement = "INSERT INTO SaleOrder(PK_idSaleOrder, FK_Provider) VALUES (? , ?)";
+		PreparedStatement preparedSqlInsertOrderStatement = con.prepareStatement(sqlInsertOrderStatement) ;
+		preparedSqlInsertOrderStatement.setInt(1, objectToInsert.getId());
+		preparedSqlInsertOrderStatement.setInt(2, objectToInsert.getCustomer().getId());
+
+		preparedSqlInsertOrderStatement.execute();
 	}
 
 	@Override
@@ -67,6 +80,9 @@ public class SaleOrderDaoImplementation implements SaleOrderDao {
 
 	@Override
 	public void deleteSaleOrder(SaleOrder objectToDelete) throws SQLException {
-
+		String sqlDeleteSaleOrderStatement = "DELETE FROM SaleOrder WHERE PK_idSaleOrder = ?";
+		PreparedStatement preparedDeleteOrderStatement = con.prepareStatement(sqlDeleteSaleOrderStatement);
+		preparedDeleteOrderStatement.setInt(1, objectToDelete.getId());
+		preparedDeleteOrderStatement.execute();
 	}
 }

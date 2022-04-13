@@ -15,6 +15,10 @@ public class SaleOrder extends Order{
         this.customer = Customer;
     }
 
+    public SaleOrder(int id){
+        super(id);
+    }
+
     public Customer getCustomer() {
         return customer;
     }
