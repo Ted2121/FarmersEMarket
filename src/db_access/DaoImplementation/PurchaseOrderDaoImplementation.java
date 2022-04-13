@@ -12,6 +12,7 @@ import db_access.DaoFactory;
 import db_access.DaoInterfaces.PurchaseOrderDao;
 import model.LineItem;
 import model.ModelFactory;
+import model.Person;
 import model.Provider;
 import model.PurchaseOrder;
 
@@ -23,7 +24,7 @@ public class PurchaseOrderDaoImplementation implements PurchaseOrderDao {
 		while(rs.next()) {
 			PurchaseOrder retrievedPurchaseOrder = buildObject(rs, false);
 			if(retrieveProvider) {
-				Provider retrievedProviderLinkedToThisPurchaseOrder = (Provider) DaoFactory.getProviderDao().findProviderById(rs.getInt("FK_Provider"));
+				Provider retrievedProviderLinkedToThisPurchaseOrder = (Provider) DaoFactory.getProviderDao().findPersonById(rs.getInt("FK_Provider"));
 				retrievedPurchaseOrder.setProvider(retrievedProviderLinkedToThisPurchaseOrder);
 			}
 			
@@ -41,28 +42,37 @@ public class PurchaseOrderDaoImplementation implements PurchaseOrderDao {
 		return purchaseOrderList;
 	}
 	
-	private PurchaseOrder buildObject(ResultSet rs, boolean retrieveProviderAssociation) throws SQLException{
+	private PurchaseOrder buildObject(ResultSet rs) throws SQLException{
 		PurchaseOrder builtObject = (PurchaseOrder) ModelFactory.getPurchaseOrderModel(rs.getInt("PK_idPurchaseOrder"));
 		return builtObject;
 	}
 
 	@Override
 	public PurchaseOrder findPurchaseOrderById(int id, boolean retrieveProvider, boolean retrieveLineItem)  throws SQLException{
+		//Retrieving the PurchaseOrder from the database
 		String query = "SELECT * FROM PurchaseOrder WHERE PK_idPurchaseOrder = ?";
 		PreparedStatement preparedSelectStatement = connectionDB.prepareStatement(query);
 		preparedSelectStatement.setInt(1, id);
 		ResultSet rs = preparedSelectStatement.executeQuery();
 		PurchaseOrder retrievedPurchaseOrder = null;
 		while(rs.next()) {
-			retrievedPurchaseOrder = buildObject(rs, false);
+			//Building the PurchaseOrder object
+			retrievedPurchaseOrder = buildObject(rs);
 			
+			//If we want to set the Provider, we just specify we want to retrieve the Provider as a parameter of this method
 			if(retrieveProvider) {
+				//If we want to retrieve the provider, we get it from the Provider Dao
 				Provider retrievedProviderLinkedToThisPurchaseOrder = (Provider) DaoFactory.getProviderDao().findProviderById(rs.getInt("FK_Provider"));
+				//And we set it as the provider of its object
 				retrievedPurchaseOrder.setProvider(retrievedProviderLinkedToThisPurchaseOrder);
 			}
 			
+			//If we want to set the LineItems, we just specify we want to retrieve the LineItem as a parameter of this method
 			if(retrieveLineItem) {
+				//If we want to retrieve the LineItems, we get the ArrayList of the retrieved PurchaseOrder
 				ArrayList<LineItem> lineItemOfTheOrder = retrievedPurchaseOrder.getLineItems();
+				
+				//We get all the LineItmes from the LineItemDao and add each of them to the ArrayList we retrieve earlier
 				for(LineItem lineItem : DaoFactory.getLineItemDao().findLineItemsByOrder(retrievedPurchaseOrder)) {
 					lineItemOfTheOrder.add(lineItem);
 				}
@@ -79,6 +89,26 @@ public class PurchaseOrderDaoImplementation implements PurchaseOrderDao {
 		
 		ResultSet rs = preparedSelectStatement.executeQuery();
 		ArrayList<PurchaseOrder> retrievedPurchaseOrderList = buildObjects(rs, retrieveProvider, retrieveLineItem);
+		
+		for(PurchaseOrder purchaseOrder : retrievedPurchaseOrderList) {
+			if(retrieveProvider) {
+				//If we want to retrieve the provider, we get it from the Provider Dao
+				Provider retrievedProviderLinkedToThisPurchaseOrder = (Provider) DaoFactory.getProviderDao().findProviderById(rs.getInt("FK_Provider"));
+				//And we set it as the provider of its object
+				purchaseOrder.setProvider(retrievedProviderLinkedToThisPurchaseOrder);
+			}
+			
+			//If we want to set the LineItems, we just specify we want to retrieve the LineItem as a parameter of this method
+			if(retrieveLineItem) {
+				//If we want to retrieve the LineItems, we get the ArrayList of the retrieved PurchaseOrder
+				ArrayList<LineItem> lineItemOfTheOrder = purchaseOrder.getLineItems();
+				
+				//We get all the LineItmes from the LineItemDao and add each of them to the ArrayList we retrieve earlier
+				for(LineItem lineItem : DaoFactory.getLineItemDao().findLineItemsByOrder(purchaseOrder)) {
+					lineItemOfTheOrder.add(lineItem);
+				}
+			}
+		}
 
 		return retrievedPurchaseOrderList;
 	}
