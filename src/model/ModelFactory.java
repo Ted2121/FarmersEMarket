@@ -3,6 +3,9 @@ package model;
 
 import java.time.format.DateTimeFormatter;
 
+import model.Product.Unit;
+import model.Product.WeightCategory;
+
 public class ModelFactory {
     private ModelFactory(){}
 
@@ -13,7 +16,25 @@ public class ModelFactory {
         return FORMAT;
     }
 
-
+    public static ProductInformation getProductInformationModel(int locationCode, int quantity, Product product) {
+    	return new ProductInformation(locationCode, quantity, product);
+    }
+    
+    public static Product getProductModelWithoutId(String name, double purchasingPrice, double sellingPrice, WeightCategory weightCategory, Unit unit) {
+    	return new Product(name, purchasingPrice, sellingPrice, weightCategory, unit);
+    }
+    
+    public static Product getProductModel(int id, String name, double purchasingPrice, double sellingPrice, WeightCategory weightCategory, Unit unit) {
+    	return new Product(id, name, purchasingPrice, sellingPrice, weightCategory, unit);
+    }
+    
+    public static Product getProductModelWithoutIdWithoutWeightedCategory(String name, double purchasingPrice, double sellingPrice, Unit unit) {
+    	return new Product(name, purchasingPrice, sellingPrice, unit);
+    }
+    
+    public static Product getProductModelWithoutWeightedCategory(int id, String name, double purchasingPrice, double sellingPrice, Unit unit) {
+    	return new Product(id, name, purchasingPrice, sellingPrice, unit);
+    }
 
     public static Person getProviderModel(int id, String firstName, String lastName, String city, String country){
         return new Provider(id, firstName, lastName, city, country);
