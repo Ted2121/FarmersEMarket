@@ -4,7 +4,7 @@ import db_access.DBConnection;
 import db_access.DaoInterfaces.CustomerDao;
 import model.Customer;
 import model.ModelFactory;
-import model.Person;
+
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -14,16 +14,16 @@ public class CustomerDaoImplementation implements CustomerDao {
 
     Connection dbCon = DBConnection.getInstance().getDBCon();
 
-    private List<Person> buildObjects(ResultSet rs) throws SQLException {
-        List<Person> customerList = new ArrayList<Person>();
+    private List<Customer> buildObjects(ResultSet rs) throws SQLException {
+        List<Customer> customerList = new ArrayList<Customer>();
         while (rs.next()) {
             customerList.add(buildObject(rs));
         }
         return customerList;
     }
 
-    private Person buildObject(ResultSet rs) throws SQLException {
-        Person builtCustomer = ModelFactory.getCustomerModel(
+    private Customer buildObject(ResultSet rs) throws SQLException {
+        Customer builtCustomer = ModelFactory.getCustomerModel(
                 rs.getInt("PK_idCustomer"),
                 rs.getString("FirstName"),
                 rs.getString("LastName"),
@@ -36,12 +36,12 @@ public class CustomerDaoImplementation implements CustomerDao {
     }
 
     @Override
-    public Person findCustomerById(int customerId) throws SQLException {
+    public Customer findCustomerById(int customerId) throws SQLException {
         String query = "SELECT * FROM Customer WHERE PK_idCustomer = ?";
         PreparedStatement preparedSelectStatement = dbCon.prepareStatement(query);
         preparedSelectStatement.setLong(1, customerId);
         ResultSet rs = preparedSelectStatement.executeQuery();
-        Person retrievedCustomer = null;
+        Customer retrievedCustomer = null;
         while (rs.next()) {
             retrievedCustomer = buildObject(rs);
         }
@@ -50,11 +50,11 @@ public class CustomerDaoImplementation implements CustomerDao {
     }
 
     @Override
-    public List<Person> findAllCustomers() throws SQLException {
+    public List<Customer> findAllCustomers() throws SQLException {
         String query = "SELECT * FROM Customer";
         PreparedStatement preparedSelectStatement = dbCon.prepareStatement(query);
         ResultSet rs = preparedSelectStatement.executeQuery();
-        List<Person> retrievedCustomerList = buildObjects(rs);
+        List<Customer> retrievedCustomerList = buildObjects(rs);
 
         return retrievedCustomerList;
     }
@@ -108,7 +108,7 @@ public class CustomerDaoImplementation implements CustomerDao {
 
 
     @Override
-    public Person findCustomerByFullName(String fullName) throws SQLException {
+    public Customer findCustomerByFullName(String fullName) throws SQLException {
         String query = "SELECT * FROM Customer WHERE FirstName = ? AND LastName = ?";
         PreparedStatement preparedSelectStatement = dbCon.prepareStatement(query);
         String[] fullNameAsArray = fullName.split(" ");
@@ -117,7 +117,7 @@ public class CustomerDaoImplementation implements CustomerDao {
         preparedSelectStatement.setString(1, firstName);
         preparedSelectStatement.setString(2, lastName);
         ResultSet rs = preparedSelectStatement.executeQuery();
-        Person retrievedCustomer = null;
+        Customer retrievedCustomer = null;
         while (rs.next()) {
             retrievedCustomer = buildObject(rs);
         }

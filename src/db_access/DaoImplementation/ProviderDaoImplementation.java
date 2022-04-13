@@ -54,6 +54,7 @@ public class ProviderDaoImplementation implements ProviderDao {
 		return retrievedProvidersList;
 	}
 
+	// TODO this needs to be reviewed
 	@Override
 	public int createProvider(Provider objectToInsert) throws SQLException {
 		String sqlInsertProviderStatement = "INSERT INTO Provider (FirstName, LastName, Country, City) + VALUES(?,?,?,?)";
