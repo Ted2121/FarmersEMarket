@@ -12,7 +12,6 @@ import db_access.DaoFactory;
 import db_access.DaoInterfaces.PurchaseOrderDao;
 import model.LineItem;
 import model.ModelFactory;
-import model.Person;
 import model.Provider;
 import model.PurchaseOrder;
 
@@ -24,7 +23,7 @@ public class PurchaseOrderDaoImplementation implements PurchaseOrderDao {
 		while(rs.next()) {
 			PurchaseOrder retrievedPurchaseOrder = buildObject(rs, false);
 			if(retrieveProvider) {
-				Provider retrievedProviderLinkedToThisPurchaseOrder = (Provider) DaoFactory.getProviderDao().findPersonById(rs.getInt("FK_Provider"));
+				Provider retrievedProviderLinkedToThisPurchaseOrder = (Provider) DaoFactory.getProviderDao().findProviderById(rs.getInt("FK_Provider"));
 				retrievedPurchaseOrder.setProvider(retrievedProviderLinkedToThisPurchaseOrder);
 			}
 			
@@ -58,7 +57,7 @@ public class PurchaseOrderDaoImplementation implements PurchaseOrderDao {
 			retrievedPurchaseOrder = buildObject(rs, false);
 			
 			if(retrieveProvider) {
-				Provider retrievedProviderLinkedToThisPurchaseOrder = (Provider) DaoFactory.getProviderDao().findPersonById(rs.getInt("FK_Provider"));
+				Provider retrievedProviderLinkedToThisPurchaseOrder = (Provider) DaoFactory.getProviderDao().findProviderById(rs.getInt("FK_Provider"));
 				retrievedPurchaseOrder.setProvider(retrievedProviderLinkedToThisPurchaseOrder);
 			}
 			
