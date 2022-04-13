@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public interface ProductInformationDao {
-    int createProductInformation(ProductInformation objectToInsert) throws SQLException;
+    void createProductInformation(ProductInformation objectToInsert) throws SQLException;
     void updateProductInformation(ProductInformation objectToUpdate) throws SQLException;
     void deleteProductInformation(ProductInformation objectToDelete) throws SQLException;
     ArrayList<ProductInformation> findAllProductInformationEntries() throws SQLException;

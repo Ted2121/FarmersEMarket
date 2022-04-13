@@ -10,9 +10,9 @@ import model.ProductInformation;
 public class ProductInformationDaoImplementation implements ProductInformationDao {
 
 	@Override
-	public int createProductInformation(ProductInformation objectToInsert) throws SQLException {
+	public void createProductInformation(ProductInformation objectToInsert) throws SQLException {
 		// TODO Auto-generated method stub
-		return 0;
+		
 	}
 
 	@Override
