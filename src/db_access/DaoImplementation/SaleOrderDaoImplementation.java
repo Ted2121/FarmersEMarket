@@ -15,7 +15,6 @@ import model.SaleOrder;
 public class SaleOrderDaoImplementation implements SaleOrderDao {
 
 	Connection con = DBConnection.getInstance().getDBCon();
-	//ProductDaoImplementation productDao = DaoFactory.getProductDao();
 
 	private List<SaleOrder> buildObjects(ResultSet rs) throws SQLException{
 		List<SaleOrder> SaleOrderList = new ArrayList<>();
@@ -58,6 +57,11 @@ public class SaleOrderDaoImplementation implements SaleOrderDao {
 
 	@Override
 	public void updateSaleOrder(SaleOrder objectToUpdate) throws SQLException {
+		String sqlUpdateSaleOrderStatement = "UPDATE SaleOrder SET FK_Provider = ? WHERE PK_idSaleOrder = ?";
+		PreparedStatement preparedUpdateProductStatement = con.prepareStatement(sqlUpdateSaleOrderStatement);
+		preparedUpdateProductStatement.setInt(1, objectToUpdate.getCustomer().getId());
+		preparedUpdateProductStatement.setInt(2, objectToUpdate.getId());
+		preparedUpdateProductStatement.execute();
 
 	}
 
