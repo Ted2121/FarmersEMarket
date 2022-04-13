@@ -8,47 +8,78 @@ import java.util.ArrayList;
 import java.util.List;
 
 import db_access.DBConnection;
+import db_access.DaoFactory;
 import db_access.DaoInterfaces.PurchaseOrderDao;
+import model.LineItem;
+import model.ModelFactory;
+import model.Person;
+import model.Provider;
 import model.PurchaseOrder;
 
 public class PurchaseOrderDaoImplementation implements PurchaseOrderDao {
 	Connection connectionDB = DBConnection.getInstance().getDBCon();
 
-	private ArrayList<PurchaseOrder> buildObjects(ResultSet rs) throws SQLException{
+	private ArrayList<PurchaseOrder> buildObjects(ResultSet rs, boolean retrieveProvider, boolean retrieveLineItem) throws SQLException{
 		ArrayList<PurchaseOrder> purchaseOrderList = new ArrayList<PurchaseOrder>();
 		while(rs.next()) {
-			purchaseOrderList.add(buildObject(rs));
+			PurchaseOrder retrievedPurchaseOrder = buildObject(rs, false);
+			if(retrieveProvider) {
+				Provider retrievedProviderLinkedToThisPurchaseOrder = (Provider) DaoFactory.getProviderDao().findPersonById(rs.getInt("FK_Provider"));
+				retrievedPurchaseOrder.setProvider(retrievedProviderLinkedToThisPurchaseOrder);
+			}
+			
+			if(retrieveLineItem) {
+				ArrayList<LineItem> lineItemOfTheOrder = retrievedPurchaseOrder.getLineItems();
+				for(LineItem lineItem : DaoFactory.getLineItemDao().findLineItemsByOrder(retrievedPurchaseOrder)) {
+					lineItemOfTheOrder.add(lineItem);
+				}
+			}
+			
+			purchaseOrderList.add(retrievedPurchaseOrder);
+			
 		}
 		
 		return purchaseOrderList;
 	}
 	
-	private PurchaseOrder buildObject(ResultSet rs) throws SQLException{
-		PurchaseOrder builtObject = new PurchaseOrder(rs.getInt("PK_idPurchaseOrder"));
+	private PurchaseOrder buildObject(ResultSet rs, boolean retrieveProviderAssociation) throws SQLException{
+		PurchaseOrder builtObject = (PurchaseOrder) ModelFactory.getPurchaseOrderModel(rs.getInt("PK_idPurchaseOrder"));
 		return builtObject;
 	}
 
 	@Override
-	public PurchaseOrder findPurchaseOrderById(int id)  throws SQLException{
+	public PurchaseOrder findPurchaseOrderById(int id, boolean retrieveProvider, boolean retrieveLineItem)  throws SQLException{
 		String query = "SELECT * FROM PurchaseOrder WHERE PK_idPurchaseOrder = ?";
 		PreparedStatement preparedSelectStatement = connectionDB.prepareStatement(query);
 		preparedSelectStatement.setInt(1, id);
 		ResultSet rs = preparedSelectStatement.executeQuery();
 		PurchaseOrder retrievedPurchaseOrder = null;
 		while(rs.next()) {
-			retrievedPurchaseOrder = buildObject(rs);
+			retrievedPurchaseOrder = buildObject(rs, false);
+			
+			if(retrieveProvider) {
+				Provider retrievedProviderLinkedToThisPurchaseOrder = (Provider) DaoFactory.getProviderDao().findPersonById(rs.getInt("FK_Provider"));
+				retrievedPurchaseOrder.setProvider(retrievedProviderLinkedToThisPurchaseOrder);
+			}
+			
+			if(retrieveLineItem) {
+				ArrayList<LineItem> lineItemOfTheOrder = retrievedPurchaseOrder.getLineItems();
+				for(LineItem lineItem : DaoFactory.getLineItemDao().findLineItemsByOrder(retrievedPurchaseOrder)) {
+					lineItemOfTheOrder.add(lineItem);
+				}
+			}
 		}
 		
 		return retrievedPurchaseOrder;
 	}
-
+	
 	@Override
-	public List<PurchaseOrder> findAllPurchaseOrders() throws SQLException {
+	public List<PurchaseOrder> findAllPurchaseOrders(boolean retrieveProvider, boolean retrieveLineItem) throws SQLException {
 		String query = "SELECT * FROM PurchaseOrder";
 		PreparedStatement preparedSelectStatement = connectionDB.prepareStatement(query);
 		
 		ResultSet rs = preparedSelectStatement.executeQuery();
-		ArrayList<PurchaseOrder> retrievedPurchaseOrderList = buildObjects(rs);
+		ArrayList<PurchaseOrder> retrievedPurchaseOrderList = buildObjects(rs, retrieveProvider, retrieveLineItem);
 
 		return retrievedPurchaseOrderList;
 	}
