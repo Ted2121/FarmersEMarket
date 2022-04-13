@@ -3,13 +3,13 @@ package model;
 public class ProductInformation {
 	private int locationCode;
 	private int quantity;
-	private Product product;
+	private int id;
 	
-	public ProductInformation(int locationCode, int quantity, Product product) {
+	public ProductInformation(int locationCode, int quantity, int id) {
 		super();
 		this.locationCode = locationCode;
 		this.quantity = quantity;
-		this.product = product;
+		this.id = id;
 	}
 
 	public int getLocationCode() {
@@ -28,11 +28,11 @@ public class ProductInformation {
 		this.quantity = quantity;
 	}
 
-	public Product getProduct() {
-		return product;
+	public int getId() {
+		return id;
 	}
 
-	public void setProduct(Product product) {
-		this.product = product;
+	public void setId(int id) {
+		this.id = id;
 	}
 }
