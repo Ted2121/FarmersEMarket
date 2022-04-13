@@ -16,8 +16,8 @@ public class ModelFactory {
         return FORMAT;
     }
 
-    public static ProductInformation getProductInformationModel(int locationCode, int quantity, Product product) {
-    	return new ProductInformation(locationCode, quantity, product);
+    public static ProductInformation getProductInformationModel(int locationCode, int quantity, int id) {
+    	return new ProductInformation(locationCode, quantity, id);
     }
     
     public static Product getProductModelWithoutId(String name, double purchasingPrice, double sellingPrice, WeightCategory weightCategory, Unit unit) {
