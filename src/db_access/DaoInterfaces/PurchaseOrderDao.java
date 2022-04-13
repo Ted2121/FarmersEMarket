@@ -9,10 +9,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public interface PurchaseOrderDao {
-	PurchaseOrder findPurchaseOrderById(int purchaseOrderId) throws SQLException;
-    List<PurchaseOrder> findAllPurchaseOrders() throws SQLException;
+	PurchaseOrder findPurchaseOrderById(int id, boolean rertieveProvider, boolean retrieveLineItem) throws SQLException;
+    List<PurchaseOrder> findAllPurchaseOrders(boolean retrieveProvider, boolean retrieveLineItem) throws SQLException;
 
     void createPurchaseOrder(PurchaseOrder objectToInsert) throws SQLException;
     void updatePurchaseOrder(PurchaseOrder objectToUpdate) throws SQLException;
     void deletePurchaseOrder(PurchaseOrder objectToDelete) throws SQLException;
+	
 }
