@@ -10,7 +10,6 @@ import java.util.List;
 
 import db_access.DBConnection;
 import db_access.DaoInterfaces.ProviderDao;
-import model.Person;
 import model.Provider;
 
 public class ProviderDaoImplementation implements ProviderDao {
@@ -23,8 +22,8 @@ public class ProviderDaoImplementation implements ProviderDao {
 		return builtObject;
 	}
 	
-	private ArrayList<Provider> buildObjects(ResultSet rs) throws SQLException{
-		ArrayList<Provider> providerList = new ArrayList<>();
+	private List<Provider> buildObjects(ResultSet rs) throws SQLException{
+		List<Provider> providerList = new ArrayList<>();
 		while(rs.next()) {
 			providerList.add(buildObject(rs));
 		}
@@ -33,12 +32,12 @@ public class ProviderDaoImplementation implements ProviderDao {
 	}
 	
 	@Override
-	public model.Provider findPersonById(int personId) throws SQLException {
+	public Provider findProviderById(int providerId) throws SQLException {
 		String query = "SLEECT * FROM Provider WHERE PK_idProviders = ?";
 		PreparedStatement preparedSelectStatement = connectionDB.prepareStatement(query);
-		preparedSelectStatement.setLong(1, personId);
+		preparedSelectStatement.setLong(1, providerId);
 		ResultSet rs = preparedSelectStatement.executeQuery();
-		model.Provider retrievedPerson = null;
+		Provider retrievedPerson = null;
 		while(rs.next()) {
 			retrievedPerson = buildObject(rs);
 		}
@@ -46,64 +45,64 @@ public class ProviderDaoImplementation implements ProviderDao {
 	}
 
 	@Override
-	public List<model.Provider> findAllPersons() throws SQLException {
+	public List<Provider> findAllProviders() throws SQLException {
 		String query = "SELECT * FROM Provider";
 		PreparedStatement preparedSelectStatement = connectionDB.prepareStatement(query);
 		ResultSet rs = preparedSelectStatement.executeQuery();
-		ArrayList<model.Provider> retrievedPersonList = buildObjects(rs);
+		List<Provider> retrievedProvidersList = buildObjects(rs);
 		
-		return retrievedPersonList;
+		return retrievedProvidersList;
 	}
 
 	@Override
-	public int createPerson(Provider objectToInsert) throws SQLException {
-		String sqlInsertPersonStatement = "INSERT INTO Provider (FirstName, LastName, Country, City) + VALUES(?,?,?,?)";
-		PreparedStatement preparedInsertPersonStatementWithGeneratedKey = connectionDB.prepareStatement(sqlInsertPersonStatement, Statement.RETURN_GENERATED_KEYS);
-		preparedInsertPersonStatementWithGeneratedKey.setString(1, objectToInsert.getFirstName());
-		preparedInsertPersonStatementWithGeneratedKey.setString(2, objectToInsert.getLastName());
-		preparedInsertPersonStatementWithGeneratedKey.setString(3, objectToInsert.getCountry());
-		preparedInsertPersonStatementWithGeneratedKey.setString(2, objectToInsert.getCity());
+	public void createProvider(Provider objectToInsert) throws SQLException {
+		String sqlInsertProviderStatement = "INSERT INTO Provider (FirstName, LastName, Country, City) + VALUES(?,?,?,?)";
+		PreparedStatement preparedInsertProviderStatementWithGeneratedKey = connectionDB.prepareStatement(sqlInsertProviderStatement, Statement.RETURN_GENERATED_KEYS);
+		preparedInsertProviderStatementWithGeneratedKey.setString(1, objectToInsert.getFirstName());
+		preparedInsertProviderStatementWithGeneratedKey.setString(2, objectToInsert.getLastName());
+		preparedInsertProviderStatementWithGeneratedKey.setString(3, objectToInsert.getCountry());
+		preparedInsertProviderStatementWithGeneratedKey.setString(2, objectToInsert.getCity());
 		
-		preparedInsertPersonStatementWithGeneratedKey.executeUpdate();
-		ResultSet tableContainingGenratedIds = preparedInsertPersonStatementWithGeneratedKey.getGeneratedKeys();
+		preparedInsertProviderStatementWithGeneratedKey.executeUpdate();
+		ResultSet tableContainingGeneratedIds = preparedInsertProviderStatementWithGeneratedKey.getGeneratedKeys();
 		int generatedId = 0;
-		while(tableContainingGenratedIds.next()) {
-			generatedId = tableContainingGenratedIds.getInt(1);
+		while(tableContainingGeneratedIds.next()) {
+			generatedId = tableContainingGeneratedIds.getInt(1);
 		}
 		objectToInsert.setId(generatedId);
 		
-		return generatedId;
+
 	}
 
 	@Override
-	public void updatePerson(Provider objectToUpdate) throws SQLException {
+	public void updateProvider(Provider objectToUpdate) throws SQLException {
 		String sqlUpdatePersonStatement = "UPDATE Provider SET FirstName = ?, LastName = ?, Country = ?, City = ?";
-		PreparedStatement preparedUpdatePersonStatement = connectionDB.prepareStatement(sqlUpdatePersonStatement);
-		preparedUpdatePersonStatement.setString(1, objectToUpdate.getFirstName());
-		preparedUpdatePersonStatement.setString(2, objectToUpdate.getLastName());
-		preparedUpdatePersonStatement.setString(3, objectToUpdate.getCountry());
-		preparedUpdatePersonStatement.setString(4, objectToUpdate.getCity());
+		PreparedStatement preparedUpdateProviderStatement = connectionDB.prepareStatement(sqlUpdatePersonStatement);
+		preparedUpdateProviderStatement.setString(1, objectToUpdate.getFirstName());
+		preparedUpdateProviderStatement.setString(2, objectToUpdate.getLastName());
+		preparedUpdateProviderStatement.setString(3, objectToUpdate.getCountry());
+		preparedUpdateProviderStatement.setString(4, objectToUpdate.getCity());
 		
-		preparedUpdatePersonStatement.execute();
+		preparedUpdateProviderStatement.execute();
 	}
 
 	@Override
-	public void deletePerson(Provider objectToDelete) throws SQLException {
-		String sqlDeletePersonStatement = "DELETE FROM Provider WHERE id = ?";
-		PreparedStatement preparedDeletePersonStatement = connectionDB.prepareStatement(sqlDeletePersonStatement);
-		preparedDeletePersonStatement.setInt(1, objectToDelete.getId());
-		preparedDeletePersonStatement.execute();
+	public void deleteProvider(Provider objectToDelete) throws SQLException {
+		String sqlDeleteProviderStatement = "DELETE FROM Provider WHERE id = ?";
+		PreparedStatement preparedDeleteProviderStatement = connectionDB.prepareStatement(sqlDeleteProviderStatement);
+		preparedDeleteProviderStatement.setInt(1, objectToDelete.getId());
+		preparedDeleteProviderStatement.execute();
 		
 	}
 
 	@Override
-	public Provider findPersonByFullName(String fullName) throws SQLException {
-		String sqlFindPersonStatement = "SELECT * FROM Provider WHERE FirstName = ?, LastName = ?";
-		PreparedStatement preparedFindPersonStatement = connectionDB.prepareStatement(sqlFindPersonStatement);
+	public Provider findProviderByFullName(String fullName) throws SQLException {
+		String sqlFindProviderStatement = "SELECT * FROM Provider WHERE FirstName = ?, LastName = ?";
+		PreparedStatement preparedFindProviderStatement = connectionDB.prepareStatement(sqlFindProviderStatement);
 		String[] fullNameArray = fullName.split(" ");
-		preparedFindPersonStatement.setString(1, fullNameArray[0]);
-		preparedFindPersonStatement.setString(2, fullNameArray[1]);
-		ResultSet rs = preparedFindPersonStatement.executeQuery();
+		preparedFindProviderStatement.setString(1, fullNameArray[0]);
+		preparedFindProviderStatement.setString(2, fullNameArray[1]);
+		ResultSet rs = preparedFindProviderStatement.executeQuery();
 		Provider retrievedProvider = null;
 		while(rs.next()) {
 			retrievedProvider = buildObject(rs);
