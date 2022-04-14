@@ -8,23 +8,33 @@ import java.util.ArrayList;
 import java.util.List;
 
 import db_access.DBConnection;
+import db_access.DaoFactory;
 import db_access.DaoInterfaces.SaleOrderDao;
-import model.ModelFactory;
-import model.PurchaseOrder;
-import model.SaleOrder;
+import model.*;
 
 public class SaleOrderDaoImplementation implements SaleOrderDao {
 
 	Connection con = DBConnection.getInstance().getDBCon();
 
-	private List<SaleOrder> buildObjects(ResultSet rs) throws SQLException{
-		List<SaleOrder> SaleOrderList = new ArrayList<>();
+	private List<SaleOrder> buildObjects(ResultSet rs, boolean retrieveCustomer, boolean retrieveLineItem) throws SQLException{
+		List<SaleOrder> saleOrderList = new ArrayList<>();
 		while(rs.next()) {
-			boolean wasProviderLinked = false;
-			SaleOrderList.add(buildObject(rs));
+			SaleOrder retrievedSaleOrder = buildObject(rs);
+			if(retrieveCustomer) {
+				Customer retrievedCustomerLinkedToThisSaleOrder = DaoFactory.getCustomerDao().findCustomerById(rs.getInt("FK_Customer"));
+				retrievedSaleOrder.setCustomer(retrievedCustomerLinkedToThisSaleOrder);
+			}
+
+			if(retrieveLineItem) {
+				List<LineItem> lineItemsOfTheOrder = retrievedSaleOrder.getLineItems();
+				lineItemsOfTheOrder.addAll(DaoFactory.getLineItemDao().findLineItemsByOrder(retrievedSaleOrder));
+			}
+
+			saleOrderList.add(retrievedSaleOrder);
+
 		}
 
-		return SaleOrderList;
+		return saleOrderList;
 	}
 
 	private SaleOrder buildObject(ResultSet rs) throws SQLException{
@@ -34,26 +44,63 @@ public class SaleOrderDaoImplementation implements SaleOrderDao {
 	}
 
 	@Override
-	public SaleOrder findSaleOrderById(int saleOrderId) throws SQLException {
-		String query = "SELECT * FROM PurchaseOrder WHERE PK_idSaleOrder = ?";
+	public SaleOrder findSaleOrderById(int saleOrderId, boolean retrieveCustomer, boolean retrieveLineItem) throws SQLException {
+		//Retrieving the SaleOrder from the database
+		String query = "SELECT * FROM SaleOrder WHERE PK_idSaleOrder = ?";
 		PreparedStatement preparedSelectStatement = con.prepareStatement(query);
-		preparedSelectStatement.setLong(1, saleOrderId);
+		preparedSelectStatement.setInt(1, saleOrderId);
 		ResultSet rs = preparedSelectStatement.executeQuery();
 		SaleOrder retrievedSaleOrder = null;
 		while(rs.next()) {
+			//Building the SaleOrder object
 			retrievedSaleOrder = buildObject(rs);
+
+			//If we want to set the Customer, we just specify we want to retrieve the Customer as a parameter of this method
+			if(retrieveCustomer) {
+				//If we want to retrieve the Customer, we get it from the CustomerDao
+				Customer retrievedCustomerLinkedToThisSaleOrder = DaoFactory.getCustomerDao().findCustomerById(rs.getInt("FK_Customer"));
+				//And we set it as the customer of its object
+				retrievedSaleOrder.setCustomer(retrievedCustomerLinkedToThisSaleOrder);
+			}
+
+			//If we want to set the LineItems, we just specify we want to retrieve the LineItem as a parameter of this method
+			if(retrieveLineItem) {
+				//If we want to retrieve the LineItems, we get the ArrayList of the retrieved PurchaseOrder
+				List<LineItem> lineItemOfTheOrder = retrievedSaleOrder.getLineItems();
+
+				//We get all the LineItems from the LineItemDao and add each of them to the ArrayList we retrieve earlier
+				lineItemOfTheOrder.addAll(DaoFactory.getLineItemDao().findLineItemsByOrder(retrievedSaleOrder));
+			}
 		}
 
 		return retrievedSaleOrder;
 	}
 
 	@Override
-	public List<SaleOrder> findAllSaleOrders() throws SQLException {
+	public List<SaleOrder> findAllSaleOrders(boolean retrieveCustomer, boolean retrieveLineItem) throws SQLException {
 		String query = "SELECT * FROM SaleOrder";
 		PreparedStatement preparedSelectStatement = con.prepareStatement(query);
 
 		ResultSet rs = preparedSelectStatement.executeQuery();
-		List<SaleOrder> retrievedSaleOrderList = buildObjects(rs);
+		List<SaleOrder> retrievedSaleOrderList = buildObjects(rs, retrieveCustomer, retrieveLineItem);
+
+		for(SaleOrder saleOrder : retrievedSaleOrderList) {
+			if(retrieveCustomer) {
+				//If we want to retrieve the customer, we get it from the CustomerDao
+				Customer retrievedCustomerLinkedToThisSaleOrder = DaoFactory.getCustomerDao().findCustomerById(rs.getInt("FK_Customer"));
+				//And we set it as the customer of its object
+				saleOrder.setCustomer(retrievedCustomerLinkedToThisSaleOrder);
+			}
+
+			//If we want to set the LineItems, we just specify we want to retrieve the LineItem as a parameter of this method
+			if(retrieveLineItem) {
+				//If we want to retrieve the LineItems, we get the ArrayList of the retrieved SaleOrder
+				List<LineItem> lineItemOfTheOrder = saleOrder.getLineItems();
+
+				//We get all the LineItems from the LineItemDao and add each of them to the ArrayList we retrieve earlier
+				lineItemOfTheOrder.addAll(DaoFactory.getLineItemDao().findLineItemsByOrder(saleOrder));
+			}
+		}
 
 		return retrievedSaleOrderList;
 	}

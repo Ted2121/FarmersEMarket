@@ -12,16 +12,16 @@ import java.util.ArrayList;
 import static org.junit.Assert.assertEquals;
 
 public class TestGettingAnOrderFromDB {
-    private int generatedOrderId;
-    private int generatedCustomerId;
-    private Product product1;
-    private Product product2;
-    private LineItem lineItem1;
-    private LineItem lineItem2;
-    private Customer customer;
-    private SaleOrder saleOrder;
-    private ArrayList<LineItem> lineItems;
-    private SaleOrder retrievedSaleOrder;
+    private static int generatedOrderId;
+    private static int generatedCustomerId;
+    private static Product product1;
+    private static Product product2;
+    private static LineItem lineItem1;
+    private static LineItem lineItem2;
+    private static Customer customer;
+    private static SaleOrder saleOrder;
+    private static ArrayList<LineItem> lineItems;
+    private static SaleOrder retrievedSaleOrder;
 
     @BeforeClass
     public void setUp() throws SQLException {
@@ -52,7 +52,7 @@ public class TestGettingAnOrderFromDB {
 
     @Test
     public void testRetrievingAnOrderFromDB() throws SQLException {
-        retrievedSaleOrder = DaoFactory.getSaleOrderDao().findSaleOrderById(generatedOrderId);
+        retrievedSaleOrder = DaoFactory.getSaleOrderDao().findSaleOrderById(generatedOrderId, true, true);
     }
 
     @Test
@@ -66,7 +66,7 @@ public class TestGettingAnOrderFromDB {
     }
 
     @AfterClass
-    public void tearDown() throws SQLException {
+    public static void tearDown() throws SQLException {
         DaoFactory.getSaleOrderDao().deleteSaleOrder(saleOrder);
         // getOrderDao().deleteOrder() should not take in an Order because it's an abstract class, and we never create one
         // maybe it should take in an int id, so I can pass in the generated id to delete it
