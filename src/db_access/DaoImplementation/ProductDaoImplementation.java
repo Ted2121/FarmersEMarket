@@ -82,8 +82,10 @@ public class ProductDaoImplementation implements ProductDao {
 		PreparedStatement statement = connection.prepareStatement(query);
 		statement.setString(1, productName);
 		ResultSet rs = statement.executeQuery();
-		rs.next();
-		return ModelFactory.getProductModel(rs.getInt("PK_idProduct"), productName, rs.getDouble("PurchasingPrice"), rs.getDouble("SellingPrice"), WeightCategory.valueOf(rs.getString("WeightCategory")), Unit.valueOf(rs.getString("Unit")));
+		while(rs.next()) {
+			return ModelFactory.getProductModel(rs.getInt("PK_idProduct"), productName, rs.getDouble("PurchasingPrice"), rs.getDouble("SellingPrice"), WeightCategory.valueOf(rs.getString("WeightCategory")), Unit.valueOf(rs.getString("Unit")));
+		}
+		return null;
 	}
 
 	@Override
