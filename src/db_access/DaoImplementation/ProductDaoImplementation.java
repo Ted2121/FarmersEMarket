@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 import db_access.DBConnection;
 import db_access.DaoInterfaces.ProductDao;
@@ -63,9 +64,9 @@ public class ProductDaoImplementation implements ProductDao {
 	}
 
 	@Override
-	public ArrayList<Product> findAllProducts() throws SQLException {
+	public List<Product> findAllProducts() throws SQLException {
 		// TODO Auto-generated method stub
-		ArrayList<Product> list = new ArrayList<Product>();
+		List<Product> list = new ArrayList<Product>();
 		String query = "select * from Product";
 		PreparedStatement statement = connection.prepareStatement(query);
 		ResultSet rs = statement.executeQuery();
