@@ -24,7 +24,7 @@ public class PurchaseOrderDaoImplementation implements PurchaseOrderDao {
 		while(rs.next()) {
 			PurchaseOrder retrievedPurchaseOrder = buildObject(rs);
 			if(retrieveProvider) {
-				Provider retrievedProviderLinkedToThisPurchaseOrder = (Provider) DaoFactory.getProviderDao().findProviderById(rs.getInt("FK_Provider"));
+				Provider retrievedProviderLinkedToThisPurchaseOrder = DaoFactory.getProviderDao().findProviderById(rs.getInt("FK_Provider"));
 				retrievedPurchaseOrder.setProvider(retrievedProviderLinkedToThisPurchaseOrder);
 			}
 			
@@ -64,7 +64,7 @@ public class PurchaseOrderDaoImplementation implements PurchaseOrderDao {
 			//If we want to set the Provider, we just specify we want to retrieve the Provider as a parameter of this method
 			if(retrieveProvider) {
 				//If we want to retrieve the provider, we get it from the Provider Dao
-				Provider retrievedProviderLinkedToThisPurchaseOrder = (Provider) DaoFactory.getProviderDao().findProviderById(rs.getInt("FK_Provider"));
+				Provider retrievedProviderLinkedToThisPurchaseOrder = DaoFactory.getProviderDao().findProviderById(rs.getInt("FK_Provider"));
 				//And we set it as the provider of its object
 				retrievedPurchaseOrder.setProvider(retrievedProviderLinkedToThisPurchaseOrder);
 			}
