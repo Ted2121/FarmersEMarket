@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public interface ProductDao {
 
-    int createProduct(Product objectToInsert) throws SQLException;
+    void createProduct(Product objectToInsert) throws SQLException;
     void updateProduct(Product objectToUpdate) throws SQLException;
     void deleteProduct(Product objectToDelete) throws SQLException;
     ArrayList<Product> findAllProducts() throws SQLException;
