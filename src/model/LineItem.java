@@ -7,14 +7,17 @@ public class LineItem {
 
 
     public LineItem(int quantity, Product product, Order order) {
-        this.quantity = quantity;
-        this.product = product;
+        this(quantity, product);
         this.order = order;
     }
 
     public LineItem(int quantity, Product product) {
-        this.quantity = quantity;
+        this(quantity);
         this.product = product;
+    }
+    
+    public LineItem(int quantity) {
+        this.quantity = quantity;
     }
 
     public int getQuantity() {
