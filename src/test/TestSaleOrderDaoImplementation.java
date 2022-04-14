@@ -31,7 +31,7 @@ private static int generatedOrderId;
     private static SaleOrder retrievedSaleOrder;
 
     @BeforeClass
-    public void setUp() throws SQLException {
+    public static void setUp() throws SQLException {
         product1 = ModelFactory.getProductModelWithoutId("potato", 10.0, 20.0, Product.WeightCategory.FIVE, Product.Unit.KG);
         product2 = ModelFactory.getProductModelWithoutId("tomato", 15.0, 25.0, Product.WeightCategory.ONE, Product.Unit.KG);
 
