@@ -16,7 +16,7 @@ public class SaleOrderDaoImplementation implements SaleOrderDao {
 
 	Connection con = DBConnection.getInstance().getDBCon();
 
-	private List<SaleOrder> buildObjects(ResultSet rs, boolean retrieveCustomer, boolean retrieveLineItem) throws SQLException{
+	private List<SaleOrder> buildObjects(ResultSet rs, boolean retrieveCustomer, boolean retrieveLineItem) throws Exception{
 		List<SaleOrder> saleOrderList = new ArrayList<>();
 		while(rs.next()) {
 			SaleOrder retrievedSaleOrder = buildObject(rs);
@@ -27,7 +27,7 @@ public class SaleOrderDaoImplementation implements SaleOrderDao {
 
 			if(retrieveLineItem) {
 				List<LineItem> lineItemsOfTheOrder = retrievedSaleOrder.getLineItems();
-				lineItemsOfTheOrder.addAll(DaoFactory.getLineItemDao().findLineItemsByOrder(retrievedSaleOrder));
+				lineItemsOfTheOrder.addAll(DaoFactory.getLineItemDao().findLineItemsByOrder(retrievedSaleOrder, true));
 			}
 
 			saleOrderList.add(retrievedSaleOrder);
@@ -69,7 +69,15 @@ public class SaleOrderDaoImplementation implements SaleOrderDao {
 				List<LineItem> lineItemOfTheOrder = retrievedSaleOrder.getLineItems();
 
 				//We get all the LineItems from the LineItemDao and add each of them to the ArrayList we retrieve earlier
-				lineItemOfTheOrder.addAll(DaoFactory.getLineItemDao().findLineItemsByOrder(retrievedSaleOrder));
+				try {
+					lineItemOfTheOrder.addAll(DaoFactory.getLineItemDao().findLineItemsByOrder(retrievedSaleOrder, true));
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
 
@@ -77,7 +85,7 @@ public class SaleOrderDaoImplementation implements SaleOrderDao {
 	}
 
 	@Override
-	public List<SaleOrder> findAllSaleOrders(boolean retrieveCustomer, boolean retrieveLineItem) throws SQLException {
+	public List<SaleOrder> findAllSaleOrders(boolean retrieveCustomer, boolean retrieveLineItem) throws Exception {
 		String query = "SELECT * FROM SaleOrder";
 		PreparedStatement preparedSelectStatement = con.prepareStatement(query);
 
@@ -98,7 +106,9 @@ public class SaleOrderDaoImplementation implements SaleOrderDao {
 				List<LineItem> lineItemOfTheOrder = saleOrder.getLineItems();
 
 				//We get all the LineItems from the LineItemDao and add each of them to the ArrayList we retrieve earlier
-				lineItemOfTheOrder.addAll(DaoFactory.getLineItemDao().findLineItemsByOrder(saleOrder));
+				
+					lineItemOfTheOrder.addAll(DaoFactory.getLineItemDao().findLineItemsByOrder(saleOrder, true));
+			
 			}
 		}
 

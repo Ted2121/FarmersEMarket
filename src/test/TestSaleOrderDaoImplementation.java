@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class TestSaleOrderDaoImplementation {
 //    private static SaleOrderDao saleOrderDao;
@@ -53,27 +54,30 @@ private static int generatedOrderId;
     }
 
     @Test
-    public void testInsertingAnOrderToDB() throws SQLException {
+    public void testInsertingAnOrderToDB() throws Exception {
         DaoFactory.getSaleOrderDao().createSaleOrder(saleOrder);
     }
 
     @Test
-    public void testRetrievingAnOrderFromDB() throws SQLException {
+    public void testRetrievingAnOrderFromDB() throws Exception {
         retrievedSaleOrder = DaoFactory.getSaleOrderDao().findSaleOrderById(generatedOrderId, true, true);
+        assertNotNull("was null", retrievedSaleOrder);
     }
 
     @Test
-    public void testCheckingFirstLineItemOfTheRetrievedSaleOrder(){
+    public void testCheckingFirstLineItemOfTheRetrievedSaleOrder() throws Exception{
+    	retrievedSaleOrder = DaoFactory.getSaleOrderDao().findSaleOrderById(generatedOrderId, true, true);
         assertEquals("potato", retrievedSaleOrder.getLineItems().get(0).getProduct().getProductName());
     }
 
     @Test
-    public void testCheckingCustomerFullNameOfTheSaleOrder(){
+    public void testCheckingCustomerFullNameOfTheSaleOrder() throws Exception{
+    	retrievedSaleOrder = DaoFactory.getSaleOrderDao().findSaleOrderById(generatedOrderId, true, true);
         assertEquals("John Doe", retrievedSaleOrder.getCustomer().getFullName());
     }
 
     @AfterClass
-    public static void tearDown() throws SQLException {
+    public static void tearDown() throws Exception {
         DaoFactory.getSaleOrderDao().deleteSaleOrder(saleOrder);
         DaoFactory.getOrderDao().deleteOrder(saleOrder);
         DaoFactory.getCustomerDao().deleteCustomer(customer);
