@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 import db_access.DBConnection;
 import db_access.DaoInterfaces.ProductDao;
@@ -12,10 +13,25 @@ import db_access.DaoInterfaces.ProductInformationDao;
 import model.ModelFactory;
 import model.Product;
 import model.ProductInformation;
+import model.Product.Unit;
+import model.Product.WeightCategory;
 
 public class ProductInformationDaoImplementation implements ProductInformationDao {
 	
 	Connection connection = DBConnection.getInstance().getDBCon();
+	
+	public ProductInformation buildObject(ResultSet rs) throws SQLException {
+		ProductInformation builtObject = ModelFactory.getProductInformationModel(rs.getInt("LocationCode"), rs.getInt("Quantity"), rs.getInt("PK_FK_Product"));
+		return builtObject;
+	}
+	
+	public List<ProductInformation> buildObjects(ResultSet rs) throws SQLException {
+		List<ProductInformation> list = new ArrayList<ProductInformation>();
+		while(rs.next()) {
+			list.add(buildObject(rs));
+		}
+		return list;
+	}
 	
 	@Override
 	public void createProductInformation(ProductInformation objectToInsert) throws SQLException {
@@ -49,16 +65,13 @@ public class ProductInformationDaoImplementation implements ProductInformationDa
 	}
 
 	@Override
-	public ArrayList<ProductInformation> findAllProductInformationEntries() throws SQLException {
+	public List<ProductInformation> findAllProductInformationEntries() throws SQLException {
 		// TODO Auto-generated method stub
 		ArrayList<ProductInformation> list = new ArrayList<ProductInformation>();
 		String query = "select * from ProductInformation";
 		PreparedStatement statement = connection.prepareStatement(query);
 		ResultSet rs = statement.executeQuery();
-		while(rs.next()) {
-			list.add(ModelFactory.getProductInformationModel(rs.getInt("LocationCode"), rs.getInt("Quantity"), rs.getInt("PK_FK_Product")));
-		}
-		return list;
+		return buildObjects(rs);
 	}
 
 	@Override
@@ -69,7 +82,7 @@ public class ProductInformationDaoImplementation implements ProductInformationDa
 		statement.setInt(1, product.getId());
 		ResultSet rs = statement.executeQuery();
 		while(rs.next()) {
-			return ModelFactory.getProductInformationModel(rs.getInt("LocationCode"), rs.getInt("Quantity"), rs.getInt("PK_FK_Product"));
+			return buildObject(rs);
 		}
 		return null;
 	}
