@@ -10,6 +10,7 @@ import java.util.List;
 
 import db_access.DBConnection;
 import db_access.DaoInterfaces.ProviderDao;
+import model.ModelFactory;
 import model.Provider;
 
 public class ProviderDaoImplementation implements ProviderDao {
@@ -17,8 +18,8 @@ public class ProviderDaoImplementation implements ProviderDao {
 	Connection connectionDB = DBConnection.getInstance().getDBCon();
 
 	private Provider buildObject(ResultSet rs) throws SQLException{
-		Provider builtObject = new model.Provider(rs.getInt("id"),rs.getString("firstName"),rs.getString("lastName"),rs.getString("city"),
-				rs.getString("country"));
+		Provider builtObject = ModelFactory.getProviderModel(rs.getInt("PK_idProvider"),rs.getString("FirstName"),rs.getString("LastName"),rs.getString("City"),
+				rs.getString("Country"));
 		return builtObject;
 	}
 	
@@ -33,9 +34,9 @@ public class ProviderDaoImplementation implements ProviderDao {
 	
 	@Override
 	public Provider findProviderById(int providerId) throws SQLException {
-		String query = "SLEECT * FROM Provider WHERE PK_idProviders = ?";
+		String query = "SELECT * FROM Provider WHERE PK_idProvider = ?";
 		PreparedStatement preparedSelectStatement = connectionDB.prepareStatement(query);
-		preparedSelectStatement.setLong(1, providerId);
+		preparedSelectStatement.setInt(1, providerId);
 		ResultSet rs = preparedSelectStatement.executeQuery();
 		Provider retrievedPerson = null;
 		while(rs.next()) {
@@ -57,12 +58,12 @@ public class ProviderDaoImplementation implements ProviderDao {
 	// TODO this needs to be reviewed
 	@Override
 	public int createProvider(Provider objectToInsert) throws SQLException {
-		String sqlInsertProviderStatement = "INSERT INTO Provider (FirstName, LastName, Country, City) + VALUES(?,?,?,?)";
+		String sqlInsertProviderStatement = "INSERT INTO Provider (FirstName, LastName, Country, City) VALUES(?,?,?,?)";
 		PreparedStatement preparedInsertProviderStatementWithGeneratedKey = connectionDB.prepareStatement(sqlInsertProviderStatement, Statement.RETURN_GENERATED_KEYS);
 		preparedInsertProviderStatementWithGeneratedKey.setString(1, objectToInsert.getFirstName());
 		preparedInsertProviderStatementWithGeneratedKey.setString(2, objectToInsert.getLastName());
 		preparedInsertProviderStatementWithGeneratedKey.setString(3, objectToInsert.getCountry());
-		preparedInsertProviderStatementWithGeneratedKey.setString(2, objectToInsert.getCity());
+		preparedInsertProviderStatementWithGeneratedKey.setString(4, objectToInsert.getCity());
 		
 		preparedInsertProviderStatementWithGeneratedKey.executeUpdate();
 		ResultSet tableContainingGeneratedIds = preparedInsertProviderStatementWithGeneratedKey.getGeneratedKeys();
