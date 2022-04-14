@@ -5,6 +5,7 @@ import db_access.DaoFactory;
 import db_access.DaoInterfaces.ProviderDao;
 import model.ModelFactory;
 import model.Provider;
+import model.PurchaseOrder;
 
 import static org.junit.Assert.*;
 
