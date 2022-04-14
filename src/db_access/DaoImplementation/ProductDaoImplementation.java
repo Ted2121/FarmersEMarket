@@ -12,12 +12,34 @@ import db_access.DaoInterfaces.ProductDao;
 import model.ModelFactory;
 import model.Product;
 import model.ProductInformation;
+import model.PurchaseOrder;
 import model.Product.Unit;
 import model.Product.WeightCategory;
 
 public class ProductDaoImplementation implements ProductDao {
 
 	Connection connection = DBConnection.getInstance().getDBCon();
+	
+	public Product buildObject(ResultSet rs) throws SQLException {
+		int result = rs.getInt("WeightCategory");
+		WeightCategory weightCategory = null;
+		switch(result) {
+			case 1 -> weightCategory = WeightCategory.ONE;
+			case 5 -> weightCategory = WeightCategory.FIVE;
+			case 10 -> weightCategory = WeightCategory.TEN;
+		}
+		Product builtObject = ModelFactory.getProductModel(rs.getInt("PK_idProduct"), rs.getString("Name"), 
+				rs.getInt("PurchasingPrice"), rs.getInt("SellingPrice"),weightCategory, Unit.valueOf(rs.getString("Unit")));
+		return builtObject;
+	}
+	
+	public List<Product> buildObjects(ResultSet rs) throws SQLException {
+		List<Product> list = new ArrayList<Product>();
+		while(rs.next()) {
+			list.add(buildObject(rs));
+		}
+		return list;
+	}
 	
 	@Override
 	public void createProduct(Product objectToInsert) throws SQLException {
@@ -28,11 +50,7 @@ public class ProductDaoImplementation implements ProductDao {
 		statement.setDouble(2, objectToInsert.getPurchasingPrice());
 		statement.setDouble(3, objectToInsert.getSellingPrice());
 		statement.setString(4, objectToInsert.getUnit());
-		switch (objectToInsert.getWeightCategory()){
-        	case 1 -> statement.setString(5, "ONE");
-        	case 5 -> statement.setString(5, "FIVE");
-        	case 10 -> statement.setString(5, "TEN");
-		}
+		statement.setInt(5, objectToInsert.getWeightCategory());
 		int row = statement.executeUpdate();
 	}
 	
@@ -47,11 +65,7 @@ public class ProductDaoImplementation implements ProductDao {
 		statement.setDouble(2, objectToUpdate.getPurchasingPrice());
 		statement.setDouble(3, objectToUpdate.getSellingPrice());
 		statement.setString(4, objectToUpdate.getUnit());
-		switch (objectToUpdate.getWeightCategory()){
-        	case 1 -> statement.setString(5, "ONE");
-        	case 5 -> statement.setString(5, "FIVE");
-        	case 10 -> statement.setString(5, "TEN");
-		}
+		statement.setInt(5, objectToUpdate.getWeightCategory());
 		statement.setInt(6, objectToUpdate.getId());
 		int row = statement.executeUpdate();
 	}
@@ -72,10 +86,7 @@ public class ProductDaoImplementation implements ProductDao {
 		String query = "select * from Product";
 		PreparedStatement statement = connection.prepareStatement(query);
 		ResultSet rs = statement.executeQuery();
-		while(rs.next()) {
-			list.add(ModelFactory.getProductModel(rs.getInt("Pk_idProduct"), rs.getString("Name"), rs.getDouble("PurchasingPrice"), rs.getDouble("SellingPrice"), WeightCategory.valueOf(rs.getString("WeightCategory")), Unit.valueOf(rs.getString("Unit"))));
-		}
-		return list;
+		return buildObjects(rs);
 	}
 
 	@Override
@@ -86,7 +97,7 @@ public class ProductDaoImplementation implements ProductDao {
 		statement.setString(1, productName);
 		ResultSet rs = statement.executeQuery();
 		while(rs.next()) {
-			return ModelFactory.getProductModel(rs.getInt("PK_idProduct"), productName, rs.getDouble("PurchasingPrice"), rs.getDouble("SellingPrice"), WeightCategory.valueOf(rs.getString("WeightCategory")), Unit.valueOf(rs.getString("Unit")));
+			return buildObject(rs);
 		}
 		return null;
 	}
@@ -99,7 +110,7 @@ public class ProductDaoImplementation implements ProductDao {
 		statement.setInt(1, productId);
 		ResultSet rs = statement.executeQuery();
 		while(rs.next()) {
-			return ModelFactory.getProductModel(productId, rs.getString("Name"), rs.getDouble("PurchasingPrice"), rs.getDouble("SellingPrice"), WeightCategory.valueOf(rs.getString("WeightCategory")), Unit.valueOf(rs.getString("Unit")));
+			return buildObject(rs);
 		}
 		return null;
 	}
