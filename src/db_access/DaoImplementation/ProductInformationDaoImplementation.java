@@ -68,8 +68,10 @@ public class ProductInformationDaoImplementation implements ProductInformationDa
 		PreparedStatement statement = connection.prepareStatement(query);
 		statement.setInt(1, product.getId());
 		ResultSet rs = statement.executeQuery();
-		rs.next();
-		return ModelFactory.getProductInformationModel(rs.getInt("LocationCode"), rs.getInt("Quantity"), rs.getInt("PK_FK_Product"));
+		while(rs.next()) {
+			return ModelFactory.getProductInformationModel(rs.getInt("LocationCode"), rs.getInt("Quantity"), rs.getInt("PK_FK_Product"));
+		}
+		return null;
 	}
 
 	@Override
