@@ -38,12 +38,12 @@ public class TestProductInformationDaoImplementation {
 		product1 = ModelFactory.getProductModelWithoutId("Test1", 15d, 20d, WeightCategory.FIVE, Unit.KG);
 		product2 = ModelFactory.getProductModelWithoutId("Test2", 15d, 20d, WeightCategory.FIVE, Unit.KG);
 		product3 = ModelFactory.getProductModelWithoutId("Test3", 15d, 20d, WeightCategory.FIVE, Unit.KG);
-		product1.setId(productDao.findProductByProductName("Test1").getId());
-		product2.setId(productDao.findProductByProductName("Test2").getId());
-		product3.setId(productDao.findProductByProductName("Test3").getId());
 		productDao.createProduct(product1);
 		productDao.createProduct(product2);
 		productDao.createProduct(product3);
+		product1.setId(productDao.findProductByProductName("Test1").getId());
+		product2.setId(productDao.findProductByProductName("Test2").getId());
+		product3.setId(productDao.findProductByProductName("Test3").getId());
 		productInformationToUpdate = ModelFactory.getProductInformationModel(900, 14, product1.getId());
 		productInformationToDelete = ModelFactory.getProductInformationModel(900, 14, product2.getId());
 		productInformationToCreate = ModelFactory.getProductInformationModel(900, 14, product3.getId());
