@@ -17,9 +17,9 @@ import model.Provider;
 import model.PurchaseOrder;
 
 public class PurchaseOrderDaoImplementation implements PurchaseOrderDao {
-	Connection connectionDB = DBConnection.getInstance().getDBCon();
+	private Connection connectionDB = DBConnection.getInstance().getDBCon();
 
-	private ArrayList<PurchaseOrder> buildObjects(ResultSet rs, boolean retrieveProvider, boolean retrieveLineItem) throws SQLException{
+	private ArrayList<PurchaseOrder> buildObjects(ResultSet rs, boolean retrieveProvider, boolean retrieveLineItem) throws SQLException, Exception{
 		ArrayList<PurchaseOrder> purchaseOrderList = new ArrayList<PurchaseOrder>();
 		while(rs.next()) {
 			PurchaseOrder retrievedPurchaseOrder = buildObject(rs);
@@ -30,7 +30,7 @@ public class PurchaseOrderDaoImplementation implements PurchaseOrderDao {
 			
 			if(retrieveLineItem) {
 				ArrayList<LineItem> lineItemOfTheOrder = retrievedPurchaseOrder.getLineItems();
-				for(LineItem lineItem : DaoFactory.getLineItemDao().findLineItemsByOrder(retrievedPurchaseOrder)) {
+				for(LineItem lineItem : DaoFactory.getLineItemDao().findLineItemsByOrder(retrievedPurchaseOrder, true)) {
 					lineItemOfTheOrder.add(lineItem);
 				}
 			}
@@ -50,7 +50,7 @@ public class PurchaseOrderDaoImplementation implements PurchaseOrderDao {
 	}
 
 	@Override
-	public PurchaseOrder findPurchaseOrderById(int id, boolean retrieveProvider, boolean retrieveLineItem)  throws SQLException{
+	public PurchaseOrder findPurchaseOrderById(int id, boolean retrieveProvider, boolean retrieveLineItem)  throws SQLException, Exception{
 		//Retrieving the PurchaseOrder from the database
 		String query = "SELECT * FROM PurchaseOrder INNER JOIN [Order] ON PurchaseOrder.PK_idPurchaseOrder = [Order].PK_idOrder WHERE PK_idPurchaseOrder = ? ";
 		PreparedStatement preparedSelectStatement = connectionDB.prepareStatement(query);
@@ -75,7 +75,7 @@ public class PurchaseOrderDaoImplementation implements PurchaseOrderDao {
 				ArrayList<LineItem> lineItemOfTheOrder = retrievedPurchaseOrder.getLineItems();
 				
 				//We get all the LineItmes from the LineItemDao and add each of them to the ArrayList we retrieve earlier
-				for(LineItem lineItem : DaoFactory.getLineItemDao().findLineItemsByOrder(retrievedPurchaseOrder)) {
+				for(LineItem lineItem : DaoFactory.getLineItemDao().findLineItemsByOrder(retrievedPurchaseOrder, true)) {
 					lineItemOfTheOrder.add(lineItem);
 				}
 			}
@@ -85,7 +85,7 @@ public class PurchaseOrderDaoImplementation implements PurchaseOrderDao {
 	}
 	
 	@Override
-	public List<PurchaseOrder> findAllPurchaseOrders(boolean retrieveProvider, boolean retrieveLineItem) throws SQLException {
+	public List<PurchaseOrder> findAllPurchaseOrders(boolean retrieveProvider, boolean retrieveLineItem) throws SQLException, Exception {
 		String query = "SELECT * FROM PurchaseOrder INNER JOIN [Order] ON PurchaseOrder.PK_idPurchaseOrder = [Order].PK_idOrder";
 		PreparedStatement preparedSelectStatement = connectionDB.prepareStatement(query);
 		
