@@ -1,5 +1,7 @@
 package model;
 
+import java.util.HashMap;
+
 public class Product {
     private int id;
     private String productName;
@@ -9,6 +11,7 @@ public class Product {
     private Unit unit;
     public enum WeightCategory{ONE, FIVE, TEN}
     private int weightCategory;
+    private HashMap<Integer, String> weightCategoryIntToEnum;
 
 
     public Product(String productName, double purchasingPrice, double sellingPrice, WeightCategory weightCategoryOption, Unit unit) {
@@ -20,6 +23,22 @@ public class Product {
             case ONE -> this.weightCategory = 1;
             case FIVE -> this.weightCategory = 5;
             case TEN -> this.weightCategory = 10;
+        }
+    }
+    
+    public Product(String productName, double purchasingPrice, double sellingPrice, int weightCategoryOption, Unit unit) {
+    	weightCategoryIntToEnum = new HashMap<Integer, String>();
+    	weightCategoryIntToEnum.put(1, "ONE");
+    	weightCategoryIntToEnum.put(1, "FIVE");
+    	weightCategoryIntToEnum.put(1, "TEN");
+        this.productName = productName;
+        this.purchasingPrice = purchasingPrice;
+        this.sellingPrice = sellingPrice;
+        this.unit = unit;
+        switch(WeightCategory.valueOf(weightCategoryIntToEnum.get(weightCategoryOption))) {
+        	case ONE -> this.weightCategory = 1;
+        	case FIVE -> this.weightCategory = 5;
+        	case TEN -> this.weightCategory = 10;
         }
     }
 
