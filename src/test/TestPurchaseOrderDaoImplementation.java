@@ -1,7 +1,5 @@
 package test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -43,7 +41,7 @@ public class TestPurchaseOrderDaoImplementation {
 	}
 	
 	@Test
-	public void TestFindAllPurchaseOrdersWithoutAssociations() throws SQLException {
+	public void testFindAllPurchaseOrdersWithoutAssociations() throws SQLException {
 		ArrayList<PurchaseOrder> retrievedPurchaseOrders = (ArrayList<PurchaseOrder>) DaoFactory.getPurchaseOrderDao().findAllPurchaseOrders(false, false);
 		assertTrue("Should return a list with more than 0 objects inside", retrievedPurchaseOrders.size()>0);
 		
@@ -53,7 +51,7 @@ public class TestPurchaseOrderDaoImplementation {
 	}
 	
 	@Test
-	public void TestFindAllPurchaseOrdersWithProviderAssociations() throws SQLException {
+	public void testFindAllPurchaseOrdersWithProviderAssociations() throws SQLException {
 		ArrayList<PurchaseOrder> retrievedPurchaseOrders = (ArrayList<PurchaseOrder>) DaoFactory.getPurchaseOrderDao().findAllPurchaseOrders(true, false);
 		assertTrue("Should return a list with more than 0 objects inside", retrievedPurchaseOrders.size()>0);
 		
@@ -64,7 +62,7 @@ public class TestPurchaseOrderDaoImplementation {
 	}
 	
 	@Test
-	public void TestFindAllPurchaseOrdersWithLineItemAssociations() throws SQLException {
+	public void testFindAllPurchaseOrdersWithLineItemAssociations() throws SQLException {
 		ArrayList<PurchaseOrder> retrievedPurchaseOrders = (ArrayList<PurchaseOrder>) DaoFactory.getPurchaseOrderDao().findAllPurchaseOrders(false, true);
 		assertTrue("Should return a list with more than 0 objects inside", retrievedPurchaseOrders.size()>0);
 		
@@ -78,7 +76,7 @@ public class TestPurchaseOrderDaoImplementation {
 	}
 	
 	@Test
-	public void TestFindAllPurchaseOrdersWithAllAssociations() throws SQLException {
+	public void testFindAllPurchaseOrdersWithAllAssociations() throws SQLException {
 		ArrayList<PurchaseOrder> retrievedPurchaseOrders = (ArrayList<PurchaseOrder>) DaoFactory.getPurchaseOrderDao().findAllPurchaseOrders(true, true);
 		assertTrue("Should return a list with more than 0 objects inside", retrievedPurchaseOrders.size()>0);
 		
@@ -96,20 +94,20 @@ public class TestPurchaseOrderDaoImplementation {
 	}
 	
 	@Test
-	public void TestFindPurchaseOrderByIdWithoutAssociations() throws SQLException {
+	public void testFindPurchaseOrderByIdWithoutAssociations() throws SQLException {
 		PurchaseOrder retrievedPurchaseOrder = DaoFactory.getPurchaseOrderDao().findPurchaseOrderById(purchaseOrderToUpdate.getId(), false, false);
 		assertNotNull("Should return an object", retrievedPurchaseOrder);
 	}
 	
 	@Test
-	public void TestFindPurchaseOrderByIdWithProviderAssociations() throws SQLException {
+	public void testFindPurchaseOrderByIdWithProviderAssociations() throws SQLException {
 		PurchaseOrder retrievedPurchaseOrder = DaoFactory.getPurchaseOrderDao().findPurchaseOrderById(purchaseOrderToUpdate.getId(), true, false);
 		assertNotNull("Should return an object", retrievedPurchaseOrder);
 		assertNotNull("Should have a provider set", retrievedPurchaseOrder.getProvider());
 	}
 	
 	@Test
-	public void TestFindPurchaseOrderByIdWithLineItemAssociations() throws SQLException {
+	public void testFindPurchaseOrderByIdWithLineItemAssociations() throws SQLException {
 		PurchaseOrder retrievedPurchaseOrder = DaoFactory.getPurchaseOrderDao().findPurchaseOrderById(purchaseOrderToUpdate.getId(), false, true);
 		assertNotNull("Should return an object", retrievedPurchaseOrder);
 		for(LineItem lineItem : retrievedPurchaseOrder.getLineItems() ) {
@@ -118,7 +116,7 @@ public class TestPurchaseOrderDaoImplementation {
 	}
 	
 	@Test
-	public void TestFindPurchaseOrderByIdWithAllAssociations() throws SQLException {
+	public void testFindPurchaseOrderByIdWithAllAssociations() throws SQLException {
 		PurchaseOrder retrievedPurchaseOrder = DaoFactory.getPurchaseOrderDao().findPurchaseOrderById(purchaseOrderToUpdate.getId(), true, true);
 		assertNotNull("Should return an object", retrievedPurchaseOrder);
 		assertNotNull("Should have a provider set", retrievedPurchaseOrder.getProvider());
@@ -128,7 +126,7 @@ public class TestPurchaseOrderDaoImplementation {
 	}
 	
 	@Test
-	public void TestCreatePurchaseOrder() throws SQLException {
+	public void testCreatePurchaseOrder() throws SQLException {
 		generatedPurchaseOrderId = DaoFactory.getOrderDao().createEmptyOrder();
 		
 		Provider testProvider = DaoFactory.getProviderDao().findAllProviders().get(0);
@@ -141,7 +139,7 @@ public class TestPurchaseOrderDaoImplementation {
 	}
 
 	@Test
-	public void TestUpdateOrder() throws SQLException {
+	public void testUpdateOrder() throws SQLException {
 		purchaseOrderToUpdate.setOrderPrice(200);
 		DaoFactory.getPurchaseOrderDao().updatePurchaseOrder(purchaseOrderToUpdate);
 		DaoFactory.getOrderDao().updateOrder(purchaseOrderToUpdate);
@@ -151,7 +149,7 @@ public class TestPurchaseOrderDaoImplementation {
 	}
 	
 	@Test
-	public void TestDeleteOrder() throws SQLException {
+	public void testDeleteOrder() throws SQLException {
 		
 		purchaseOrderDao.deletePurchaseOrder(purchaseOrderToDelete);
 		DaoFactory.getOrderDao().deleteOrder(purchaseOrderToDelete);
