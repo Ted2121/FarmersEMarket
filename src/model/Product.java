@@ -25,22 +25,26 @@ public class Product {
             case TEN -> this.weightCategory = 10;
         }
     }
+
+    // sorry if i commented this and u were using it, i wasn't sure
     
-    public Product(String productName, double purchasingPrice, double sellingPrice, int weightCategoryOption, Unit unit) {
-    	weightCategoryIntToEnum = new HashMap<Integer, String>();
-    	weightCategoryIntToEnum.put(1, "ONE");
-    	weightCategoryIntToEnum.put(1, "FIVE");
-    	weightCategoryIntToEnum.put(1, "TEN");
-        this.productName = productName;
-        this.purchasingPrice = purchasingPrice;
-        this.sellingPrice = sellingPrice;
-        this.unit = unit;
-        switch(WeightCategory.valueOf(weightCategoryIntToEnum.get(weightCategoryOption))) {
-        	case ONE -> this.weightCategory = 1;
-        	case FIVE -> this.weightCategory = 5;
-        	case TEN -> this.weightCategory = 10;
-        }
-    }
+//    public Product(String productName, double purchasingPrice, double sellingPrice, int weightCategoryOption, Unit unit) {
+//    	weightCategoryIntToEnum = new HashMap<Integer, String>();
+//    	weightCategoryIntToEnum.put(1, "ONE");
+//    	weightCategoryIntToEnum.put(5, "FIVE");
+//    	weightCategoryIntToEnum.put(10, "TEN");
+//        this.productName = productName;
+//        this.purchasingPrice = purchasingPrice;
+//        this.sellingPrice = sellingPrice;
+//        this.unit = unit;
+//        switch(WeightCategory.valueOf(weightCategoryIntToEnum.get(weightCategoryOption))) {
+//        	case ONE -> this.weightCategory = 1;
+//        	case FIVE -> this.weightCategory = 5;
+//        	case TEN -> this.weightCategory = 10;
+//        }
+//    }
+
+
 
     public Product(int id, String productName, double purchasingPrice, double sellingPrice, WeightCategory weightCategoryOption, Unit unit) {
         this.id = id;

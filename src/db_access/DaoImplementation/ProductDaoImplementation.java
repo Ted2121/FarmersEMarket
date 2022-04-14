@@ -35,6 +35,8 @@ public class ProductDaoImplementation implements ProductDao {
 		}
 		int row = statement.executeUpdate();
 	}
+	
+
 
 	@Override
 	public void updateProduct(Product objectToUpdate) throws SQLException {
