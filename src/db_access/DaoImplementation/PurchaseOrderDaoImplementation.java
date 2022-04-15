@@ -29,9 +29,9 @@ public class PurchaseOrderDaoImplementation implements PurchaseOrderDao {
 			}
 			
 			if(retrieveLineItem) {
-				ArrayList<LineItem> lineItemOfTheOrder = retrievedPurchaseOrder.getLineItems();
+				retrievedPurchaseOrder.setLineItems(new ArrayList<LineItem>());
 				for(LineItem lineItem : DaoFactory.getLineItemDao().findLineItemsByOrder(retrievedPurchaseOrder, true)) {
-					lineItemOfTheOrder.add(lineItem);
+					retrievedPurchaseOrder.getLineItems().add(lineItem);
 				}
 			}
 			
@@ -72,6 +72,7 @@ public class PurchaseOrderDaoImplementation implements PurchaseOrderDao {
 			//If we want to set the LineItems, we just specify we want to retrieve the LineItem as a parameter of this method
 			if(retrieveLineItem) {
 				//If we want to retrieve the LineItems, we get the ArrayList of the retrieved PurchaseOrder
+				retrievedPurchaseOrder.setLineItems(new ArrayList<LineItem>());
 				ArrayList<LineItem> lineItemOfTheOrder = retrievedPurchaseOrder.getLineItems();
 				
 				//We get all the LineItmes from the LineItemDao and add each of them to the ArrayList we retrieve earlier
