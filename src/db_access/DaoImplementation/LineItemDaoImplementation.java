@@ -96,7 +96,7 @@ public class LineItemDaoImplementation implements LineItemDao {
 		preparedSelectStatement.setInt(1, order.getId());
 		ResultSet rs = preparedSelectStatement.executeQuery();
 		ArrayList<LineItem> retrievedLineItem = null;
-		retrievedLineItem = buildObjects(rs, false, retrieveProduct);
+		retrievedLineItem = buildObjects(rs, retrieveProduct, false);
 		
 		return retrievedLineItem;
 	}
@@ -108,7 +108,7 @@ public class LineItemDaoImplementation implements LineItemDao {
 		preparedSelectStatement.setInt(1, product.getId());
 		ResultSet rs = preparedSelectStatement.executeQuery();
 		ArrayList<LineItem> retrievedLineItem = null;
-		retrievedLineItem = buildObjects(rs, retrieveOrder, false);
+		retrievedLineItem = buildObjects(rs, false, retrieveOrder);
 		
 		return retrievedLineItem;
 	}
@@ -119,7 +119,7 @@ public class LineItemDaoImplementation implements LineItemDao {
 		PreparedStatement preparedSelectStatement = connectionDB.prepareStatement(query);
 		ResultSet rs = preparedSelectStatement.executeQuery();
 		ArrayList<LineItem> retrievedLineItem = null;
-		retrievedLineItem = buildObjects(rs, false, false);
+		retrievedLineItem = buildObjects(rs, retrieveProduct, retrieveOrder);
 		
 		return retrievedLineItem;
 	}
@@ -139,7 +139,7 @@ public class LineItemDaoImplementation implements LineItemDao {
 	@Override
 	public void updateLineItem(LineItem objectToUpdate) throws SQLException {
 		String sqlUpdateLineItemStatement = "UPDATE LineItem SET quantity = ?"
-				+ " WHERE PK_FK_Product = ? AND PK_FK_SaleOrder = ?";
+				+ " WHERE PK_FK_ProductId = ? AND PK_FK_OrderId = ?";
 		PreparedStatement preparedUpdateLineItemStatement = connectionDB.prepareStatement(sqlUpdateLineItemStatement);
 		preparedUpdateLineItemStatement.setInt(1, objectToUpdate.getQuantity());
 		preparedUpdateLineItemStatement.setInt(2, objectToUpdate.getProduct().getId());
