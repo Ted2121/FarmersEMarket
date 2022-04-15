@@ -24,13 +24,14 @@ import model.Product.WeightCategory;
 import test.testingClass.TestingSaleOrder;
 
 public class TestLineItemDaoImplementation {
-	static LineItemDao lineItemDao = DaoFactory.getLineItemDao();
+	static LineItemDao lineItemDao;
 	static LineItem generatedLineItem;
 	static LineItem objectToDelete;
 	static LineItem objectToUpdate;
 	
 	@BeforeClass
 	public static void creatingTheTupleToDelete () throws Exception {
+		lineItemDao = DaoFactory.getLineItemDao();
 		objectToDelete = ModelFactory.getLineItemModel(10);
 		objectToUpdate = ModelFactory.getLineItemModel(5);
 //		lineItemDao.createLineItem(objectToDelete);

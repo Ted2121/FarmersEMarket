@@ -20,7 +20,7 @@ import model.PurchaseOrder;
 
 public class TestPurchaseOrderDaoImplementation {
 
-	static PurchaseOrderDao purchaseOrderDao = DaoFactory.getPurchaseOrderDao();
+	static PurchaseOrderDao purchaseOrderDao;
 	static int generatedPurchaseOrderId;
 	static int id = 0;
 	static PurchaseOrder purchaseOrderToUpdate;
@@ -28,6 +28,7 @@ public class TestPurchaseOrderDaoImplementation {
 	
 	@BeforeClass
 	public static void setUp() throws SQLException {
+		purchaseOrderDao = DaoFactory.getPurchaseOrderDao();
 		Provider testProvider = DaoFactory.getProviderDao().findAllProviders().get(0);
 		
 		id = DaoFactory.getOrderDao().createEmptyOrder();
