@@ -35,13 +35,13 @@ public class TestCustomerDaoImplementation {
 	}
 	
 	@Test
-	public void testFindCustomerById() throws SQLException {
-		Customer result = customerDao.findCustomerById(1);
+	public void testFindCustomerById() throws Exception {
+		Customer result = customerDao.findCustomerById(1, false);
 		assertNotNull("The retrieved object shouldn't be null", result);
 	}
 	
 	@Test
-	public void testFindAllCustomers() throws SQLException {
+	public void testFindAllCustomers() throws Exception {
 		List<Customer> result = customerDao.findAllCustomers(false);
 		assertFalse("The retrievedArrayList shouldn't be empty", result.isEmpty());
 	}
@@ -52,30 +52,30 @@ public class TestCustomerDaoImplementation {
 	}
 	
 	@Test
-	public void testCreateCustomer() throws SQLException {
+	public void testCreateCustomer() throws Exception {
 
 		generatedIdCreateTest = customerDao.createCustomer(testCustomer);
-		assertNotNull("The retrieved object shouldn't be null", customerDao.findCustomerById(generatedIdCreateTest));
+		assertNotNull("The retrieved object shouldn't be null", customerDao.findCustomerById(generatedIdCreateTest, false));
 	}
 	
 	@Test
-	public void testDeleteCustomer() throws SQLException {
+	public void testDeleteCustomer() throws Exception {
 		customerDao.deleteCustomer(objectToDelete);
-		assertNull("Should have deleted the object", customerDao.findCustomerById(objectToDelete.getId()));
+		assertNull("Should have deleted the object", customerDao.findCustomerById(objectToDelete.getId(), false));
 	}
 	
 	@Test
-	public void testUpdateCustomer() throws SQLException {
+	public void testUpdateCustomer() throws Exception {
 		objectToUpdate.setFirstName("updatedFirstName");
 
 		customerDao.updateCustomer(objectToUpdate);
 		
-		assertEquals("Should display updatedFirstName", "updatedFirstName", customerDao.findCustomerById(objectToUpdate.getId()).getFirstName());
+		assertEquals("Should display updatedFirstName", "updatedFirstName", customerDao.findCustomerById(objectToUpdate.getId(), false).getFirstName());
 	}
 	
 	@AfterClass
-	public static void cleanUp() throws SQLException {
-		Customer objectToBeCleanedUp = customerDao.findCustomerById(generatedIdCreateTest);
+	public static void cleanUp() throws Exception {
+		Customer objectToBeCleanedUp = customerDao.findCustomerById(generatedIdCreateTest, false);
 		customerDao.deleteCustomer(objectToBeCleanedUp);
 		customerDao.deleteCustomer(objectToUpdate);
 		customerDao.deleteCustomer(testCustomer);
