@@ -15,9 +15,21 @@ import java.util.List;
 
 public class TestProviderDaoImplementation {
 	//TODO this class needs to be checked
-	Connection dbCon = DBConnection.getInstance().getDBCon();
-	static ProviderDao providerDao = DaoFactory.getProviderDao();
+	static ProviderDao providerDao;
 	static int generatedId;
+	static Provider providerToUpdate;
+	static Provider providerToDelete;
+	
+	@BeforeClass
+	public static void setUp() throws SQLException {
+		providerDao = DaoFactory.getProviderDao();
+		providerToUpdate = ModelFactory.getProviderModel("Michel", "Michel", "Michel", "Michel");
+		providerDao.createProvider(providerToUpdate);
+		
+		providerToDelete = ModelFactory.getProviderModel("Michel", "Michel", "Michel", "Michel");
+		providerDao.createProvider(providerToDelete);
+		
+	}
 	
 	@Test
 	public void testFindPersonById() throws SQLException{
@@ -40,16 +52,24 @@ public class TestProviderDaoImplementation {
 	
 	@Test
 	public void testUpdatePerson() throws SQLException {
-		Provider testProvider = providerDao.findProviderById(generatedId);
-		testProvider.setFirstName("UpdatedFirstName");
-		providerDao.updateProvider(testProvider);
-		assertEquals("Should equal \"UpdatedFirstName\".", providerDao.findProviderById(generatedId).getFirstName());
+		providerToUpdate.setFirstName("UpdatedFirstName");
+		providerDao.updateProvider(providerToUpdate);
+		assertEquals("Should equal \"UpdatedFirstName\".", "UpdatedFirstName",providerDao.findProviderById(providerToUpdate.getId()).getFirstName() );
 	}
 
 	@Test
 	public void testDeleteProvider() throws SQLException {
-		Provider testProvider = providerDao.findProviderById(generatedId);
-		providerDao.deleteProvider(testProvider);
-		assertNull("Should return null.", providerDao.findProviderById(generatedId));
+		providerDao.deleteProvider(providerToDelete);
+		assertNull("Should return null.", providerDao.findProviderById(providerToDelete.getId()));
+	}
+	
+	@AfterClass
+	public static void cleanUp() throws SQLException {
+		
+		Provider createdProvider = ModelFactory.getProviderModel(generatedId, null, null, null, null);
+		
+		providerDao.deleteProvider(createdProvider);
+		providerDao.deleteProvider(providerToUpdate);
+		
 	}
 }

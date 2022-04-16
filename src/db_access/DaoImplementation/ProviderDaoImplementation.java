@@ -73,28 +73,31 @@ public class ProviderDaoImplementation implements ProviderDao {
 		}
 		objectToInsert.setId(generatedId);
 		
+		System.out.println(">> Provider added to the Database");
 		return generatedId;
 	}
 
 	@Override
 	public void updateProvider(Provider objectToUpdate) throws SQLException {
-		String sqlUpdatePersonStatement = "UPDATE Provider SET FirstName = ?, LastName = ?, Country = ?, City = ?";
+		String sqlUpdatePersonStatement = "UPDATE Provider SET FirstName = ?, LastName = ?, Country = ?, City = ? WHERE PK_idProvider = ?";
 		PreparedStatement preparedUpdateProviderStatement = connectionDB.prepareStatement(sqlUpdatePersonStatement);
 		preparedUpdateProviderStatement.setString(1, objectToUpdate.getFirstName());
 		preparedUpdateProviderStatement.setString(2, objectToUpdate.getLastName());
 		preparedUpdateProviderStatement.setString(3, objectToUpdate.getCountry());
 		preparedUpdateProviderStatement.setString(4, objectToUpdate.getCity());
+		preparedUpdateProviderStatement.setInt(5, objectToUpdate.getId());
 		
 		preparedUpdateProviderStatement.execute();
+		System.out.println(">> Provider updated in the Database");
 	}
 
 	@Override
 	public void deleteProvider(Provider objectToDelete) throws SQLException {
-		String sqlDeleteProviderStatement = "DELETE FROM Provider WHERE id = ?";
+		String sqlDeleteProviderStatement = "DELETE FROM Provider WHERE PK_idProvider = ?";
 		PreparedStatement preparedDeleteProviderStatement = connectionDB.prepareStatement(sqlDeleteProviderStatement);
 		preparedDeleteProviderStatement.setInt(1, objectToDelete.getId());
 		preparedDeleteProviderStatement.execute();
-		
+		System.out.println(">> Provider deleted in the Database");
 	}
 
 	@Override
