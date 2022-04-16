@@ -24,7 +24,7 @@ public class PurchaseOrderDaoImplementation implements PurchaseOrderDao {
 		while(rs.next()) {
 			PurchaseOrder retrievedPurchaseOrder = buildObject(rs);
 			if(retrieveProvider) {
-				Provider retrievedProviderLinkedToThisPurchaseOrder = DaoFactory.getProviderDao().findProviderById(rs.getInt("FK_Provider"));
+				Provider retrievedProviderLinkedToThisPurchaseOrder = DaoFactory.getProviderDao().findProviderById(rs.getInt("FK_Provider"), false);
 				retrievedPurchaseOrder.setProvider(retrievedProviderLinkedToThisPurchaseOrder);
 			}
 			
@@ -64,7 +64,7 @@ public class PurchaseOrderDaoImplementation implements PurchaseOrderDao {
 			//If we want to set the Provider, we just specify we want to retrieve the Provider as a parameter of this method
 			if(retrieveProvider) {
 				//If we want to retrieve the provider, we get it from the Provider Dao
-				Provider retrievedProviderLinkedToThisPurchaseOrder = DaoFactory.getProviderDao().findProviderById(rs.getInt("FK_Provider"));
+				Provider retrievedProviderLinkedToThisPurchaseOrder = DaoFactory.getProviderDao().findProviderById(rs.getInt("FK_Provider"), false);
 				//And we set it as the provider of its object
 				retrievedPurchaseOrder.setProvider(retrievedProviderLinkedToThisPurchaseOrder);
 			}
@@ -84,6 +84,20 @@ public class PurchaseOrderDaoImplementation implements PurchaseOrderDao {
 		
 		return retrievedPurchaseOrder;
 	}
+	
+	@Override
+	public ArrayList<PurchaseOrder> findPurchaseOrderByProviderId(int idProvider, boolean retrieveProvider, boolean retrieveLineItem)  throws SQLException, Exception{
+		//Retrieving the PurchaseOrder from the database
+		String query = "SELECT * FROM PurchaseOrder INNER JOIN [Order] ON PurchaseOrder.PK_idPurchaseOrder = [Order].PK_idOrder WHERE FK_Provider = ? ";
+		PreparedStatement preparedSelectStatement = connectionDB.prepareStatement(query);
+		preparedSelectStatement.setInt(1, idProvider);
+		ResultSet rs = preparedSelectStatement.executeQuery();
+		PurchaseOrder retrievedPurchaseOrder = null;
+		ArrayList<PurchaseOrder> retrievedPurchaseOrders = buildObjects(rs, retrieveProvider, retrieveLineItem);
+		
+		return retrievedPurchaseOrders;
+	}
+	
 	
 	@Override
 	public List<PurchaseOrder> findAllPurchaseOrders(boolean retrieveProvider, boolean retrieveLineItem) throws SQLException, Exception {

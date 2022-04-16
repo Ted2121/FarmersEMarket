@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -27,9 +28,9 @@ public class TestPurchaseOrderDaoImplementation {
 	static PurchaseOrder purchaseOrderToDelete;
 	
 	@BeforeClass
-	public static void setUp() throws SQLException {
+	public static void setUp() throws SQLException, Exception {
 		purchaseOrderDao = DaoFactory.getPurchaseOrderDao();
-		Provider testProvider = DaoFactory.getProviderDao().findAllProviders().get(0);
+		Provider testProvider = DaoFactory.getProviderDao().findAllProviders(false).get(0);
 		
 		id = DaoFactory.getOrderDao().createEmptyOrder();
 		
@@ -127,10 +128,50 @@ public class TestPurchaseOrderDaoImplementation {
 	}
 	
 	@Test
+	public void testFindPurchaseOrderByProviderWithoutAssociations() throws Exception {
+		List<PurchaseOrder> retrievedPurchaseOrders = DaoFactory.getPurchaseOrderDao().findPurchaseOrderByProviderId(1, false, false);
+		
+		for(PurchaseOrder purchaseOrder : retrievedPurchaseOrders ) {
+			assertNull("Shouldn't have a provider set", purchaseOrder.getProvider());
+			assertNull("Shouldn't have lineItems set", purchaseOrder.getLineItems());
+		}
+	}
+	
+	@Test
+	public void testFindPurchaseOrderByProviderWithProviderAssociations() throws Exception {
+		List<PurchaseOrder> retrievedPurchaseOrders = DaoFactory.getPurchaseOrderDao().findPurchaseOrderByProviderId(1, true, false);
+		
+		for(PurchaseOrder purchaseOrder : retrievedPurchaseOrders ) {
+			assertNotNull("Should have a provider set", purchaseOrder.getProvider());
+			assertNull("Shouldn't have lineItems set", purchaseOrder.getLineItems());
+		}
+	}
+	
+	@Test
+	public void testFindPurchaseOrderByProviderWithLineItemAssociations() throws Exception {
+		List<PurchaseOrder> retrievedPurchaseOrders = DaoFactory.getPurchaseOrderDao().findPurchaseOrderByProviderId(1, false, true);
+		
+		for(PurchaseOrder purchaseOrder : retrievedPurchaseOrders ) {
+			assertNull("Shouldn't have a provider set", purchaseOrder.getProvider());
+			assertNotNull("Should have lineItems set", purchaseOrder.getLineItems());
+		}
+	}
+	
+	@Test
+	public void testFindPurchaseOrderByProviderWithAllAssociations() throws Exception {
+		List<PurchaseOrder> retrievedPurchaseOrders = DaoFactory.getPurchaseOrderDao().findPurchaseOrderByProviderId(1, true, true);
+		
+		for(PurchaseOrder purchaseOrder : retrievedPurchaseOrders ) {
+			assertNotNull("Should have a provider set", purchaseOrder.getProvider());
+			assertNotNull("Should have lineItems set", purchaseOrder.getLineItems());
+		}
+	}
+	
+	@Test
 	public void testCreatePurchaseOrder() throws Exception {
 		generatedPurchaseOrderId = DaoFactory.getOrderDao().createEmptyOrder();
 		
-		Provider testProvider = DaoFactory.getProviderDao().findAllProviders().get(0);
+		Provider testProvider = DaoFactory.getProviderDao().findAllProviders(false).get(0);
 		PurchaseOrder testSaleOrder = ModelFactory.getPurchaseOrderModel(generatedPurchaseOrderId, testProvider);
 		
 		DaoFactory.getPurchaseOrderDao().createPurchaseOrder(testSaleOrder);
