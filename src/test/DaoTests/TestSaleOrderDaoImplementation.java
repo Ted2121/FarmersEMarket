@@ -1,4 +1,4 @@
-package test;
+package test.DaoTests;
 
 import db_access.DaoFactory;
 import db_access.DaoInterfaces.SaleOrderDao;

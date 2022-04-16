@@ -1,4 +1,4 @@
-package test;
+package test.DaoTests;
 
 import db_access.DBConnection;
 import db_access.DaoFactory;
