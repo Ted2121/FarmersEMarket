@@ -8,8 +8,10 @@ import java.sql.Statement;
 
 
 import db_access.DBConnection;
+import db_access.DaoFactory;
 import db_access.DaoInterfaces.OrderDao;
 import model.Order;
+import model.PurchaseOrder;
 import model.SaleOrder;
 
 public class OrderDaoImplementation implements OrderDao{
@@ -62,7 +64,12 @@ public class OrderDaoImplementation implements OrderDao{
 	}
 
 	@Override
-	public void deleteOrder(Order objectToDelete) throws SQLException {
+	public void deleteOrder(Order objectToDelete) throws Exception {
+		if(objectToDelete.getClass().equals(PurchaseOrder.class)) {
+			DaoFactory.getPurchaseOrderDao().deletePurchaseOrder((PurchaseOrder) objectToDelete);
+		}else if(objectToDelete.getClass().equals(SaleOrder.class)) {
+			DaoFactory.getSaleOrderDao().deleteSaleOrder((SaleOrder) objectToDelete);
+		}
 		String sqlDeleteOrderStatement = "DELETE FROM [Order] WHERE PK_idOrder = ?";
 		PreparedStatement preparedDeleteOrderStatement = connectionDB.prepareStatement(sqlDeleteOrderStatement);
 		preparedDeleteOrderStatement.setInt(1, objectToDelete.getId());
