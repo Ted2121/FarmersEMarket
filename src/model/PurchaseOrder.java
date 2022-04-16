@@ -12,6 +12,10 @@ public class PurchaseOrder extends Order{
         super(id);
         this.provider = provider;
     }
+    
+    public PurchaseOrder(Provider provider) {
+        this.provider = provider;
+    }
 
     public PurchaseOrder(int id) {
         super(id);
