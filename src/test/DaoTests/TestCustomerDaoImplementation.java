@@ -5,7 +5,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -13,7 +12,6 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import db_access.DBConnection;
 import db_access.DaoFactory;
 import db_access.DaoInterfaces.CustomerDao;
 import model.Customer;
@@ -44,7 +42,7 @@ public class TestCustomerDaoImplementation {
 	
 	@Test
 	public void testFindAllCustomers() throws SQLException {
-		List<Customer> result = customerDao.findAllCustomers();
+		List<Customer> result = customerDao.findAllCustomers(false);
 		assertFalse("The retrievedArrayList shouldn't be empty", result.isEmpty());
 	}
 	

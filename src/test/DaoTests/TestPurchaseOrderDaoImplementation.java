@@ -28,7 +28,7 @@ public class TestPurchaseOrderDaoImplementation {
 	static PurchaseOrder purchaseOrderToDelete;
 	
 	@BeforeClass
-	public static void setUp() throws SQLException, Exception {
+	public static void setUp() throws Exception {
 		purchaseOrderDao = DaoFactory.getPurchaseOrderDao();
 		Provider testProvider = DaoFactory.getProviderDao().findAllProviders(false).get(0);
 		

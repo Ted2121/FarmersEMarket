@@ -1,9 +1,9 @@
 package db_access.DaoImplementation;
 
 import db_access.DBConnection;
+import db_access.DaoFactory;
 import db_access.DaoInterfaces.CustomerDao;
-import model.Customer;
-import model.ModelFactory;
+import model.*;
 
 
 import java.sql.*;
@@ -14,12 +14,20 @@ public class CustomerDaoImplementation implements CustomerDao {
 
     Connection dbCon = DBConnection.getInstance().getDBCon();
 
-    private List<Customer> buildObjects(ResultSet rs) throws SQLException {
-        List<Customer> customerList = new ArrayList<Customer>();
-        while (rs.next()) {
-            customerList.add(buildObject(rs));
+    private List<Customer> buildObjects(ResultSet rs, boolean retrieveSaleOrder) throws Exception {
+
+        List<Customer> customerList = new ArrayList<>();
+		while(rs.next()) {
+        Customer retrievedCustomer = buildObject(rs);
+        if(retrieveSaleOrder) {
+            ArrayList<SaleOrder> linkedSaleOrder = DaoFactory.getSaleOrderDao().findSaleOrderByCustomerId(rs.getInt("PK_IdCustomer"), false, false);
+            retrievedCustomer.setSaleOrders(linkedSaleOrder);
         }
-        return customerList;
+
+            customerList.add(retrievedCustomer);
+    }
+
+		return customerList;
     }
 
     private Customer buildObject(ResultSet rs) throws SQLException {
@@ -36,25 +44,30 @@ public class CustomerDaoImplementation implements CustomerDao {
     }
 
     @Override
-    public Customer findCustomerById(int customerId) throws SQLException {
+    public Customer findCustomerById(int customerId, boolean retrieveSaleOrder) throws Exception {
         String query = "SELECT * FROM Customer WHERE PK_idCustomer = ?";
         PreparedStatement preparedSelectStatement = dbCon.prepareStatement(query);
-        preparedSelectStatement.setLong(1, customerId);
+        preparedSelectStatement.setInt(1, customerId);
         ResultSet rs = preparedSelectStatement.executeQuery();
         Customer retrievedCustomer = null;
         while (rs.next()) {
             retrievedCustomer = buildObject(rs);
+
+            if(retrieveSaleOrder) {
+                ArrayList<SaleOrder> linkedSaleOrder = DaoFactory.getSaleOrderDao().findSaleOrderByCustomerId(rs.getInt("PK_IdCustomer"), false, false);
+                retrievedCustomer.setSaleOrders(linkedSaleOrder);
+            }
         }
 
         return retrievedCustomer;
     }
 
     @Override
-    public List<Customer> findAllCustomers() throws SQLException {
+    public List<Customer> findAllCustomers(boolean retrieveSaleOrder) throws Exception {
         String query = "SELECT * FROM Customer";
         PreparedStatement preparedSelectStatement = dbCon.prepareStatement(query);
         ResultSet rs = preparedSelectStatement.executeQuery();
-        List<Customer> retrievedCustomerList = buildObjects(rs);
+        List<Customer> retrievedCustomerList = buildObjects(rs, retrieveSaleOrder);
 
         return retrievedCustomerList;
     }

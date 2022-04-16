@@ -43,14 +43,14 @@ public class PurchaseOrderDaoImplementation implements PurchaseOrderDao {
 	}
 	
 	private PurchaseOrder buildObject(ResultSet rs) throws SQLException{
-		PurchaseOrder builtObject = (PurchaseOrder) ModelFactory.getPurchaseOrderModel(rs.getInt("PK_idPurchaseOrder"));
+		PurchaseOrder builtObject = ModelFactory.getPurchaseOrderModel(rs.getInt("PK_idPurchaseOrder"));
 		builtObject.setOrderPrice(rs.getInt("Price"));
 		builtObject.setOrderDateTime(rs.getString("DateTime"));
 		return builtObject;
 	}
 
 	@Override
-	public PurchaseOrder findPurchaseOrderById(int id, boolean retrieveProvider, boolean retrieveLineItem)  throws SQLException, Exception{
+	public PurchaseOrder findPurchaseOrderById(int id, boolean retrieveProvider, boolean retrieveLineItem)  throws Exception{
 		//Retrieving the PurchaseOrder from the database
 		String query = "SELECT * FROM PurchaseOrder INNER JOIN [Order] ON PurchaseOrder.PK_idPurchaseOrder = [Order].PK_idOrder WHERE PK_idPurchaseOrder = ? ";
 		PreparedStatement preparedSelectStatement = connectionDB.prepareStatement(query);
@@ -100,7 +100,7 @@ public class PurchaseOrderDaoImplementation implements PurchaseOrderDao {
 	
 	
 	@Override
-	public List<PurchaseOrder> findAllPurchaseOrders(boolean retrieveProvider, boolean retrieveLineItem) throws SQLException, Exception {
+	public List<PurchaseOrder> findAllPurchaseOrders(boolean retrieveProvider, boolean retrieveLineItem) throws Exception {
 		String query = "SELECT * FROM PurchaseOrder INNER JOIN [Order] ON PurchaseOrder.PK_idPurchaseOrder = [Order].PK_idOrder";
 		PreparedStatement preparedSelectStatement = connectionDB.prepareStatement(query);
 		

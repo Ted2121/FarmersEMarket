@@ -25,7 +25,7 @@ public class ProviderDaoImplementation implements ProviderDao {
 		return builtObject;
 	}
 	
-	private List<Provider> buildObjects(ResultSet rs, boolean retrievePurchaseOrder) throws SQLException, Exception{
+	private List<Provider> buildObjects(ResultSet rs, boolean retrievePurchaseOrder) throws Exception{
 		List<Provider> providerList = new ArrayList<>();
 		while(rs.next()) {
 			Provider retrievedProvider = buildObject(rs);
