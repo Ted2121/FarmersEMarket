@@ -1,5 +1,6 @@
 package test.DaoTests;
 
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.sql.SQLException;
@@ -11,6 +12,9 @@ import org.junit.Test;
 import db_access.DaoFactory;
 import db_access.DaoInterfaces.OrderDao;
 import model.Customer;
+import model.ModelFactory;
+import model.Provider;
+import model.PurchaseOrder;
 import model.SaleOrder;
 import test.testingClass.TestingSaleOrder;
 
@@ -19,18 +23,20 @@ public class TestOrderDao {
 	static OrderDao orderDao = DaoFactory.getOrderDao();
 	static int generatedOrderId;
 	static int emptyOrderGeneratedId;
-	static SaleOrder orderToUpdate;
-	static SaleOrder orderToDelete;
+	static PurchaseOrder orderToUpdate;
+	static PurchaseOrder orderToDelete;
 	
 	@BeforeClass
-	public static void setUp() throws SQLException {
-		Customer testCustomer = new Customer("test", "test", "Aalborg","Denmark", "new adress", 5000);
-		orderToUpdate = new SaleOrder(0, testCustomer);
+	public static void setUp() throws Exception {
+		Provider testProvider = DaoFactory.getProviderDao().findAllProviders(false).get(0);
+		orderToUpdate = new PurchaseOrder(testProvider);
 		orderToUpdate.setOrderPrice(10);
 		orderDao.createOrder(orderToUpdate);
+		DaoFactory.getPurchaseOrderDao().createPurchaseOrder(orderToUpdate);
 		
-		orderToDelete = new SaleOrder(testCustomer);
+		orderToDelete = new PurchaseOrder(testProvider);
 		orderDao.createOrder(orderToDelete);
+		DaoFactory.getPurchaseOrderDao().createPurchaseOrder(orderToDelete);
 	}
 	
 	@Test
@@ -50,29 +56,28 @@ public class TestOrderDao {
 	}
 	
 	@Test
-	public void testUpdateOrder() throws SQLException {
+	public void testUpdateOrder() throws Exception {
 		
 		double lastPrice = orderToUpdate.getOrderPrice();
 		orderToUpdate.setOrderPrice(28);
 		
 		orderDao.updateOrder(orderToUpdate);
-		//TODO Test the updateOrder methods once SaleOrder or PurchaseOrder is done
-		//Hard verified using MSSQL
+		PurchaseOrder retrievedOrder = DaoFactory.getPurchaseOrderDao().findPurchaseOrderById(orderToUpdate.getId(), false, false);
 		
-//		assertTrue("Should return a generated id > 0", generatedId>0);
+		assertTrue("Should return a generated id > 0", retrievedOrder.getOrderPrice() != lastPrice);
 	}
 	
 	@Test
-	public void testDeleteOrder() throws SQLException {
+	public void testDeleteOrder() throws Exception {
 		
 		orderDao.deleteOrder(orderToDelete);
-		//TODO Test the updateOrder methods once SaleOrder or PurchaseOrder is done
-		//Hard verified using MSSQL
+		PurchaseOrder retrievedOrder = DaoFactory.getPurchaseOrderDao().findPurchaseOrderById(orderToDelete.getId(), false, false);
+		assertNull("Shouldn't retrieve objects", retrievedOrder );
 		
 	}
 	
 	@AfterClass
-	public static void cleanUp() throws SQLException {
+	public static void cleanUp() throws Exception {
 		
 		TestingSaleOrder createdOrder = new TestingSaleOrder(generatedOrderId);
 		TestingSaleOrder createdEmptyOrder = new TestingSaleOrder(emptyOrderGeneratedId);

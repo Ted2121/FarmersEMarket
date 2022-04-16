@@ -200,7 +200,7 @@ public class TestPurchaseOrderDaoImplementation {
 	}
 	
 	@AfterClass
-	public static void cleanUp() throws SQLException {
+	public static void cleanUp() throws SQLException, Exception {
 		
 		PurchaseOrder createdOrder = new PurchaseOrder(generatedPurchaseOrderId, null);
 		
