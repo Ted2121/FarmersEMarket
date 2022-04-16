@@ -67,7 +67,7 @@ public class ModelFactory {
     }
 
     public static SaleOrder getSaleOrderModel(int id, Customer customer) {
-        return new SaleOrder(id);
+        return new SaleOrder(id, customer);
     }
 
     public static LineItem getLineItemModel(int quantity) {
