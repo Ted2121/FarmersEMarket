@@ -9,9 +9,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import db_access.DBConnection;
+import db_access.DaoFactory;
 import db_access.DaoInterfaces.ProviderDao;
 import model.ModelFactory;
 import model.Provider;
+import model.PurchaseOrder;
 
 public class ProviderDaoImplementation implements ProviderDao {
 	//TODO this class needs to be checked
@@ -23,17 +25,23 @@ public class ProviderDaoImplementation implements ProviderDao {
 		return builtObject;
 	}
 	
-	private List<Provider> buildObjects(ResultSet rs) throws SQLException{
+	private List<Provider> buildObjects(ResultSet rs, boolean retrievePurchaseOrder) throws SQLException, Exception{
 		List<Provider> providerList = new ArrayList<>();
 		while(rs.next()) {
-			providerList.add(buildObject(rs));
+			Provider retrievedProvider = buildObject(rs);
+			if(retrievePurchaseOrder) {
+				ArrayList<PurchaseOrder> linkedPurchaseOrder = DaoFactory.getPurchaseOrderDao().findPurchaseOrderByProviderId(rs.getInt("PK_IdProvider"), false, false);
+				retrievedProvider.setPurchaseOrders(linkedPurchaseOrder);
+			}
+			
+			providerList.add(retrievedProvider);
 		}
 		
 		return providerList;
 	}
 	
 	@Override
-	public Provider findProviderById(int providerId) throws SQLException {
+	public Provider findProviderById(int providerId, boolean retrievePurchaseOrder) throws SQLException, Exception {
 		String query = "SELECT * FROM Provider WHERE PK_idProvider = ?";
 		PreparedStatement preparedSelectStatement = connectionDB.prepareStatement(query);
 		preparedSelectStatement.setInt(1, providerId);
@@ -41,23 +49,62 @@ public class ProviderDaoImplementation implements ProviderDao {
 		Provider retrievedPerson = null;
 		while(rs.next()) {
 			retrievedPerson = buildObject(rs);
+			
+			if(retrievePurchaseOrder) {
+				ArrayList<PurchaseOrder> linkedPurchaseOrder = DaoFactory.getPurchaseOrderDao().findPurchaseOrderByProviderId(rs.getInt("PK_IdProvider"), false, false);
+				retrievedPerson.setPurchaseOrders(linkedPurchaseOrder);
+			}
 		}
 		return retrievedPerson;
 	}
 
 	@Override
-	public List<Provider> findAllProviders() throws SQLException {
+	public Provider findProviderByFullName(String fullName, boolean retrievePurchaseOrder) throws SQLException, Exception {
+		String sqlFindProviderStatement = "SELECT * FROM Provider WHERE (FirstName = ? AND LastName = ?) OR (LastName = ? AND FirstName = ?)";
+		PreparedStatement preparedFindProviderStatement = connectionDB.prepareStatement(sqlFindProviderStatement);
+		String[] fullNameArray = fullName.split(" ");
+		preparedFindProviderStatement.setString(1, fullNameArray[0]);
+		preparedFindProviderStatement.setString(2, fullNameArray[1]);
+		preparedFindProviderStatement.setString(3, fullNameArray[0]);
+		preparedFindProviderStatement.setString(4, fullNameArray[1]);
+		ResultSet rs = preparedFindProviderStatement.executeQuery();
+		Provider retrievedProvider = null;
+		while(rs.next()) {
+			retrievedProvider = buildObject(rs);
+			if(retrievePurchaseOrder) {
+				ArrayList<PurchaseOrder> linkedPurchaseOrder = DaoFactory.getPurchaseOrderDao().findPurchaseOrderByProviderId(rs.getInt("PK_IdProvider"), false, false);
+				retrievedProvider.setPurchaseOrders(linkedPurchaseOrder);
+			}
+		}
+		return retrievedProvider;
+	}
+	
+	@Override
+	public List<Provider> findProvidersByName(String name, boolean retrievePurchaseOrder) throws SQLException, Exception {
+		String sqlFindProviderStatement = "SELECT * FROM Provider WHERE FirstName LIKE ? OR LastName LIKE ? "
+				+ "OR CONCAT(FirstName, ' ', LastName) LIKE ? OR CONCAT(LastName, ' ', FirstName) LIKE ?";
+		PreparedStatement preparedFindProviderStatement = connectionDB.prepareStatement(sqlFindProviderStatement);
+		preparedFindProviderStatement.setString(1, "%" + name + "%");
+		preparedFindProviderStatement.setString(2, "%" + name + "%");
+		preparedFindProviderStatement.setString(3, "%" + name + "%");
+		preparedFindProviderStatement.setString(4, "%" + name + "%");
+		ResultSet rs = preparedFindProviderStatement.executeQuery();
+		List<Provider> retrievedProviders = buildObjects(rs, retrievePurchaseOrder);
+		return retrievedProviders;
+	}
+	
+	@Override
+	public List<Provider> findAllProviders(boolean retrievePurchaseOrder) throws SQLException, Exception {
 		String query = "SELECT * FROM Provider";
 		PreparedStatement preparedSelectStatement = connectionDB.prepareStatement(query);
 		ResultSet rs = preparedSelectStatement.executeQuery();
-		List<Provider> retrievedProvidersList = buildObjects(rs);
+		List<Provider> retrievedProvidersList = buildObjects(rs, retrievePurchaseOrder);
 		
 		return retrievedProvidersList;
 	}
 
-	// TODO this needs to be reviewed
 	@Override
-	public int createProvider(Provider objectToInsert) throws SQLException {
+	public void createProvider(Provider objectToInsert) throws SQLException {
 		String sqlInsertProviderStatement = "INSERT INTO Provider (FirstName, LastName, Country, City) VALUES(?,?,?,?)";
 		PreparedStatement preparedInsertProviderStatementWithGeneratedKey = connectionDB.prepareStatement(sqlInsertProviderStatement, Statement.RETURN_GENERATED_KEYS);
 		preparedInsertProviderStatementWithGeneratedKey.setString(1, objectToInsert.getFirstName());
@@ -74,7 +121,6 @@ public class ProviderDaoImplementation implements ProviderDao {
 		objectToInsert.setId(generatedId);
 		
 		System.out.println(">> Provider added to the Database");
-		return generatedId;
 	}
 
 	@Override
@@ -100,20 +146,7 @@ public class ProviderDaoImplementation implements ProviderDao {
 		System.out.println(">> Provider deleted in the Database");
 	}
 
-	@Override
-	public Provider findProviderByFullName(String fullName) throws SQLException {
-		String sqlFindProviderStatement = "SELECT * FROM Provider WHERE FirstName = ?, LastName = ?";
-		PreparedStatement preparedFindProviderStatement = connectionDB.prepareStatement(sqlFindProviderStatement);
-		String[] fullNameArray = fullName.split(" ");
-		preparedFindProviderStatement.setString(1, fullNameArray[0]);
-		preparedFindProviderStatement.setString(2, fullNameArray[1]);
-		ResultSet rs = preparedFindProviderStatement.executeQuery();
-		Provider retrievedProvider = null;
-		while(rs.next()) {
-			retrievedProvider = buildObject(rs);
-		}
-		return retrievedProvider;
-	}
+	
 
 
 }
