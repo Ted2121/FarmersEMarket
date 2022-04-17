@@ -13,30 +13,23 @@ public class Product {
     private int weightCategory;
     private HashMap<Integer, String> weightCategoryIntToEnum;
 
-
+    public Product(int id, String productName, double purchasingPrice, double sellingPrice, WeightCategory weightCategoryOption, Unit unit) {
+    	this(productName, purchasingPrice, sellingPrice, weightCategoryOption, unit);
+    	this.id = id;
+    }
+    
     public Product(String productName, double purchasingPrice, double sellingPrice, WeightCategory weightCategoryOption, Unit unit) {
-        this.productName = productName;
-        this.purchasingPrice = purchasingPrice;
-        this.sellingPrice = sellingPrice;
-        this.unit = unit;
+        this(productName, purchasingPrice, sellingPrice, unit);
         switch (weightCategoryOption){
             case ONE -> this.weightCategory = 1;
             case FIVE -> this.weightCategory = 5;
             case TEN -> this.weightCategory = 10;
         }
     }
-
-    public Product(int id, String productName, double purchasingPrice, double sellingPrice, WeightCategory weightCategoryOption, Unit unit) {
-        this.id = id;
-        this.productName = productName;
-        this.purchasingPrice = purchasingPrice;
-        this.sellingPrice = sellingPrice;
-        this.unit = unit;
-        switch (weightCategoryOption) {
-            case ONE -> this.weightCategory = 1;
-            case FIVE -> this.weightCategory = 5;
-            case TEN -> this.weightCategory = 10;
-        }
+    
+    public Product(int id, String productName, double purchasingPrice, double sellingPrice, Unit unit) {
+    	this(productName, purchasingPrice, sellingPrice, unit);
+    	this.id = id;
     }
 
     public Product(String productName, double purchasingPrice, double sellingPrice, Unit unit) {
@@ -46,13 +39,7 @@ public class Product {
         this.unit = unit;
     }
 
-    public Product(int id, String productName, double purchasingPrice, double sellingPrice, Unit unit) {
-        this.id = id;
-        this.productName = productName;
-        this.purchasingPrice = purchasingPrice;
-        this.sellingPrice = sellingPrice;
-        this.unit = unit;
-    }
+    
 
 
 
@@ -61,7 +48,6 @@ public class Product {
     }
 
     public void setWeightCategory(WeightCategory weightCategoryOption) {
-
         switch (weightCategoryOption){
             case ONE -> this.weightCategory = 1;
             case FIVE -> this.weightCategory = 5;

@@ -17,12 +17,8 @@ public abstract class Person {
     }
 
     public Person(int id, String firstName, String lastName, String city, String country ) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.fullName = firstName + " " + lastName;
-        this.city = city;
-        this.country = country;
+    	this(firstName, lastName, city, country);
+    	this.id = id;
     }
 
     public int getId() {
