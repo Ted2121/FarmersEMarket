@@ -36,7 +36,6 @@ private static int generatedOrderId;
 
         saleOrderToUpdate = ModelFactory.getSaleOrderModel(id, testCustomer);
         saleOrderDao.createSaleOrder(saleOrderToUpdate);
-
         id = DaoFactory.getOrderDao().createEmptyOrder();
         saleOrderToDelete = ModelFactory.getSaleOrderModel(id, testCustomer);
         saleOrderDao.createSaleOrder(saleOrderToDelete);
