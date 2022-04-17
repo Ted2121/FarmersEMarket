@@ -7,7 +7,7 @@ import model.Order;
 import model.SaleOrder;
 
 public interface OrderDao {
-    int createOrder(Order objectToCreate) throws SQLException;
+    void createOrder(Order objectToCreate) throws SQLException;
     int createEmptyOrder() throws SQLException;
     void updateOrder(Order objectToUpdate) throws SQLException;
     void deleteOrder(Order objectToDelete) throws SQLException, Exception;

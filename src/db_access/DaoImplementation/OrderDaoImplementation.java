@@ -33,7 +33,7 @@ public class OrderDaoImplementation implements OrderDao{
 	}
 	
 	@Override
-	public int createOrder(Order order) throws SQLException {
+	public void createOrder(Order order) throws SQLException {
 		String sqlInsertOrderStatement = "INSERT INTO [Order](Price, DateTime) VALUES (? , ?)";
 		PreparedStatement preparedSqlInsertOrderStatementWithGeneratedKey = connectionDB.prepareStatement(sqlInsertOrderStatement, Statement.RETURN_GENERATED_KEYS) ;
 		preparedSqlInsertOrderStatementWithGeneratedKey.setDouble(1, order.getOrderPrice());
@@ -48,7 +48,6 @@ public class OrderDaoImplementation implements OrderDao{
 		order.setId(generatedId);
 		
 		System.out.println(">> Order added to the Database");
-		return generatedId;
 	}
 
 	@Override

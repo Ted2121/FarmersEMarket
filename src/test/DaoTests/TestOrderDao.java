@@ -51,7 +51,8 @@ public class TestOrderDao {
 		Customer testCustomer = new Customer("test", "test", "Aalborg","Denmark", "new adress", 5000);
 		SaleOrder testSaleOrder = new SaleOrder(testCustomer);
 		
-		generatedOrderId = orderDao.createOrder(testSaleOrder);
+		orderDao.createOrder(testSaleOrder);
+		generatedOrderId =  testSaleOrder.getId();
 		assertTrue("Should return a generated id > 0", generatedOrderId>0);
 	}
 	
