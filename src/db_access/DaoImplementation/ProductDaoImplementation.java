@@ -96,10 +96,11 @@ public class ProductDaoImplementation implements ProductDao {
 		PreparedStatement statement = connection.prepareStatement(query);
 		statement.setString(1, productName);
 		ResultSet rs = statement.executeQuery();
+		Product product = null;
 		while(rs.next()) {
-			return buildObject(rs);
+			product =  buildObject(rs);
 		}
-		return null;
+		return product;
 	}
 
 	@Override
