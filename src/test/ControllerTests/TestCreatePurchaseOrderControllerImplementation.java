@@ -44,7 +44,7 @@ public class TestCreatePurchaseOrderControllerImplementation {
 	public static void cleanUp() throws SQLException, Exception {
 		CreatePurchaseOrderControllerImplementation controllerImplementation = (CreatePurchaseOrderControllerImplementation) controller;
 		PurchaseOrder purchaseOrder = controllerImplementation.getPurchaseOrder();
-		for(LineItem lineItem : DaoFactory.getLineItemDao().findLineItemsByOrder(purchaseOrder, false)) {
+		for(LineItem lineItem : DaoFactory.getLineItemDao().findLineItemsByOrder(purchaseOrder, true)) {
 			lineItem.setOrder(purchaseOrder);
 			DaoFactory.getLineItemDao().deleteLineItem(lineItem);
 		}
