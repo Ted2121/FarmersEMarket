@@ -211,6 +211,5 @@ public class TestPurchaseOrderDaoImplementation {
 		DaoFactory.getOrderDao().deleteOrder(purchaseOrderToDelete);
 		DaoFactory.getOrderDao().deleteOrder(purchaseOrderToUpdate);
 		
-//		purchaseOrderDao.deletePurchaseOrder(createdOrder);
 	}
 }
