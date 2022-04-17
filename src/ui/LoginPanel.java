@@ -15,7 +15,7 @@ public class LoginPanel extends JPanel{
 		ProgramFrame.getFrame().setSize(new Dimension(400,200));
 		ProgramFrame.getFrame().setResizable(false);
 		setLayout(null);
-		setBackground(new Color(0xdddddd));
+		setBackground(ProgramFrame.getBgcolor());
 		JLabel usernameLabel = new JLabel("Username:");
 		JLabel passwordLabel = new JLabel("Password:");
 		usernameLabel.setBounds(50,35,70,30);
@@ -35,6 +35,8 @@ public class LoginPanel extends JPanel{
 		add(loginButton);
 		loginButton.addActionListener(e -> {
 			ProgramFrame.changePanel(new HomePanel());
+			ProgramFrame.getFrame().setSize(new Dimension(800,600));
+			ProgramFrame.getFrame().setLocationRelativeTo(null);
 		});
 	}
 }

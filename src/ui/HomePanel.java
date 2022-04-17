@@ -16,11 +16,9 @@ import javax.swing.JTable;
 public class HomePanel extends JPanel{
 	
 	public HomePanel() {
-		ProgramFrame.getFrame().setSize(new Dimension(800,600));
-		ProgramFrame.getFrame().setLocationRelativeTo(null);
 		ProgramFrame.getFrame().setTitle("Home");
 		ProgramFrame.getFrame().setResizable(true);
-		setBackground(new Color(0xdddddd));
+		setBackground(ProgramFrame.getBgcolor());
 		setLayout(new BorderLayout());
 		add(new MenuSelectorPanel(), BorderLayout.NORTH);
 		JPanel tablesPanel = new JPanel();
@@ -32,6 +30,10 @@ public class HomePanel extends JPanel{
 		rightTable.getNewButton().setText("New Sale");
 		tablesPanel.add(leftTable);
 		tablesPanel.add(rightTable);
+		leftTable.getJumpToTableButton().addActionListener(e -> ProgramFrame.changePanel(new PurchasesPanel()));
+		leftTable.getNewButton().addActionListener(f -> new PurchasesPopup());
+		rightTable.getJumpToTableButton().addActionListener(g -> ProgramFrame.changePanel(new SalesPanel()));
+		rightTable.getNewButton().addActionListener(h -> new SalesPopup());
 		add(tablesPanel, BorderLayout.CENTER);
 	}
 	
@@ -44,7 +46,7 @@ public class HomePanel extends JPanel{
 		
 		public SmallTablePanel(int buttonAlign, String tableName) {
 			setLayout(new GridBagLayout());
-			setBackground(new Color(0xdddddd));
+			setBackground(ProgramFrame.getBgcolor());
 			GridBagConstraints c = new GridBagConstraints();
 			JLabel tableNameLabel = new JLabel(tableName);
 			jumpToTableButton = new JButton("Show");

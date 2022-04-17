@@ -1,6 +1,7 @@
 package ui;
 
 import java.awt.Dimension;
+import java.awt.Color;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -8,6 +9,7 @@ import javax.swing.JPanel;
 public class ProgramFrame{
 	private static JFrame frame;
 	private static JPanel panel;
+	private static Color bgcolor = new Color(0xdddddd);
 	
 	private ProgramFrame() {
 		frame = new JFrame();
@@ -32,5 +34,9 @@ public class ProgramFrame{
 	
 	public static void main(String[] args) {
 		new ProgramFrame();
+	}
+	
+	public static Color getBgcolor() {
+		return bgcolor;
 	}
 }

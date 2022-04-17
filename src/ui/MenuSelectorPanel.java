@@ -1,6 +1,5 @@
 package ui;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Image;
@@ -16,7 +15,7 @@ public class MenuSelectorPanel extends JPanel{
 	public MenuSelectorPanel() {
 		setLayout(new FlowLayout(FlowLayout.RIGHT));
 		setPreferredSize(new Dimension(800,50));
-		setBackground(new Color(0xdddddd));
+		setBackground(ProgramFrame.getBgcolor());
 		JButton hideShowButton = new JButton();
 		hideShowButton.setPreferredSize(new Dimension(40,40));
 		try {
@@ -60,5 +59,11 @@ public class MenuSelectorPanel extends JPanel{
 			salesButton.setVisible(opened);
 			purchasesButton.setVisible(opened);
 		});
+		
+		productInfoButton.addActionListener(f -> ProgramFrame.changePanel(new ProductInfoPanel()));
+		customersButton.addActionListener(g -> ProgramFrame.changePanel(new CustomersPanel()));
+		providersButton.addActionListener(h -> ProgramFrame.changePanel(new ProvidersPanel()));
+		salesButton.addActionListener(i -> ProgramFrame.changePanel(new SalesPanel()));
+		purchasesButton.addActionListener(j -> ProgramFrame.changePanel(new PurchasesPanel()));
 	}
 }
