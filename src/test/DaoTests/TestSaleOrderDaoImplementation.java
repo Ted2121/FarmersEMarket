@@ -29,7 +29,8 @@ private static int generatedOrderId;
     public static void setUp() throws Exception {
         saleOrderDao = DaoFactory.getSaleOrderDao();
         Customer testCustomer = DaoFactory.getCustomerDao().findAllCustomers(false).get(0);
-        System.out.println(testCustomer.getFirstName());
+        //for debugging
+        // System.out.println(testCustomer.getFirstName());
 
         id = DaoFactory.getOrderDao().createEmptyOrder();
 
