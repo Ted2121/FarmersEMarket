@@ -7,5 +7,5 @@ import model.Provider;
 
 public interface CreatePurchaseOrderController {
 	void addProductToPurchaseOrder(Product product, int quantity);
-	void createPurchaseOrder(String date, Provider provider, HashMap<Product, Integer> productsWithQuantity);
+	void createPurchaseOrder(Provider provider);
 }
