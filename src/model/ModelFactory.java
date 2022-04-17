@@ -61,6 +61,10 @@ public class ModelFactory {
     public static PurchaseOrder getPurchaseOrderModel(int id) {
     	return new PurchaseOrder(id);
     }
+    
+    public static PurchaseOrder getPurchaseOrderModel(Provider provider) {
+    	return new PurchaseOrder(provider);
+    }
 
     public static SaleOrder getSaleOrderModel(int id) {
         return new SaleOrder(id);
@@ -72,6 +76,10 @@ public class ModelFactory {
 
     public static LineItem getLineItemModel(int quantity) {
 		return new LineItem(quantity);
+    }
+    
+    public static LineItem getLineItemModel(int quantity, Product product, Order order) {
+		return new LineItem(quantity, product, order);
     }
 
 
