@@ -32,14 +32,14 @@ public class TestProviderDaoImplementation {
 	}
 	
 	@Test
-	public void testFindPersonByIdWithoutAssociation() throws SQLException, Exception{
+	public void testFindProviderByIdWithoutAssociation() throws SQLException, Exception{
 		Provider result = providerDao.findProviderById(1, false);
 		assertNotNull("The retrieved object shouldn't be null.", result);
 		assertNull("The provider PurchaseOrder list shouldn't be set",result.getPurchaseOrders());
 	}
 	
 	@Test
-	public void testFindPersonByIdWithPurchaseOrderAssociation() throws SQLException, Exception{
+	public void testFindProviderByIdWithPurchaseOrderAssociation() throws SQLException, Exception{
 		Provider result = providerDao.findProviderById(1, true);
 		assertNotNull("The retrieved object shouldn't be null.", result);
 		assertNotNull("The provider PurchaseOrder list should be set",result.getPurchaseOrders());
@@ -47,7 +47,7 @@ public class TestProviderDaoImplementation {
 
 	
 	@Test
-	public void testFindAllPersonsWithoutAssociation() throws SQLException, Exception {
+	public void testFindAllProviderWithoutAssociation() throws SQLException, Exception {
 		List<Provider> results = providerDao.findAllProviders(false);
 		assertNotNull("The retrieved object shouldn't be null.", results);
 		for(Provider provider : results) {
@@ -56,7 +56,7 @@ public class TestProviderDaoImplementation {
 	}
 	
 	@Test
-	public void testFindAllPersonsWithPurchaseOrderAssociation() throws SQLException, Exception {
+	public void testFindAllProviderWithPurchaseOrderAssociation() throws SQLException, Exception {
 		List<Provider> results = providerDao.findAllProviders(true);
 		assertNotNull("The retrieved object shouldn't be null.", results);
 		for(Provider provider : results) {
@@ -65,21 +65,21 @@ public class TestProviderDaoImplementation {
 	}
 	
 	@Test
-	public void testFindPersonByFullNameWithoutAssociation() throws SQLException, Exception{
+	public void testFindProviderByFullNameWithoutAssociation() throws SQLException, Exception{
 		Provider result = providerDao.findProviderByFullName("Cassandra Johnson", false);
 		assertNotNull("The retrieved object shouldn't be null.", result);
 		assertNull("The provider PurchaseOrder list shouldn't be set",result.getPurchaseOrders());
 	}
 	
 	@Test
-	public void testFindPersonByFullNameWithPurchaseOrderAssociation() throws SQLException, Exception{
+	public void testFindProviderByFullNameWithPurchaseOrderAssociation() throws SQLException, Exception{
 		Provider result = providerDao.findProviderByFullName("Cassandra Johnson", true);
 		assertNotNull("The retrieved object shouldn't be null.", result);
 		assertNotNull("The provider PurchaseOrder list should be set",result.getPurchaseOrders());
 	}
 	
 	@Test
-	public void testFindPersonByNameWithoutAssociation() throws SQLException, Exception{
+	public void testFindProviderByPartialNameWithoutAssociation() throws SQLException, Exception{
 		List<Provider> results = providerDao.findProvidersByName("n", false);
 		assertNotNull("The retrieved object shouldn't be null.", results);
 		for(Provider provider : results) {
@@ -88,7 +88,7 @@ public class TestProviderDaoImplementation {
 	}
 	
 	@Test
-	public void testFindPersonByNameWithPurchaseOrderAssociation() throws SQLException, Exception{
+	public void testFindProviderByPartialNameWithPurchaseOrderAssociation() throws SQLException, Exception{
 		List<Provider> results = providerDao.findProvidersByName("n", true);
 		assertNotNull("The retrieved object shouldn't be null.", results);
 		for(Provider provider : results) {
@@ -97,7 +97,7 @@ public class TestProviderDaoImplementation {
 	}
 	
 	@Test
-	public void testCreatePerson() throws SQLException, Exception {
+	public void testCreateProvider() throws SQLException, Exception {
 		Provider testProvider = (Provider) ModelFactory.getProviderModel("TestFirstName", "TestLastName", "testCity", "testCountry");
 		providerDao.createProvider(testProvider);
 		generatedId = testProvider.getId();
@@ -105,7 +105,7 @@ public class TestProviderDaoImplementation {
 	}
 	
 	@Test
-	public void testUpdatePerson() throws SQLException, Exception {
+	public void testUpdateProvider() throws SQLException, Exception {
 		providerToUpdate.setFirstName("UpdatedFirstName");
 		providerDao.updateProvider(providerToUpdate);
 		assertEquals("Should equal \"UpdatedFirstName\".", "UpdatedFirstName",providerDao.findProviderById(providerToUpdate.getId(), false).getFirstName() );
