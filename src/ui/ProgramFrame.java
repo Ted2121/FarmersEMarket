@@ -1,0 +1,36 @@
+package ui;
+
+import java.awt.Dimension;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+
+public class ProgramFrame{
+	private static JFrame frame;
+	private static JPanel panel;
+	
+	private ProgramFrame() {
+		frame = new JFrame();
+		frame.setTitle("Farmer's Emarket Management Software");
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		changePanel(new LoginPanel());
+		frame.setLocationRelativeTo(null);
+		frame.setVisible(true);
+	}
+	
+	public static JFrame getFrame() {
+		if(frame==null) frame = new JFrame();
+		return frame;
+	}
+	
+	public static void changePanel(JPanel newPanel) {
+		if(panel!=null) frame.remove(panel);
+		panel = newPanel;
+		frame.add(panel);
+		frame.setVisible(true);
+	}
+	
+	public static void main(String[] args) {
+		new ProgramFrame();
+	}
+}
