@@ -102,5 +102,23 @@ public class ProductInformationDaoImplementation implements ProductInformationDa
 		Product product = dao.findProductById(productId);
 		return findProductInformationByProduct(product);
 	}
+
+	@Override
+	public void addQuantityToProduct(Product product, int quantity) throws SQLException {
+		// TODO Auto-generated method stub
+		ProductInformation productInformation = findProductInformationByProduct(product);
+		productInformation.setQuantity(productInformation.getQuantity()+quantity);
+		updateProductInformation(productInformation);
+	}
+
+	@Override
+	public void removeQuantityToProduct(Product product, int quantity) throws SQLException {
+		// TODO Auto-generated method stub
+		ProductInformation productInformation = findProductInformationByProduct(product);
+		quantity = productInformation.getQuantity()-quantity;
+		productInformation.setQuantity(quantity);
+		updateProductInformation(productInformation);
+	}
+	
 	
 }

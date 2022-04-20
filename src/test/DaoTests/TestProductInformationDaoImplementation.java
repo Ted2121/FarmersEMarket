@@ -101,6 +101,17 @@ public class TestProductInformationDaoImplementation {
 		assertEquals(result.getLocationCode(), productInformationToUpdate.getLocationCode());
 	}
 	
+	@Test
+	public void testAddOrRemoveQuantityToAProduct() throws SQLException {
+		productInformationToUpdate.setQuantity(14);
+		productInformationDao.addQuantityToProduct(product1, 5);
+		productInformationToUpdate.setQuantity(productInformationDao.findProductInformationByProduct(product1).getQuantity());
+		assertEquals(productInformationToUpdate.getQuantity(),19);
+		productInformationDao.removeQuantityToProduct(product1, 5);
+		productInformationToUpdate.setQuantity(productInformationDao.findProductInformationByProduct(product1).getQuantity());
+		assertEquals(productInformationToUpdate.getQuantity(),14);
+	}
+	
 	@AfterClass
 	public static void cleanUp() throws SQLException {
 		productInformationDao.deleteProductInformation(ModelFactory.getProductInformationModel(900, 14, product3.getId()));
