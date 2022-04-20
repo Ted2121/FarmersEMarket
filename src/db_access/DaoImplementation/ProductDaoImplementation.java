@@ -52,6 +52,7 @@ public class ProductDaoImplementation implements ProductDao {
 		statement.setString(4, objectToInsert.getUnit());
 		statement.setInt(5, objectToInsert.getWeightCategory());
 		int row = statement.executeUpdate();
+		objectToInsert = findProductByProductName(objectToInsert.getProductName());
 	}
 	
 
