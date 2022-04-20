@@ -15,4 +15,6 @@ public interface ProductInformationDao {
     ProductInformation findProductInformationByProduct(Product product) throws SQLException;
     ProductInformation findProductInformationByProductName(String productName) throws SQLException;
     ProductInformation findProductInformationByProductId(int productId) throws SQLException;
+    void addQuantityToProduct(Product product, int quantity) throws SQLException;
+    void removeQuantityToProduct(Product product, int quantity) throws SQLException;
 }
