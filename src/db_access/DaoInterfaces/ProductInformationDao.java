@@ -11,9 +11,9 @@ public interface ProductInformationDao {
     void createProductInformation(ProductInformation objectToInsert) throws SQLException;
     void updateProductInformation(ProductInformation objectToUpdate) throws SQLException;
     void deleteProductInformation(ProductInformation objectToDelete) throws SQLException;
-    List<ProductInformation> findAllProductInformationEntries() throws SQLException;
+    List<ProductInformation> findAllProductInformation() throws SQLException;
     ProductInformation findProductInformationByProduct(Product product) throws SQLException;
-    ProductInformation findProductInformationByProductName(String productName) throws SQLException;
+    List<ProductInformation> findProductInformationByProductName(String productName) throws SQLException;
     ProductInformation findProductInformationByProductId(int productId) throws SQLException;
     void addQuantityToProduct(Product product, int quantity) throws SQLException;
     void removeQuantityToProduct(Product product, int quantity) throws SQLException;

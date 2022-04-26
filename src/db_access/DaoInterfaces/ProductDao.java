@@ -13,7 +13,7 @@ public interface ProductDao {
     void updateProduct(Product objectToUpdate) throws SQLException;
     void deleteProduct(Product objectToDelete) throws SQLException;
     List<Product> findAllProducts() throws SQLException;
-    Product findProductByProductName(String productName) throws SQLException;
+    List<Product> findProductByProductName(String productName) throws SQLException;
     Product findProductById(int productId) throws SQLException;
 
 }

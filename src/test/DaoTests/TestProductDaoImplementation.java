@@ -35,14 +35,11 @@ public class TestProductDaoImplementation {
 		productToDelete = ModelFactory.getProductModelWithoutId("TestDelete", 15d, 20d, WeightCategory.FIVE, Unit.KG);
 		productDao.createProduct(productToUpdate);
 		productDao.createProduct(productToDelete);
-		productToUpdate.setId(productDao.findProductByProductName("TestUpdate").getId());
-		productToDelete.setId(productDao.findProductByProductName("TestDelete").getId());
 	}
 	
 	@Test
 	public void testCreateProductInformation() throws SQLException {
 		productDao.createProduct(productToCreate);
-		productToCreate.setId(productDao.findProductByProductName("TestCreate").getId());
 		assertNotNull(productDao.findProductById(productToCreate.getId()));
 	}
 	
@@ -50,7 +47,7 @@ public class TestProductDaoImplementation {
 	public void testUpdate() throws SQLException {
 		productToUpdate.setSellingPrice(50d);
 		productDao.updateProduct(productToUpdate);
-		assertEquals(50d, productDao.findProductByProductName("TestUpdate").getSellingPrice(), 50d);
+		assertTrue("Should return 50d", productDao.findProductById(productToUpdate.getId()).getSellingPrice() == 50d);
 	}
 	
 	@Test
@@ -71,9 +68,8 @@ public class TestProductDaoImplementation {
 	
 	@Test
 	public void testFindByProductName() throws SQLException {
-		Product result = productDao.findProductByProductName("TestUpdate");
-		assertEquals(productToUpdate.getProductName(), result.getProductName());
-		assertEquals(productToUpdate.getSellingPrice(), result.getSellingPrice(), productToUpdate.getSellingPrice());
+		List<Product> results = productDao.findProductByProductName("TestUpdate");
+		assertNotNull("Should return a list with something inside",results);
 	}
 	
 	@Test

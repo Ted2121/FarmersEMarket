@@ -62,7 +62,7 @@ public class ProductInformationDaoImplementation implements ProductInformationDa
 	}
 
 	@Override
-	public List<ProductInformation> findAllProductInformationEntries() throws SQLException {
+	public List<ProductInformation> findAllProductInformation() throws SQLException {
 		String query = "SELECT * FROM ProductInformation";
 		PreparedStatement statement = connection.prepareStatement(query);
 		ResultSet rs = statement.executeQuery();
@@ -82,36 +82,43 @@ public class ProductInformationDaoImplementation implements ProductInformationDa
 	}
 
 	@Override
-	public ProductInformation findProductInformationByProductName(String productName) throws SQLException {
-		// TODO Once ProductDao.findProductBuProductName will be fixed, this part need to be fixed as well
-		ProductDao dao = new ProductDaoImplementation();
-		Product product = dao.findProductByProductName(productName);
-		return findProductInformationByProduct(product);
+	public List<ProductInformation> findProductInformationByProductName(String productName) throws SQLException {
+		String query = "SELECT * FROM Product INNER JOIN ProductInformation ON PK_idProduct = ProductInformation.PK_FK_Product WHERE Product.[Name] = ?";
+		PreparedStatement statement = connection.prepareStatement(query);
+		statement.setString(1, productName);
+		ResultSet rs = statement.executeQuery();
+		return buildObjects(rs);
 	}
 
 	@Override
 	public ProductInformation findProductInformationByProductId(int productId) throws SQLException {
-		//If you have the product ID you can go to the findById without using the productDao
-		ProductDao dao = new ProductDaoImplementation();
-		Product product = dao.findProductById(productId);
-		return findProductInformationByProduct(product);
+		String query = "SELECT * FROM ProductInformation WHERE PK_FK_Product = ?";
+		PreparedStatement statement = connection.prepareStatement(query);
+		statement.setInt(1, productId);
+		ResultSet rs = statement.executeQuery();
+		while(rs.next()) {
+			return buildObject(rs);
+		}
+		return null;
 	}
 
 	@Override
 	public void addQuantityToProduct(Product product, int quantity) throws SQLException {
-		// TODO Better to use a single SQL statement than 2
-		ProductInformation productInformation = findProductInformationByProduct(product);
-		productInformation.setQuantity(productInformation.getQuantity()+quantity);
-		updateProductInformation(productInformation);
+		String addQuantity = "UPDATE ProductInformation SET quantity += ? WHERE PK_FK_Product = ?";
+		PreparedStatement statement = connection.prepareStatement(addQuantity);
+		statement.setInt(1, quantity);
+		statement.setInt(2, product.getId());
+		statement.executeUpdate();
+		
 	}
 
 	@Override
 	public void removeQuantityToProduct(Product product, int quantity) throws SQLException {
-		// TODO Better to use a single SQL statement than 2
-		ProductInformation productInformation = findProductInformationByProduct(product);
-		quantity = productInformation.getQuantity()-quantity;
-		productInformation.setQuantity(quantity);
-		updateProductInformation(productInformation);
+		String addQuantity = "UPDATE ProductInformation SET quantity -= ? WHERE PK_FK_Product = ?";
+		PreparedStatement statement = connection.prepareStatement(addQuantity);
+		statement.setInt(1, quantity);
+		statement.setInt(2, product.getId());
+		statement.executeUpdate();
 	}
 	
 	

@@ -12,6 +12,7 @@ public class Product {
     public enum WeightCategory{ONE, FIVE, TEN}
     private int weightCategory;
     private HashMap<Integer, String> weightCategoryIntToEnum;
+    private ProductInformation productInformation;
 
     public Product(int id, String productName, double purchasingPrice, double sellingPrice, WeightCategory weightCategoryOption, Unit unit) {
     	this(productName, purchasingPrice, sellingPrice, weightCategoryOption, unit);
@@ -38,10 +39,6 @@ public class Product {
         this.sellingPrice = sellingPrice;
         this.unit = unit;
     }
-
-    
-
-
 
     public int getWeightCategory() {
         return weightCategory;

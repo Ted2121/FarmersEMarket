@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,20 +44,24 @@ public class ProductDaoImplementation implements ProductDao {
 	
 	@Override
 	public void createProduct(Product objectToInsert) throws SQLException {
-		//TODO changing the retrieving id methods with the SQL statement part. It's better using 1 SQL statement than 2 (for speed efficiency)
 		String query = "INSERT INTO Product VALUES(?, ?, ?, ?, ?)";
-		PreparedStatement statement = connection.prepareStatement(query);
+		PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 		statement.setString(1, objectToInsert.getProductName());
 		statement.setDouble(2, objectToInsert.getPurchasingPrice());
 		statement.setDouble(3, objectToInsert.getSellingPrice());
 		statement.setString(4, objectToInsert.getUnit());
 		statement.setInt(5, objectToInsert.getWeightCategory());
 		statement.executeUpdate();
-		objectToInsert = findProductByProductName(objectToInsert.getProductName()); //To retrieve only the ID, refers to create() methods of OrderDao
+		
+		ResultSet tableContainingGeneratedIds = statement.getGeneratedKeys();
+		int generatedId = 0;
+		while(tableContainingGeneratedIds.next()) {
+			generatedId = tableContainingGeneratedIds.getInt(1);
+		}
+		
+		objectToInsert.setId(generatedId);
 	}
 	
-
-
 	@Override
 	public void updateProduct(Product objectToUpdate) throws SQLException {
 		String query = "UPDATE Product SET [Name]=?, PurchasingPrice=?, SellingPrice=?, Unit=?, WeightCategory=? WHERE PK_idProduct=?";
@@ -87,18 +92,14 @@ public class ProductDaoImplementation implements ProductDao {
 	}
 
 	@Override
-	public Product findProductByProductName(String productName) throws SQLException {
+	public List<Product> findProductByProductName(String productName) throws SQLException {
 		//TODO changing the methods to retrieve more than 1 results.
 		//If you retrieve potatoes, you can retrive 3 products, potatoes of 1kg, 5kg and 10kg
 		String query = "SELECT * FROM Product WHERE [Name]=?";
 		PreparedStatement statement = connection.prepareStatement(query);
 		statement.setString(1, productName);
 		ResultSet rs = statement.executeQuery();
-		Product product = null;
-		while(rs.next()) {
-			product =  buildObject(rs);
-		}
-		return product;
+		return buildObjects(rs);
 	}
 
 	@Override
