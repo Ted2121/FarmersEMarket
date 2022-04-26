@@ -13,8 +13,8 @@ public class Product {
     public enum WeightCategory{ONE, FIVE, TEN}
     private int weightCategory;
     private HashMap<Integer, String> weightCategoryIntToEnum;
-    private ProductInformation relatedProductInformation;
-    private List<LineItem> relatedLineItems;
+    private ProductInformation relatedProductInformation = null;
+    private List<LineItem> relatedLineItems = null;
 
     public Product(int id, String productName, double purchasingPrice, double sellingPrice, WeightCategory weightCategoryOption, Unit unit) {
     	this(productName, purchasingPrice, sellingPrice, weightCategoryOption, unit);

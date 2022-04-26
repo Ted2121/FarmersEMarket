@@ -6,6 +6,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.AfterClass;
@@ -15,6 +16,7 @@ import org.junit.Test;
 import db_access.DaoFactory;
 import db_access.DaoInterfaces.ProductDao;
 import db_access.DaoInterfaces.ProductInformationDao;
+import model.LineItem;
 import model.ModelFactory;
 import model.Product;
 import model.ProductInformation;
@@ -26,6 +28,8 @@ public class TestProductDaoImplementation {
 	private static Product productToUpdate;
 	private static Product productToDelete;
 	private static Product productToCreate;
+	private static LineItem lineItem;
+	private static ProductInformation productInformation;
 	
 	@BeforeClass
 	public static void setUp() throws SQLException {
@@ -35,6 +39,12 @@ public class TestProductDaoImplementation {
 		productToDelete = ModelFactory.getProductModelWithoutId("TestDelete", 15d, 20d, WeightCategory.FIVE, Unit.KG);
 		productDao.createProduct(productToUpdate);
 		productDao.createProduct(productToDelete);
+		lineItem = ModelFactory.getLineItemModel(5, productToUpdate, null);
+		productInformation = ModelFactory.getProductInformationModel(156, 14, productToCreate.getId());
+		productToUpdate.setRelatedProductInformation(productInformation);
+		List<LineItem> lineItems = new ArrayList<LineItem>();
+		lineItems.add(lineItem);
+		productToUpdate.setRelatedLineItems(lineItems);
 	}
 	
 	@Test
@@ -57,13 +67,58 @@ public class TestProductDaoImplementation {
 	}
 	
 	@Test
-	public void testFindAll() throws SQLException, Exception {
+	public void testFindAllWithoutAssociation() throws SQLException, Exception {
 		List<Product> list =  productDao.findAllProducts(false, false);
 		int count = 0;
 		for(Product p : list) {
 			count++;
 		}
 		assertTrue(count>0);
+	}
+	@Test
+	public void testFindAllWithProductInformationAssociation() throws SQLException, Exception {
+		List<Product> list =  productDao.findAllProducts(false, true);
+		int count = 0;
+		for(Product p : list) {
+			if(p.equals(productToUpdate)) {
+				assertTrue(p.getRelatedProductInformation().getQuantity() == productInformation.getQuantity());
+			}
+			else {
+				assertTrue(p.getRelatedProductInformation() == null);
+			}
+		}
+		
+	}
+	
+	@Test
+	public void testFindAllWithLineItemAssociation() throws SQLException, Exception {
+		List<Product> list =  productDao.findAllProducts(true, false);
+		int count = 0;
+		for(Product p : list) {
+			if(p.equals(productToUpdate)) {
+				assertTrue(p.getRelatedLineItems().equals(productToUpdate.getRelatedLineItems()));
+			}
+			else {
+				assertTrue(p.getRelatedProductInformation() == null);
+			}
+		}
+		
+	}
+	
+	public void testFindAllWithLineItemAndProductInformationAssociation() throws SQLException, Exception {
+		List<Product> list =  productDao.findAllProducts(true, true);
+		int count = 0;
+		for(Product p : list) {
+			if(p.equals(productToUpdate)) {
+				assertTrue(p.getRelatedLineItems().equals(productToUpdate.getRelatedLineItems()));
+				assertTrue(p.getRelatedProductInformation().getQuantity() == productInformation.getQuantity());
+			}
+			else {
+				assertTrue(p.getRelatedProductInformation() == null);
+				assertTrue(p.getRelatedProductInformation() == null);
+			}
+		}
+		
 	}
 	
 	@Test
