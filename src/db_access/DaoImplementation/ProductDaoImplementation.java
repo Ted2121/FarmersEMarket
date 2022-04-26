@@ -9,10 +9,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import db_access.DBConnection;
+import db_access.DaoFactory;
 import db_access.DaoInterfaces.ProductDao;
+import model.LineItem;
 import model.ModelFactory;
 import model.Product;
 import model.ProductInformation;
+import model.Provider;
 import model.PurchaseOrder;
 import model.Product.Unit;
 import model.Product.WeightCategory;
@@ -34,12 +37,74 @@ public class ProductDaoImplementation implements ProductDao {
 		return builtObject;
 	}
 	
-	public List<Product> buildObjects(ResultSet rs) throws SQLException {
+	public List<Product> buildObjects(ResultSet rs, boolean retrieveLineItems, boolean retrieveProductInformation) throws SQLException, Exception {
 		List<Product> list = new ArrayList<Product>();
 		while(rs.next()) {
-			list.add(buildObject(rs));
+			Product product = buildObject(rs);
+			if(retrieveLineItems) {
+				List<LineItem> retrievedLineItemsLinkedToThisProduct = DaoFactory.getLineItemDao().findLineItemsByProduct(product, false);
+				product.setRelatedLineItems(retrievedLineItemsLinkedToThisProduct);
+			}
+			
+			if(retrieveProductInformation) {
+				ProductInformation retrievedProductInforamtionLinkedToThisProduct = DaoFactory.getProductInformationDao().findProductInformationByProduct(product, false);
+				product.setRelatedProductInformation(retrievedProductInforamtionLinkedToThisProduct);
+			}
+			list.add(product);
+			
 		}
 		return list;
+	}
+	
+	@Override
+	public List<Product> findAllProducts(boolean retrieveLineItems, boolean retrieveProductInformation) throws SQLException, Exception {
+		String query = "SELECT * FROM Product";
+		PreparedStatement statement = connection.prepareStatement(query);
+		ResultSet rs = statement.executeQuery();
+		return buildObjects(rs, retrieveLineItems, retrieveProductInformation);
+	}
+
+	@Override
+	public List<Product> findProductByProductName(String productName, boolean retrieveLineItems, boolean retrieveProductInformation) throws SQLException, Exception {
+		//TODO changing the methods to retrieve more than 1 results.
+		//If you retrieve potatoes, you can retrive 3 products, potatoes of 1kg, 5kg and 10kg
+		String query = "SELECT * FROM Product WHERE [Name]=?";
+		PreparedStatement statement = connection.prepareStatement(query);
+		statement.setString(1, productName);
+		ResultSet rs = statement.executeQuery();
+		return buildObjects(rs, retrieveLineItems, retrieveProductInformation);
+	}
+
+	@Override
+	public Product findProductById(int productId, boolean retrieveLineItems, boolean retrieveProductInformation) throws SQLException, Exception {
+		String query = "SELECT * FROM Product WHERE Pk_idProduct=?";
+		PreparedStatement statement = connection.prepareStatement(query);
+		statement.setInt(1, productId);
+		ResultSet rs = statement.executeQuery();
+		while(rs.next()) {
+			Product product = buildObject(rs);
+			if(retrieveLineItems) {
+				List<LineItem> retrievedLineItemsLinkedToThisProduct = DaoFactory.getLineItemDao().findLineItemsByProduct(product, false);
+				product.setRelatedLineItems(retrievedLineItemsLinkedToThisProduct);
+			}
+			
+			if(retrieveProductInformation) {
+				ProductInformation retrievedProductInforamtionLinkedToThisProduct = DaoFactory.getProductInformationDao().findProductInformationByProduct(product, false);
+				product.setRelatedProductInformation(retrievedProductInforamtionLinkedToThisProduct);
+			}
+			return product;
+		}
+		return null;
+	}
+
+	@Override
+	public List<Product> findProductsByPartialName(String partialName, boolean retrieveLineItems, boolean retrieveProductInformation) throws SQLException, Exception {
+		String sqlFindProviderStatement = "SELECT * FROM Product WHERE [Name] LIKE ?";
+		PreparedStatement preparedFindProviderStatement = connection.prepareStatement(sqlFindProviderStatement);
+		preparedFindProviderStatement.setString(1, "%" + partialName + "%");
+		ResultSet rs = preparedFindProviderStatement.executeQuery();
+		List<Product> retrievedProviders = buildObjects(rs, retrieveLineItems, retrieveProductInformation);
+		return retrievedProviders;
 	}
 	
 	@Override
@@ -83,34 +148,5 @@ public class ProductDaoImplementation implements ProductDao {
 		statement.executeUpdate();
 	}
 
-	@Override
-	public List<Product> findAllProducts() throws SQLException {
-		String query = "SELECT * FROM Product";
-		PreparedStatement statement = connection.prepareStatement(query);
-		ResultSet rs = statement.executeQuery();
-		return buildObjects(rs);
-	}
-
-	@Override
-	public List<Product> findProductByProductName(String productName) throws SQLException {
-		//TODO changing the methods to retrieve more than 1 results.
-		//If you retrieve potatoes, you can retrive 3 products, potatoes of 1kg, 5kg and 10kg
-		String query = "SELECT * FROM Product WHERE [Name]=?";
-		PreparedStatement statement = connection.prepareStatement(query);
-		statement.setString(1, productName);
-		ResultSet rs = statement.executeQuery();
-		return buildObjects(rs);
-	}
-
-	@Override
-	public Product findProductById(int productId) throws SQLException {
-		String query = "SELECT * FROM Product WHERE Pk_idProduct=?";
-		PreparedStatement statement = connection.prepareStatement(query);
-		statement.setInt(1, productId);
-		ResultSet rs = statement.executeQuery();
-		while(rs.next()) {
-			return buildObject(rs);
-		}
-		return null;
-	}
+	
 }

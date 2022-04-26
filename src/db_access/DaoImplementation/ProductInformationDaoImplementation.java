@@ -8,8 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import db_access.DBConnection;
+import db_access.DaoFactory;
 import db_access.DaoInterfaces.ProductDao;
 import db_access.DaoInterfaces.ProductInformationDao;
+import model.LineItem;
 import model.ModelFactory;
 import model.Product;
 import model.ProductInformation;
@@ -25,12 +27,69 @@ public class ProductInformationDaoImplementation implements ProductInformationDa
 		return builtObject;
 	}
 	
-	public List<ProductInformation> buildObjects(ResultSet rs) throws SQLException {
+	public List<ProductInformation> buildObjects(ResultSet rs, boolean retrieveProduct) throws SQLException, Exception {
 		List<ProductInformation> list = new ArrayList<ProductInformation>();
 		while(rs.next()) {
-			list.add(buildObject(rs));
+			ProductInformation productInformation = buildObject(rs);
+			if(retrieveProduct) {
+				Product retrievedProductLinkedToThisProductInformation = DaoFactory.getProductDao().findProductById(productInformation.getId(), false, false);
+				productInformation.setRelatedProduct(retrievedProductLinkedToThisProductInformation);
+			}
+			
+			list.add(productInformation);
 		}
 		return list;
+	}
+	
+	@Override
+	public List<ProductInformation> findAllProductInformation(boolean retrieveProduct) throws SQLException, Exception {
+		String query = "SELECT * FROM ProductInformation";
+		PreparedStatement statement = connection.prepareStatement(query);
+		ResultSet rs = statement.executeQuery();
+		return buildObjects(rs, retrieveProduct);
+	}
+
+	@Override
+	public ProductInformation findProductInformationByProduct(Product product, boolean retrieveProduct) throws SQLException, Exception {
+		String query = "SELECT * FROM ProductInformation WHERE PK_FK_Product=?";
+		PreparedStatement statement = connection.prepareStatement(query);
+		statement.setInt(1, product.getId());
+		ResultSet rs = statement.executeQuery();
+		while(rs.next()) {
+			ProductInformation productInformation = buildObject(rs);
+			if(retrieveProduct) {
+				Product retrievedProductLinkedToThisProductInformation = DaoFactory.getProductDao().findProductById(productInformation.getId(), false, false);
+				productInformation.setRelatedProduct(retrievedProductLinkedToThisProductInformation);
+			}
+			return productInformation;
+		}
+		return null;
+	}
+
+	@Override
+	public List<ProductInformation> findProductInformationByProductName(String productName, boolean retrieveProduct) throws SQLException, Exception {
+		String query = "SELECT * FROM Product INNER JOIN ProductInformation ON PK_idProduct = ProductInformation.PK_FK_Product WHERE Product.[Name] = ?";
+		PreparedStatement statement = connection.prepareStatement(query);
+		statement.setString(1, productName);
+		ResultSet rs = statement.executeQuery();
+		return buildObjects(rs, retrieveProduct);
+	}
+
+	@Override
+	public ProductInformation findProductInformationByProductId(int productId, boolean retrieveProduct) throws SQLException, Exception {
+		String query = "SELECT * FROM ProductInformation WHERE PK_FK_Product = ?";
+		PreparedStatement statement = connection.prepareStatement(query);
+		statement.setInt(1, productId);
+		ResultSet rs = statement.executeQuery();
+		while(rs.next()) {
+			ProductInformation productInformation = buildObject(rs);
+			if(retrieveProduct) {
+				Product retrievedProductLinkedToThisProductInformation = DaoFactory.getProductDao().findProductById(productInformation.getId(), false, false);
+				productInformation.setRelatedProduct(retrievedProductLinkedToThisProductInformation);
+			}
+			return productInformation;
+		}
+		return null;
 	}
 	
 	@Override
@@ -59,47 +118,6 @@ public class ProductInformationDaoImplementation implements ProductInformationDa
 		PreparedStatement statement = connection.prepareStatement(query);
 		statement.setInt(1, objectToDelete.getId());
 		statement.executeUpdate();
-	}
-
-	@Override
-	public List<ProductInformation> findAllProductInformation() throws SQLException {
-		String query = "SELECT * FROM ProductInformation";
-		PreparedStatement statement = connection.prepareStatement(query);
-		ResultSet rs = statement.executeQuery();
-		return buildObjects(rs);
-	}
-
-	@Override
-	public ProductInformation findProductInformationByProduct(Product product) throws SQLException {
-		String query = "SELECT * FROM ProductInformation WHERE PK_FK_Product=?";
-		PreparedStatement statement = connection.prepareStatement(query);
-		statement.setInt(1, product.getId());
-		ResultSet rs = statement.executeQuery();
-		while(rs.next()) {
-			return buildObject(rs);
-		}
-		return null;
-	}
-
-	@Override
-	public List<ProductInformation> findProductInformationByProductName(String productName) throws SQLException {
-		String query = "SELECT * FROM Product INNER JOIN ProductInformation ON PK_idProduct = ProductInformation.PK_FK_Product WHERE Product.[Name] = ?";
-		PreparedStatement statement = connection.prepareStatement(query);
-		statement.setString(1, productName);
-		ResultSet rs = statement.executeQuery();
-		return buildObjects(rs);
-	}
-
-	@Override
-	public ProductInformation findProductInformationByProductId(int productId) throws SQLException {
-		String query = "SELECT * FROM ProductInformation WHERE PK_FK_Product = ?";
-		PreparedStatement statement = connection.prepareStatement(query);
-		statement.setInt(1, productId);
-		ResultSet rs = statement.executeQuery();
-		while(rs.next()) {
-			return buildObject(rs);
-		}
-		return null;
 	}
 
 	@Override

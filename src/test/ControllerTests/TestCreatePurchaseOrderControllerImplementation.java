@@ -29,7 +29,7 @@ public class TestCreatePurchaseOrderControllerImplementation {
 	public void testCreatePurchaseOrderTransaction() throws Exception {
 		int numberOfPurchaseOrderBeforeTest = DaoFactory.getPurchaseOrderDao().findAllPurchaseOrders(false, false).size();
 		
-		for(Product product : DaoFactory.getProductDao().findAllProducts()) {
+		for(Product product : DaoFactory.getProductDao().findAllProducts(false, false)) {
 			controller.addProductToPurchaseOrder(product, 3);
 		}
 		Provider provider = DaoFactory.getProviderDao().findAllProviders(false).get(0);

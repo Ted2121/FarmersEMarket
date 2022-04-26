@@ -1,6 +1,7 @@
 package model;
 
 import java.util.HashMap;
+import java.util.List;
 
 public class Product {
     private int id;
@@ -12,7 +13,8 @@ public class Product {
     public enum WeightCategory{ONE, FIVE, TEN}
     private int weightCategory;
     private HashMap<Integer, String> weightCategoryIntToEnum;
-    private ProductInformation productInformation;
+    private ProductInformation relatedProductInformation;
+    private List<LineItem> relatedLineItems;
 
     public Product(int id, String productName, double purchasingPrice, double sellingPrice, WeightCategory weightCategoryOption, Unit unit) {
     	this(productName, purchasingPrice, sellingPrice, weightCategoryOption, unit);
@@ -91,4 +93,22 @@ public class Product {
     public void setUnit(Unit unit) {
         this.unit = unit;
     }
+
+	public ProductInformation getRelatedProductInformation() {
+		return relatedProductInformation;
+	}
+
+	public void setRelatedProductInformation(ProductInformation relatedProductInformation) {
+		this.relatedProductInformation = relatedProductInformation;
+	}
+
+	public List<LineItem> getRelatedLineItems() {
+		return relatedLineItems;
+	}
+
+	public void setRelatedLineItems(List<LineItem> relatedLineItems) {
+		this.relatedLineItems = relatedLineItems;
+	}
+    
+    
 }

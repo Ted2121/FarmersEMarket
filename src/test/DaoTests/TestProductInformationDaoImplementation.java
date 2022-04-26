@@ -49,27 +49,27 @@ public class TestProductInformationDaoImplementation {
 	}
 	
 	@Test
-	public void testCreateProductInformation() throws SQLException {
+	public void testCreateProductInformation() throws SQLException, Exception {
 		productInformationDao.createProductInformation(productInformationToCreate);
-		assertNotNull(productInformationDao.findProductInformationByProductId(product3.getId()));
+		assertNotNull(productInformationDao.findProductInformationByProductId(product3.getId(), false));
 	}
 	
 	@Test
-	public void testUpdate() throws SQLException {
+	public void testUpdate() throws SQLException, Exception {
 		productInformationToUpdate.setQuantity(50);
 		productInformationDao.updateProductInformation(productInformationToUpdate);
-		assertEquals(50, productInformationDao.findProductInformationByProduct(product1).getQuantity());
+		assertEquals(50, productInformationDao.findProductInformationByProduct(product1, false).getQuantity());
 	}
 	
 	@Test
-	public void testDelete() throws SQLException {
+	public void testDelete() throws SQLException, Exception {
 		productInformationDao.deleteProductInformation(productInformationToDelete);
-		assertNull(productInformationDao.findProductInformationByProductId(product2.getId()));
+		assertNull(productInformationDao.findProductInformationByProductId(product2.getId(), false));
 	}
 	
 	@Test
-	public void testFindAll() throws SQLException {
-		List<ProductInformation> list =  productInformationDao.findAllProductInformation();
+	public void testFindAll() throws SQLException, Exception {
+		List<ProductInformation> list =  productInformationDao.findAllProductInformation(false);
 		int count = 0;
 		for(ProductInformation p : list) {
 			count++;
@@ -78,37 +78,37 @@ public class TestProductInformationDaoImplementation {
 	}
 	
 	@Test
-	public void testFindByProduct() throws SQLException {
-		ProductInformation result = productInformationDao.findProductInformationByProduct(product1);
+	public void testFindByProduct() throws SQLException, Exception {
+		ProductInformation result = productInformationDao.findProductInformationByProduct(product1, false);
 		assertEquals(result.getQuantity(), productInformationToUpdate.getQuantity());
 		assertEquals(result.getLocationCode(), productInformationToUpdate.getLocationCode());
 	}
 	
 	@Test
-	public void testFindByProductName() throws SQLException {
-		List<ProductInformation> results = productInformationDao.findProductInformationByProductName(product1.getProductName());
+	public void testFindByProductName() throws SQLException, Exception {
+		List<ProductInformation> results = productInformationDao.findProductInformationByProductName(product1.getProductName(), false);
 		assertNotNull("Shouldn't return a null object", results);
 	}
 	
 	@Test
-	public void testFindByProductId() throws SQLException {
-		ProductInformation result = productInformationDao.findProductInformationByProductId(product1.getId());
+	public void testFindByProductId() throws SQLException, Exception {
+		ProductInformation result = productInformationDao.findProductInformationByProductId(product1.getId(), false);
 		assertEquals(result.getQuantity(), productInformationToUpdate.getQuantity());
 		assertEquals(result.getLocationCode(), productInformationToUpdate.getLocationCode());
 	}
 	
 	@Test
-	public void testAddOrRemoveQuantityToAProduct() throws SQLException {
+	public void testAddOrRemoveQuantityToAProduct() throws SQLException, Exception {
 		int quantityToAdd = 5;
 		int quantityToRemove = 5;
 		productInformationToUpdate.setQuantity(14);
 		productInformationDao.updateProductInformation(productInformationToUpdate);
 		productInformationDao.addQuantityToProduct(product1, quantityToAdd);
-		ProductInformation updatedProductInfo = productInformationDao.findProductInformationByProduct(product1);
+		ProductInformation updatedProductInfo = productInformationDao.findProductInformationByProduct(product1, false);
 		assertTrue("Should return the value +"+quantityToAdd,updatedProductInfo.getQuantity() == (productInformationToUpdate.getQuantity() + quantityToAdd));
 		productInformationToUpdate.setQuantity(14+quantityToAdd);
 		productInformationDao.removeQuantityToProduct(product1, quantityToRemove);
-		updatedProductInfo = productInformationDao.findProductInformationByProduct(product1);
+		updatedProductInfo = productInformationDao.findProductInformationByProduct(product1, false);
 		assertTrue("Should return the value -"+quantityToRemove,updatedProductInfo.getQuantity() == (productInformationToUpdate.getQuantity() - quantityToRemove));
 		productInformationToUpdate.setQuantity(19-quantityToRemove);
 	}

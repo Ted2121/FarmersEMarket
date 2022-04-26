@@ -36,10 +36,10 @@ public class TestLineItemDaoImplementation {
 		objectToUpdate = ModelFactory.getLineItemModel(5);
 //		lineItemDao.createLineItem(objectToDelete);
 		objectToUpdate.setOrder(DaoFactory.getSaleOrderDao().findSaleOrderById(2, false, false));
-		objectToUpdate.setProduct(DaoFactory.getProductDao().findProductById(3));
+		objectToUpdate.setProduct(DaoFactory.getProductDao().findProductById(3, false, false));
 		
 		objectToDelete.setOrder(DaoFactory.getSaleOrderDao().findSaleOrderById(3, false, false));
-		objectToDelete.setProduct(DaoFactory.getProductDao().findProductById(1));
+		objectToDelete.setProduct(DaoFactory.getProductDao().findProductById(1, false, false));
 		
 		lineItemDao.createLineItem(objectToUpdate);
 		lineItemDao.createLineItem(objectToDelete);
@@ -167,7 +167,7 @@ public class TestLineItemDaoImplementation {
 	
 	@Test
 	public void testCreateLinetem() throws SQLException, Exception{
-		Product product = DaoFactory.getProductDao().findProductById(2);
+		Product product = DaoFactory.getProductDao().findProductById(2, false, false);
 		Order order = DaoFactory.getSaleOrderDao().findSaleOrderById(2, false, false);
 		
 		generatedLineItem = new LineItem(2, product, order);

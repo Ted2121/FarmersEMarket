@@ -22,7 +22,7 @@ public class LineItemDaoImplementation implements LineItemDao {
 		while(rs.next()) {
 			LineItem retrievedLineItem = buildObject(rs);
 			if(retrieveProducts) {
-				Product retrievedProductLinkedToThisPurchaseOrder = (Product) DaoFactory.getProductDao().findProductById(rs.getInt("PK_FK_ProductId"));
+				Product retrievedProductLinkedToThisPurchaseOrder = (Product) DaoFactory.getProductDao().findProductById(rs.getInt("PK_FK_ProductId"), false, false);
 				retrievedLineItem.setProduct(retrievedProductLinkedToThisPurchaseOrder);
 			}
 			
@@ -81,7 +81,7 @@ public class LineItemDaoImplementation implements LineItemDao {
 			//If we want to set the LineItems, we just specify we want to retrieve the LineItem as a parameter of this method
 			if(retrieveProduct) {
 				//If we want to retrieve the LineItems, we get the ArrayList of the retrieved PurchaseOrder
-				Product productRelatedToThisLineItem = DaoFactory.getProductDao().findProductById(rs.getInt("PK_FK_ProductId"));
+				Product productRelatedToThisLineItem = DaoFactory.getProductDao().findProductById(rs.getInt("PK_FK_ProductId"), false, false);
 				retrievedLineItem.setProduct(productRelatedToThisLineItem);
 			}
 		}

@@ -38,27 +38,27 @@ public class TestProductDaoImplementation {
 	}
 	
 	@Test
-	public void testCreateProductInformation() throws SQLException {
+	public void testCreateProductInformation() throws SQLException, Exception {
 		productDao.createProduct(productToCreate);
-		assertNotNull(productDao.findProductById(productToCreate.getId()));
+		assertNotNull(productDao.findProductById(productToCreate.getId(), false, false));
 	}
 	
 	@Test
-	public void testUpdate() throws SQLException {
+	public void testUpdate() throws SQLException, Exception {
 		productToUpdate.setSellingPrice(50d);
 		productDao.updateProduct(productToUpdate);
-		assertTrue("Should return 50d", productDao.findProductById(productToUpdate.getId()).getSellingPrice() == 50d);
+		assertTrue("Should return 50d", productDao.findProductById(productToUpdate.getId(),false, false).getSellingPrice() == 50d);
 	}
 	
 	@Test
-	public void testDelete() throws SQLException {
+	public void testDelete() throws SQLException, Exception {
 		productDao.deleteProduct(productToDelete);
-		assertNull(productDao.findProductById(productToDelete.getId()));
+		assertNull(productDao.findProductById(productToDelete.getId(), false, false));
 	}
 	
 	@Test
-	public void testFindAll() throws SQLException {
-		List<Product> list =  productDao.findAllProducts();
+	public void testFindAll() throws SQLException, Exception {
+		List<Product> list =  productDao.findAllProducts(false, false);
 		int count = 0;
 		for(Product p : list) {
 			count++;
@@ -67,14 +67,14 @@ public class TestProductDaoImplementation {
 	}
 	
 	@Test
-	public void testFindByProductName() throws SQLException {
-		List<Product> results = productDao.findProductByProductName("TestUpdate");
+	public void testFindByProductName() throws SQLException, Exception {
+		List<Product> results = productDao.findProductByProductName("TestUpdate", false, false);
 		assertNotNull("Should return a list with something inside",results);
 	}
 	
 	@Test
-	public void testFindById() throws SQLException {
-		Product result = productDao.findProductById(productToUpdate.getId());
+	public void testFindById() throws SQLException, Exception{
+		Product result = productDao.findProductById(productToUpdate.getId(), false, false);
 		assertEquals(productToUpdate.getProductName(), result.getProductName());
 		assertEquals(productToUpdate.getSellingPrice(), result.getSellingPrice(), productToUpdate.getSellingPrice());
 	}

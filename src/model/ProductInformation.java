@@ -4,6 +4,7 @@ public class ProductInformation {
 	private int locationCode;
 	private int quantity;
 	private int id;
+	private Product relatedProduct;
 	
 	public ProductInformation(int locationCode, int quantity, int id) {
 		super();
@@ -35,4 +36,14 @@ public class ProductInformation {
 	public void setId(int id) {
 		this.id = id;
 	}
+
+	public Product getRelatedProduct() {
+		return relatedProduct;
+	}
+
+	public void setRelatedProduct(Product relatedProduct) {
+		this.relatedProduct = relatedProduct;
+	}
+	
+	
 }
