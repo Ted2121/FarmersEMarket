@@ -19,10 +19,12 @@ import model.PurchaseOrder;
 
 public class TestCreatePurchaseOrderControllerImplementation {
 	private static CreatePurchaseOrderController controller;
+	private static int quantityOfEachLineItem;
 	
 	@BeforeClass
 	public static void setUp() {
 		controller = ControllerFactory.getCreatePurchaseOrderController();
+		quantityOfEachLineItem = 3;
 	}
 	
 	@Test
@@ -30,7 +32,7 @@ public class TestCreatePurchaseOrderControllerImplementation {
 		int numberOfPurchaseOrderBeforeTest = DaoFactory.getPurchaseOrderDao().findAllPurchaseOrders(false, false).size();
 		
 		for(Product product : DaoFactory.getProductDao().findAllProducts(false, false)) {
-			controller.addProductToPurchaseOrder(product, 3);
+			controller.addProductToPurchaseOrder(product, quantityOfEachLineItem);
 		}
 		Provider provider = DaoFactory.getProviderDao().findAllProviders(false).get(0);
 		
@@ -47,6 +49,7 @@ public class TestCreatePurchaseOrderControllerImplementation {
 		for(LineItem lineItem : DaoFactory.getLineItemDao().findLineItemsByOrder(purchaseOrder, true)) {
 			lineItem.setOrder(purchaseOrder);
 			DaoFactory.getLineItemDao().deleteLineItem(lineItem);
+			DaoFactory.getProductInformationDao().removeQuantityToProduct(lineItem.getProduct(), quantityOfEachLineItem);
 		}
 		
 		DaoFactory.getPurchaseOrderDao().deletePurchaseOrder(purchaseOrder);
