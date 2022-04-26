@@ -35,40 +35,35 @@ public class ProductInformationDaoImplementation implements ProductInformationDa
 	
 	@Override
 	public void createProductInformation(ProductInformation objectToInsert) throws SQLException {
-		// TODO Auto-generated method stub
-		String query = "insert into ProductInformation values(?, ?, ?)";
+		String query = "INSERT INTO ProductInformation VALUES(?, ?, ?)";
 		PreparedStatement statement = connection.prepareStatement(query);
 		statement.setInt(1, objectToInsert.getId());
 		statement.setInt(2, objectToInsert.getQuantity());
 		statement.setInt(3, objectToInsert.getLocationCode());
-		int row = statement.executeUpdate();
+		statement.executeUpdate();
 	}
 
 	@Override
 	public void updateProductInformation(ProductInformation objectToUpdate) throws SQLException {
-		// TODO Auto-generated method stub
-		String query = "update ProductInformation set Quantity=?, LocationCode=? where PK_FK_Product=?";
+		String query = "UPDATE ProductInformation SET Quantity=?, LocationCode=? WHERE PK_FK_Product=?";
 		PreparedStatement statement = connection.prepareStatement(query);
 		statement.setInt(1, objectToUpdate.getQuantity());
 		statement.setInt(2, objectToUpdate.getLocationCode());
 		statement.setInt(3, objectToUpdate.getId());
-		int row = statement.executeUpdate();
+		statement.executeUpdate();
 	}
 
 	@Override
 	public void deleteProductInformation(ProductInformation objectToDelete) throws SQLException {
-		// TODO Auto-generated method stub
-		String query = "delete from ProductInformation where PK_FK_Product=?";
+		String query = "DELETE FROM ProductInformation WHERE PK_FK_Product=?";
 		PreparedStatement statement = connection.prepareStatement(query);
 		statement.setInt(1, objectToDelete.getId());
-		int row = statement.executeUpdate();
+		statement.executeUpdate();
 	}
 
 	@Override
 	public List<ProductInformation> findAllProductInformationEntries() throws SQLException {
-		// TODO Auto-generated method stub
-		ArrayList<ProductInformation> list = new ArrayList<ProductInformation>();
-		String query = "select * from ProductInformation";
+		String query = "SELECT * FROM ProductInformation";
 		PreparedStatement statement = connection.prepareStatement(query);
 		ResultSet rs = statement.executeQuery();
 		return buildObjects(rs);
@@ -76,8 +71,7 @@ public class ProductInformationDaoImplementation implements ProductInformationDa
 
 	@Override
 	public ProductInformation findProductInformationByProduct(Product product) throws SQLException {
-		// TODO Auto-generated method stub
-		String query = "select * from ProductInformation where PK_FK_Product=?";
+		String query = "SELECT * FROM ProductInformation WHERE PK_FK_Product=?";
 		PreparedStatement statement = connection.prepareStatement(query);
 		statement.setInt(1, product.getId());
 		ResultSet rs = statement.executeQuery();
@@ -89,7 +83,7 @@ public class ProductInformationDaoImplementation implements ProductInformationDa
 
 	@Override
 	public ProductInformation findProductInformationByProductName(String productName) throws SQLException {
-		// TODO Auto-generated method stub
+		// TODO Once ProductDao.findProductBuProductName will be fixed, this part need to be fixed as well
 		ProductDao dao = new ProductDaoImplementation();
 		Product product = dao.findProductByProductName(productName);
 		return findProductInformationByProduct(product);
@@ -97,7 +91,7 @@ public class ProductInformationDaoImplementation implements ProductInformationDa
 
 	@Override
 	public ProductInformation findProductInformationByProductId(int productId) throws SQLException {
-		// TODO Auto-generated method stub
+		//If you have the product ID you can go to the findById without using the productDao
 		ProductDao dao = new ProductDaoImplementation();
 		Product product = dao.findProductById(productId);
 		return findProductInformationByProduct(product);
@@ -105,7 +99,7 @@ public class ProductInformationDaoImplementation implements ProductInformationDa
 
 	@Override
 	public void addQuantityToProduct(Product product, int quantity) throws SQLException {
-		// TODO Auto-generated method stub
+		// TODO Better to use a single SQL statement than 2
 		ProductInformation productInformation = findProductInformationByProduct(product);
 		productInformation.setQuantity(productInformation.getQuantity()+quantity);
 		updateProductInformation(productInformation);
@@ -113,7 +107,7 @@ public class ProductInformationDaoImplementation implements ProductInformationDa
 
 	@Override
 	public void removeQuantityToProduct(Product product, int quantity) throws SQLException {
-		// TODO Auto-generated method stub
+		// TODO Better to use a single SQL statement than 2
 		ProductInformation productInformation = findProductInformationByProduct(product);
 		quantity = productInformation.getQuantity()-quantity;
 		productInformation.setQuantity(quantity);

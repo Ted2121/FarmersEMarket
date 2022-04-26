@@ -43,24 +43,23 @@ public class ProductDaoImplementation implements ProductDao {
 	
 	@Override
 	public void createProduct(Product objectToInsert) throws SQLException {
-		// TODO Auto-generated method stub
-		String query = "insert into Product values(?, ?, ?, ?, ?)";
+		//TODO changing the retrieving id methods with the SQL statement part. It's better using 1 SQL statement than 2 (for speed efficiency)
+		String query = "INSERT INTO Product VALUES(?, ?, ?, ?, ?)";
 		PreparedStatement statement = connection.prepareStatement(query);
 		statement.setString(1, objectToInsert.getProductName());
 		statement.setDouble(2, objectToInsert.getPurchasingPrice());
 		statement.setDouble(3, objectToInsert.getSellingPrice());
 		statement.setString(4, objectToInsert.getUnit());
 		statement.setInt(5, objectToInsert.getWeightCategory());
-		int row = statement.executeUpdate();
-		objectToInsert = findProductByProductName(objectToInsert.getProductName());
+		statement.executeUpdate();
+		objectToInsert = findProductByProductName(objectToInsert.getProductName()); //To retrieve only the ID, refers to create() methods of OrderDao
 	}
 	
 
 
 	@Override
 	public void updateProduct(Product objectToUpdate) throws SQLException {
-		// TODO Auto-generated method stub
-		String query = "update Product set Name=?, PurchasingPrice=?, SellingPrice=?, Unit=?, WeightCategory=? where PK_idProduct=?";
+		String query = "UPDATE Product SET [Name]=?, PurchasingPrice=?, SellingPrice=?, Unit=?, WeightCategory=? WHERE PK_idProduct=?";
 		PreparedStatement statement = connection.prepareStatement(query);
 		statement.setString(1, objectToUpdate.getProductName());
 		statement.setDouble(2, objectToUpdate.getPurchasingPrice());
@@ -68,23 +67,20 @@ public class ProductDaoImplementation implements ProductDao {
 		statement.setString(4, objectToUpdate.getUnit());
 		statement.setInt(5, objectToUpdate.getWeightCategory());
 		statement.setInt(6, objectToUpdate.getId());
-		int row = statement.executeUpdate();
+		statement.executeUpdate();
 	}
 
 	@Override
 	public void deleteProduct(Product objectToDelete) throws SQLException {
-		// TODO Auto-generated method stub
-		String query = "delete from Product where PK_idProduct=?";
+		String query = "DELETE FROM Product WHERE PK_idProduct=?";
 		PreparedStatement statement = connection.prepareStatement(query);
 		statement.setInt(1, objectToDelete.getId());
-		int row = statement.executeUpdate();
+		statement.executeUpdate();
 	}
 
 	@Override
 	public List<Product> findAllProducts() throws SQLException {
-		// TODO Auto-generated method stub
-		List<Product> list = new ArrayList<Product>();
-		String query = "select * from Product";
+		String query = "SELECT * FROM Product";
 		PreparedStatement statement = connection.prepareStatement(query);
 		ResultSet rs = statement.executeQuery();
 		return buildObjects(rs);
@@ -92,8 +88,9 @@ public class ProductDaoImplementation implements ProductDao {
 
 	@Override
 	public Product findProductByProductName(String productName) throws SQLException {
-		// TODO Auto-generated method stub
-		String query = "select * from Product where Name=?";
+		//TODO changing the methods to retrieve more than 1 results.
+		//If you retrieve potatoes, you can retrive 3 products, potatoes of 1kg, 5kg and 10kg
+		String query = "SELECT * FROM Product WHERE [Name]=?";
 		PreparedStatement statement = connection.prepareStatement(query);
 		statement.setString(1, productName);
 		ResultSet rs = statement.executeQuery();
@@ -106,8 +103,7 @@ public class ProductDaoImplementation implements ProductDao {
 
 	@Override
 	public Product findProductById(int productId) throws SQLException {
-		// TODO Auto-generated method stub
-		String query = "select * from Product where Pk_idProduct=?";
+		String query = "SELECT * FROM Product WHERE Pk_idProduct=?";
 		PreparedStatement statement = connection.prepareStatement(query);
 		statement.setInt(1, productId);
 		ResultSet rs = statement.executeQuery();
