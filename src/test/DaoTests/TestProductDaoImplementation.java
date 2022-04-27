@@ -14,12 +14,16 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import db_access.DaoFactory;
+import db_access.DaoInterfaces.LineItemDao;
+import db_access.DaoInterfaces.OrderDao;
 import db_access.DaoInterfaces.ProductDao;
 import db_access.DaoInterfaces.ProductInformationDao;
 import model.LineItem;
 import model.ModelFactory;
+import model.Order;
 import model.Product;
 import model.ProductInformation;
+import test.testingClass.TestingSaleOrder;
 import model.Product.Unit;
 import model.Product.WeightCategory;
 
@@ -30,17 +34,27 @@ public class TestProductDaoImplementation {
 	private static Product productToCreate;
 	private static LineItem lineItem;
 	private static ProductInformation productInformation;
+	private static LineItemDao lineItemDao;
+	private static ProductInformationDao productInformationDao;
+	private static int idOrder;
+	private static TestingSaleOrder order;
 	
 	@BeforeClass
 	public static void setUp() throws SQLException {
 		productDao = DaoFactory.getProductDao();
+		lineItemDao = DaoFactory.getLineItemDao();
+		productInformationDao = DaoFactory.getProductInformationDao();
 		productToCreate = ModelFactory.getProductModelWithoutId("TestCreate", 15d, 20d, WeightCategory.FIVE, Unit.KG);
 		productToUpdate = ModelFactory.getProductModelWithoutId("TestUpdate", 15d, 20d, WeightCategory.FIVE, Unit.KG);
 		productToDelete = ModelFactory.getProductModelWithoutId("TestDelete", 15d, 20d, WeightCategory.FIVE, Unit.KG);
 		productDao.createProduct(productToUpdate);
 		productDao.createProduct(productToDelete);
-		lineItem = ModelFactory.getLineItemModel(5, productToUpdate, null);
-		productInformation = ModelFactory.getProductInformationModel(156, 14, productToCreate.getId());
+		idOrder = DaoFactory.getOrderDao().createEmptyOrder();
+		order = new TestingSaleOrder(idOrder);
+		lineItem = ModelFactory.getLineItemModel(5, productToUpdate, order);
+		lineItemDao.createLineItem(lineItem);
+		productInformation = ModelFactory.getProductInformationModel(156, 14, productToUpdate.getId());
+		productInformationDao.createProductInformation(productInformation);
 		productToUpdate.setRelatedProductInformation(productInformation);
 		List<LineItem> lineItems = new ArrayList<LineItem>();
 		lineItems.add(lineItem);
@@ -72,19 +86,22 @@ public class TestProductDaoImplementation {
 		int count = 0;
 		for(Product p : list) {
 			count++;
+			assertTrue(p.getRelatedProductInformation() == null);
+			assertTrue(p.getRelatedLineItems() == null);
 		}
 		assertTrue(count>0);
 	}
 	@Test
 	public void testFindAllWithProductInformationAssociation() throws SQLException, Exception {
 		List<Product> list =  productDao.findAllProducts(false, true);
-		int count = 0;
 		for(Product p : list) {
-			if(p.equals(productToUpdate)) {
+			if(p.getId() == productToUpdate.getId()) {
 				assertTrue(p.getRelatedProductInformation().getQuantity() == productInformation.getQuantity());
+				assertTrue(p.getRelatedLineItems() == null);
 			}
 			else {
 				assertTrue(p.getRelatedProductInformation() == null);
+				assertTrue(p.getRelatedLineItems() == null);
 			}
 		}
 		
@@ -93,28 +110,29 @@ public class TestProductDaoImplementation {
 	@Test
 	public void testFindAllWithLineItemAssociation() throws SQLException, Exception {
 		List<Product> list =  productDao.findAllProducts(true, false);
-		int count = 0;
 		for(Product p : list) {
-			if(p.equals(productToUpdate)) {
-				assertTrue(p.getRelatedLineItems().equals(productToUpdate.getRelatedLineItems()));
+			if(p.getId() == productToUpdate.getId()) {
+				assertTrue(!p.getRelatedLineItems().isEmpty());
+				assertTrue(p.getRelatedProductInformation() == null);
 			}
 			else {
+				assertTrue(p.getRelatedLineItems().isEmpty());
 				assertTrue(p.getRelatedProductInformation() == null);
 			}
 		}
 		
 	}
 	
+	@Test
 	public void testFindAllWithLineItemAndProductInformationAssociation() throws SQLException, Exception {
 		List<Product> list =  productDao.findAllProducts(true, true);
-		int count = 0;
 		for(Product p : list) {
-			if(p.equals(productToUpdate)) {
-				assertTrue(p.getRelatedLineItems().equals(productToUpdate.getRelatedLineItems()));
+			if(p.getId() == productToUpdate.getId()) {
+				assertTrue(!p.getRelatedLineItems().isEmpty());
 				assertTrue(p.getRelatedProductInformation().getQuantity() == productInformation.getQuantity());
 			}
 			else {
-				assertTrue(p.getRelatedProductInformation() == null);
+				assertTrue(p.getRelatedLineItems().isEmpty());
 				assertTrue(p.getRelatedProductInformation() == null);
 			}
 		}
@@ -135,7 +153,10 @@ public class TestProductDaoImplementation {
 	}
 	
 	@AfterClass
-	public static void cleanUp() throws SQLException {
+	public static void cleanUp() throws Exception {
+		lineItemDao.deleteLineItem(lineItem);
+		DaoFactory.getOrderDao().deleteOrder(order);
+		productInformationDao.deleteProductInformation(productInformation);
 		productDao.deleteProduct(productToCreate);
 		productDao.deleteProduct(productToUpdate);
 	}
