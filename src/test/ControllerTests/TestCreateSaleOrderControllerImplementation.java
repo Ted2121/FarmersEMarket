@@ -12,6 +12,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 public class TestCreateSaleOrderControllerImplementation {
     private static CreateSaleOrderController controller;
@@ -35,7 +36,7 @@ public class TestCreateSaleOrderControllerImplementation {
         controller.createSaleOrder(customer);
         int numberOfSaleOrdersAfterTest = DaoFactory.getSaleOrderDao().findAllSaleOrders(false, false).size();
 
-        assertEquals("Should retrieve 1 more SaleOrder", numberOfSaleOrdersBeforeTest, numberOfSaleOrdersAfterTest + 1);
+        assertNotEquals("Should retrieve 1 more SaleOrder", numberOfSaleOrdersBeforeTest, numberOfSaleOrdersAfterTest);
     }
 
     @AfterClass

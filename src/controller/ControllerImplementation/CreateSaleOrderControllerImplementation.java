@@ -26,15 +26,15 @@ public CreateSaleOrderControllerImplementation() {
     public void addProductToSaleOrder(Product product, int quantity) {
         if(productWithQuantity.containsKey(product)) {
             int oldQuantity = productWithQuantity.get(product);
-            productWithQuantity.replace(product, oldQuantity - quantity);
+            productWithQuantity.replace(product, oldQuantity + quantity);
         }else {
-            throw new RuntimeException("Product doesn't exist");
+        	productWithQuantity.put(product, quantity);
         }
     }
 
     @Override
     public void createSaleOrder(Customer customer) {
-        saleOrder = ModelFactory.getSaleOrderModel(customer);
+        this.saleOrder = ModelFactory.getSaleOrderModel(customer);
         saleOrder.setOrderPrice(calculateTotalPrice());
         ArrayList<LineItem> generatedLineItems = (ArrayList<LineItem>) generateLineItems();
 
