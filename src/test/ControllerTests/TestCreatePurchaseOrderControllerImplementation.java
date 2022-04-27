@@ -2,8 +2,6 @@ package test.ControllerTests;
 
 import static org.junit.Assert.assertNotEquals;
 
-import java.sql.SQLException;
-
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -43,7 +41,7 @@ public class TestCreatePurchaseOrderControllerImplementation {
 	}
 	
 	@AfterClass
-	public static void cleanUp() throws SQLException, Exception {
+	public static void cleanUp() throws Exception {
 		CreatePurchaseOrderControllerImplementation controllerImplementation = (CreatePurchaseOrderControllerImplementation) controller;
 		PurchaseOrder purchaseOrder = controllerImplementation.getPurchaseOrder();
 		for(LineItem lineItem : DaoFactory.getLineItemDao().findLineItemsByOrder(purchaseOrder, true)) {

@@ -50,7 +50,7 @@ public class ProductInformationDaoImplementation implements ProductInformationDa
 	}
 
 	@Override
-	public ProductInformation findProductInformationByProduct(Product product, boolean retrieveProduct) throws SQLException, Exception {
+	public ProductInformation findProductInformationByProduct(Product product, boolean retrieveProduct) throws Exception {
 		String query = "SELECT * FROM ProductInformation WHERE PK_FK_Product=?";
 		PreparedStatement statement = connection.prepareStatement(query);
 		statement.setInt(1, product.getId());
@@ -130,14 +130,15 @@ public class ProductInformationDaoImplementation implements ProductInformationDa
 		
 	}
 
-	@Override
-	public void removeQuantityToProduct(Product product, int quantity) throws SQLException {
-		String addQuantity = "UPDATE ProductInformation SET quantity -= ? WHERE PK_FK_Product = ?";
-		PreparedStatement statement = connection.prepareStatement(addQuantity);
-		statement.setInt(1, quantity);
-		statement.setInt(2, product.getId());
-		statement.executeUpdate();
+
+		@Override
+		public void removeQuantityToProduct (Product product, int quantity) throws SQLException {
+			String addQuantity = "UPDATE ProductInformation SET quantity -= ? WHERE PK_FK_Product = ?";
+			PreparedStatement statement = connection.prepareStatement(addQuantity);
+			statement.setInt(1, quantity);
+			statement.setInt(2, product.getId());
+			statement.executeUpdate();
+		}
+
 	}
-	
-	
-}
+

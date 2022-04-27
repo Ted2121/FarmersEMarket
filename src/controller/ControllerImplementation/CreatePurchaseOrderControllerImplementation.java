@@ -92,7 +92,7 @@ public class CreatePurchaseOrderControllerImplementation implements CreatePurcha
 	private List<LineItem> generateLineItems() {
 		ArrayList<LineItem> generatedLineItems = new ArrayList<LineItem>();
 		for(Product key : productWithQuantity.keySet()) {
-			key.getId();
+
 			LineItem lineItem = ModelFactory.getLineItemModel(productWithQuantity.get(key), key, purchaseOrder);
 			generatedLineItems.add(lineItem);
 		}
