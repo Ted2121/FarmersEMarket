@@ -140,16 +140,177 @@ public class TestProductDaoImplementation {
 	}
 	
 	@Test
-	public void testFindByProductName() throws SQLException, Exception {
+	public void testFindByProductNameWithoutAssociation() throws SQLException, Exception {
 		List<Product> results = productDao.findProductByProductName("TestUpdate", false, false);
 		assertNotNull("Should return a list with something inside",results);
+		for(Product p : results) {
+			assertTrue(p.getRelatedProductInformation() == null);
+			assertTrue(p.getRelatedLineItems() == null);
+		}
 	}
 	
 	@Test
-	public void testFindById() throws SQLException, Exception{
+	public void testFindByProductNameWithProductInformationAssociation() throws SQLException, Exception {
+		List<Product> results = productDao.findProductByProductName("TestUpdate", false, true);
+		assertNotNull("Should return a list with something inside",results);
+		for(Product p : results) {
+			if(p.getId() == productToUpdate.getId()) {
+				assertTrue(p.getRelatedProductInformation().getQuantity() == productInformation.getQuantity());
+				assertTrue(p.getRelatedLineItems() == null);
+			}
+			else {
+				assertTrue(p.getRelatedProductInformation() == null);
+				assertTrue(p.getRelatedLineItems() == null);
+			}
+		}
+	}
+	
+	@Test
+	public void testFindByProductNameWithLineItemAssociation() throws SQLException, Exception {
+		List<Product> results = productDao.findProductByProductName("TestUpdate", true, false);
+		assertNotNull("Should return a list with something inside",results);
+		for(Product p : results) {
+			if(p.getId() == productToUpdate.getId()) {
+				assertTrue(!p.getRelatedLineItems().isEmpty());
+				assertTrue(p.getRelatedProductInformation() == null);
+			}
+			else {
+				assertTrue(p.getRelatedLineItems().isEmpty());
+				assertTrue(p.getRelatedProductInformation() == null);
+			}
+		}
+	}
+	
+	@Test
+	public void testFindByProductNameAllAssociations() throws SQLException, Exception {
+		List<Product> results = productDao.findProductByProductName("TestUpdate", true, true);
+		assertNotNull("Should return a list with something inside",results);
+		for(Product p : results) {
+			if(p.getId() == productToUpdate.getId()) {
+				assertTrue(!p.getRelatedLineItems().isEmpty());
+				assertTrue(p.getRelatedProductInformation().getQuantity() == productInformation.getQuantity());
+			}
+			else {
+				assertTrue(p.getRelatedLineItems().isEmpty());
+				assertTrue(p.getRelatedProductInformation() == null);
+			}
+		}
+	}
+	
+	@Test
+	public void testFindByIdWitoutAssociation() throws SQLException, Exception{
 		Product result = productDao.findProductById(productToUpdate.getId(), false, false);
 		assertEquals(productToUpdate.getProductName(), result.getProductName());
 		assertEquals(productToUpdate.getSellingPrice(), result.getSellingPrice(), productToUpdate.getSellingPrice());
+		
+		assertTrue(result.getRelatedProductInformation() == null);
+		assertTrue(result.getRelatedLineItems() == null);
+	}
+	
+	@Test
+	public void testFindByIdWithProductInformationAssociation() throws SQLException, Exception{
+		Product result = productDao.findProductById(productToUpdate.getId(), false, true);
+		assertEquals(productToUpdate.getProductName(), result.getProductName());
+		assertEquals(productToUpdate.getSellingPrice(), result.getSellingPrice(), productToUpdate.getSellingPrice());
+		
+		if(result.getId() == productToUpdate.getId()) {
+			assertTrue(result.getRelatedProductInformation().getQuantity() == productInformation.getQuantity());
+			assertTrue(result.getRelatedLineItems() == null);
+		}              
+		else {         
+			assertTrue(result.getRelatedProductInformation() == null);
+			assertTrue(result.getRelatedLineItems() == null);
+		}             
+	}
+	
+	@Test
+	public void testFindByIdWithLineItemAssociation() throws SQLException, Exception{
+		Product result = productDao.findProductById(productToUpdate.getId(), true, false);
+		assertEquals(productToUpdate.getProductName(), result.getProductName());
+		assertEquals(productToUpdate.getSellingPrice(), result.getSellingPrice(), productToUpdate.getSellingPrice());
+		
+		if(result.getId() == productToUpdate.getId()) {
+			assertTrue(!result.getRelatedLineItems().isEmpty());
+			assertTrue(result.getRelatedProductInformation() == null);
+		}
+		else {
+			assertTrue(result.getRelatedLineItems().isEmpty());
+			assertTrue(result.getRelatedProductInformation() == null);
+		}
+	}
+	
+	@Test
+	public void testFindByIdWithAllAssociations() throws SQLException, Exception{
+		Product result = productDao.findProductById(productToUpdate.getId(), true, true);
+		assertEquals(productToUpdate.getProductName(), result.getProductName());
+		assertEquals(productToUpdate.getSellingPrice(), result.getSellingPrice(), productToUpdate.getSellingPrice());
+		
+		if(result.getId() == productToUpdate.getId()) {
+			assertTrue(!result.getRelatedLineItems().isEmpty());
+			assertTrue(result.getRelatedProductInformation().getQuantity() == productInformation.getQuantity());
+		}
+		else {
+			assertTrue(result.getRelatedLineItems().isEmpty());
+			assertTrue(result.getRelatedProductInformation() == null);
+		}
+	}
+	
+	@Test
+	public void testFindByPartialNameWithoutAssociations() throws SQLException, Exception {
+		List<Product> results = productDao.findProductsByPartialName("Up", false, false);
+		assertNotNull("Should return a list with something inside",results);
+		for(Product p : results) {
+			assertTrue(p.getRelatedProductInformation() == null);
+			assertTrue(p.getRelatedLineItems() == null);
+		}
+	}
+	
+	@Test
+	public void testFindByPartialNameWithProductInformationAssociation() throws SQLException, Exception {
+		List<Product> results = productDao.findProductsByPartialName("Up", false, true);
+		assertNotNull("Should return a list with something inside",results);
+		for(Product p : results) {
+			if(p.getId() == productToUpdate.getId()) {
+				assertTrue(p.getRelatedProductInformation().getQuantity() == productInformation.getQuantity());
+				assertTrue(p.getRelatedLineItems() == null);
+			}
+			else {
+				assertTrue(p.getRelatedProductInformation() == null);
+				assertTrue(p.getRelatedLineItems() == null);
+			}
+		}
+	}
+	
+	@Test
+	public void testFindByPartialNameWithLineItemAssociation() throws SQLException, Exception {
+		List<Product> results = productDao.findProductsByPartialName("Up", true, false);
+		assertNotNull("Should return a list with something inside",results);
+		for(Product p : results) {
+			if(p.getId() == productToUpdate.getId()) {
+				assertTrue(!p.getRelatedLineItems().isEmpty());
+				assertTrue(p.getRelatedProductInformation() == null);
+			}
+			else {
+				assertTrue(p.getRelatedLineItems().isEmpty());
+				assertTrue(p.getRelatedProductInformation() == null);
+			}
+		}
+	}
+	
+	@Test
+	public void testFindByPartialNameWithAllAssociation() throws SQLException, Exception {
+		List<Product> results = productDao.findProductsByPartialName("Up", true, true);
+		assertNotNull("Should return a list with something inside",results);
+		for(Product p : results) {
+			if(p.getId() == productToUpdate.getId()) {
+				assertTrue(!p.getRelatedLineItems().isEmpty());
+				assertTrue(p.getRelatedProductInformation().getQuantity() == productInformation.getQuantity());
+			}
+			else {
+				assertTrue(p.getRelatedLineItems().isEmpty());
+				assertTrue(p.getRelatedProductInformation() == null);
+			}
+		}
 	}
 	
 	@AfterClass
