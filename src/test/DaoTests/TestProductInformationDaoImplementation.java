@@ -42,6 +42,7 @@ public class TestProductInformationDaoImplementation {
 		productDao.createProduct(product2);
 		productDao.createProduct(product3);
 		productInformationToUpdate = ModelFactory.getProductInformationModel(900, 14, product1.getId());
+		productInformationToUpdate.setRelatedProduct(product1);
 		productInformationToDelete = ModelFactory.getProductInformationModel(900, 14, product2.getId());
 		productInformationToCreate = ModelFactory.getProductInformationModel(900, 14, product3.getId());
 		productInformationDao.createProductInformation(productInformationToUpdate);
@@ -68,33 +69,75 @@ public class TestProductInformationDaoImplementation {
 	}
 	
 	@Test
-	public void testFindAll() throws SQLException, Exception {
+	public void testFindAllWithoutAssociation() throws SQLException, Exception {
 		List<ProductInformation> list =  productInformationDao.findAllProductInformation(false);
 		int count = 0;
 		for(ProductInformation p : list) {
 			count++;
+			assertTrue(p.getRelatedProduct()==null);
 		}
 		assertTrue(count>0);
 	}
 	
 	@Test
-	public void testFindByProduct() throws SQLException, Exception {
+	public void testFindAllWithAssocation() throws SQLException, Exception {
+		List<ProductInformation> list =  productInformationDao.findAllProductInformation(true);
+		int count = 0;
+		for(ProductInformation p : list) {
+			count++;
+			assertTrue(p.getRelatedProduct().getId()==p.getId());
+		}
+		assertTrue(count>0);
+	}
+	
+	@Test
+	public void testFindByProductWithoutAssociation() throws SQLException, Exception {
 		ProductInformation result = productInformationDao.findProductInformationByProduct(product1, false);
 		assertEquals(result.getQuantity(), productInformationToUpdate.getQuantity());
 		assertEquals(result.getLocationCode(), productInformationToUpdate.getLocationCode());
+		assertTrue(result.getRelatedProduct()==null);
 	}
 	
 	@Test
-	public void testFindByProductName() throws SQLException, Exception {
+	public void testFindByProductWithAssociation() throws SQLException, Exception {
+		ProductInformation result = productInformationDao.findProductInformationByProduct(product1, true);
+		assertEquals(result.getQuantity(), productInformationToUpdate.getQuantity());
+		assertEquals(result.getLocationCode(), productInformationToUpdate.getLocationCode());
+		assertTrue(result.getRelatedProduct().getId()==product1.getId());
+	}
+	
+	@Test
+	public void testFindByProductNameWithoutAssociation() throws SQLException, Exception {
 		List<ProductInformation> results = productInformationDao.findProductInformationByProductName(product1.getProductName(), false);
 		assertNotNull("Shouldn't return a null object", results);
+		for(ProductInformation p : results) {
+			assertTrue(p.getRelatedProduct()==null);
+		}
 	}
 	
 	@Test
-	public void testFindByProductId() throws SQLException, Exception {
+	public void testFindByProductNameWithAssociation() throws SQLException, Exception {
+		List<ProductInformation> results = productInformationDao.findProductInformationByProductName(product1.getProductName(), true);
+		assertNotNull("Shouldn't return a null object", results);
+		for(ProductInformation p : results) {
+			assertTrue(p.getRelatedProduct().getId()==p.getId());
+		}
+	}
+	
+	@Test
+	public void testFindByProductIdWithoutAssociation() throws SQLException, Exception {
 		ProductInformation result = productInformationDao.findProductInformationByProductId(product1.getId(), false);
 		assertEquals(result.getQuantity(), productInformationToUpdate.getQuantity());
 		assertEquals(result.getLocationCode(), productInformationToUpdate.getLocationCode());
+		assertTrue(result.getRelatedProduct()==null);
+	}
+	
+	@Test
+	public void testFindByProductIdWithAssociation() throws SQLException, Exception {
+		ProductInformation result = productInformationDao.findProductInformationByProductId(product1.getId(), true);
+		assertEquals(result.getQuantity(), productInformationToUpdate.getQuantity());
+		assertEquals(result.getLocationCode(), productInformationToUpdate.getLocationCode());
+		assertTrue(result.getRelatedProduct().getId()==product1.getId());
 	}
 	
 	@Test
