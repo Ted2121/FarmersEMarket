@@ -41,10 +41,8 @@ public class TestProductInformationDaoImplementation {
 		productDao.createProduct(product1);
 		productDao.createProduct(product2);
 		productDao.createProduct(product3);
-		product1.setId(productDao.findProductByProductName("Test1").getId());
-		product2.setId(productDao.findProductByProductName("Test2").getId());
-		product3.setId(productDao.findProductByProductName("Test3").getId());
 		productInformationToUpdate = ModelFactory.getProductInformationModel(900, 14, product1.getId());
+		productInformationToUpdate.setRelatedProduct(product1);
 		productInformationToDelete = ModelFactory.getProductInformationModel(900, 14, product2.getId());
 		productInformationToCreate = ModelFactory.getProductInformationModel(900, 14, product3.getId());
 		productInformationDao.createProductInformation(productInformationToUpdate);
@@ -52,53 +50,110 @@ public class TestProductInformationDaoImplementation {
 	}
 	
 	@Test
-	public void testCreateProductInformation() throws SQLException {
+	public void testCreateProductInformation() throws SQLException, Exception {
 		productInformationDao.createProductInformation(productInformationToCreate);
-		assertNotNull(productInformationDao.findProductInformationByProductId(product3.getId()));
+		assertNotNull(productInformationDao.findProductInformationByProductId(product3.getId(), false));
 	}
 	
 	@Test
-	public void testUpdate() throws SQLException {
+	public void testUpdate() throws SQLException, Exception {
 		productInformationToUpdate.setQuantity(50);
 		productInformationDao.updateProductInformation(productInformationToUpdate);
-		assertEquals(50, productInformationDao.findProductInformationByProduct(product1).getQuantity());
+		assertEquals(50, productInformationDao.findProductInformationByProduct(product1, false).getQuantity());
 	}
 	
 	@Test
-	public void testDelete() throws SQLException {
+	public void testDelete() throws SQLException, Exception {
 		productInformationDao.deleteProductInformation(productInformationToDelete);
-		assertNull(productInformationDao.findProductInformationByProductId(product2.getId()));
+		assertNull(productInformationDao.findProductInformationByProductId(product2.getId(), false));
 	}
 	
 	@Test
-	public void testFindAll() throws SQLException {
-		List<ProductInformation> list =  productInformationDao.findAllProductInformationEntries();
+	public void testFindAllWithoutAssociation() throws SQLException, Exception {
+		List<ProductInformation> list =  productInformationDao.findAllProductInformation(false);
 		int count = 0;
 		for(ProductInformation p : list) {
 			count++;
+			assertTrue(p.getRelatedProduct()==null);
 		}
 		assertTrue(count>0);
 	}
 	
 	@Test
-	public void testFindByProduct() throws SQLException {
-		ProductInformation result = productInformationDao.findProductInformationByProduct(product1);
-		assertEquals(result.getQuantity(), productInformationToUpdate.getQuantity());
-		assertEquals(result.getLocationCode(), productInformationToUpdate.getLocationCode());
+	public void testFindAllWithAssocation() throws SQLException, Exception {
+		List<ProductInformation> list =  productInformationDao.findAllProductInformation(true);
+		int count = 0;
+		for(ProductInformation p : list) {
+			count++;
+			assertTrue(p.getRelatedProduct().getId()==p.getId());
+		}
+		assertTrue(count>0);
 	}
 	
 	@Test
-	public void testFindByProductName() throws SQLException {
-		ProductInformation result = productInformationDao.findProductInformationByProductName(product1.getProductName());
+	public void testFindByProductWithoutAssociation() throws SQLException, Exception {
+		ProductInformation result = productInformationDao.findProductInformationByProduct(product1, false);
 		assertEquals(result.getQuantity(), productInformationToUpdate.getQuantity());
 		assertEquals(result.getLocationCode(), productInformationToUpdate.getLocationCode());
+		assertTrue(result.getRelatedProduct()==null);
 	}
 	
 	@Test
-	public void testFindByProductId() throws SQLException {
-		ProductInformation result = productInformationDao.findProductInformationByProductId(product1.getId());
+	public void testFindByProductWithAssociation() throws SQLException, Exception {
+		ProductInformation result = productInformationDao.findProductInformationByProduct(product1, true);
 		assertEquals(result.getQuantity(), productInformationToUpdate.getQuantity());
 		assertEquals(result.getLocationCode(), productInformationToUpdate.getLocationCode());
+		assertTrue(result.getRelatedProduct().getId()==product1.getId());
+	}
+	
+	@Test
+	public void testFindByProductNameWithoutAssociation() throws SQLException, Exception {
+		List<ProductInformation> results = productInformationDao.findProductInformationByProductName(product1.getProductName(), false);
+		assertNotNull("Shouldn't return a null object", results);
+		for(ProductInformation p : results) {
+			assertTrue(p.getRelatedProduct()==null);
+		}
+	}
+	
+	@Test
+	public void testFindByProductNameWithAssociation() throws SQLException, Exception {
+		List<ProductInformation> results = productInformationDao.findProductInformationByProductName(product1.getProductName(), true);
+		assertNotNull("Shouldn't return a null object", results);
+		for(ProductInformation p : results) {
+			assertTrue(p.getRelatedProduct().getId()==p.getId());
+		}
+	}
+	
+	@Test
+	public void testFindByProductIdWithoutAssociation() throws SQLException, Exception {
+		ProductInformation result = productInformationDao.findProductInformationByProductId(product1.getId(), false);
+		assertEquals(result.getQuantity(), productInformationToUpdate.getQuantity());
+		assertEquals(result.getLocationCode(), productInformationToUpdate.getLocationCode());
+		assertTrue(result.getRelatedProduct()==null);
+	}
+	
+	@Test
+	public void testFindByProductIdWithAssociation() throws SQLException, Exception {
+		ProductInformation result = productInformationDao.findProductInformationByProductId(product1.getId(), true);
+		assertEquals(result.getQuantity(), productInformationToUpdate.getQuantity());
+		assertEquals(result.getLocationCode(), productInformationToUpdate.getLocationCode());
+		assertTrue(result.getRelatedProduct().getId()==product1.getId());
+	}
+	
+	@Test
+	public void testAddOrRemoveQuantityToAProduct() throws SQLException, Exception {
+		int quantityToAdd = 5;
+		int quantityToRemove = 5;
+		productInformationToUpdate.setQuantity(14);
+		productInformationDao.updateProductInformation(productInformationToUpdate);
+		productInformationDao.addQuantityToProduct(product1, quantityToAdd);
+		ProductInformation updatedProductInfo = productInformationDao.findProductInformationByProduct(product1, false);
+		assertTrue("Should return the value +"+quantityToAdd,updatedProductInfo.getQuantity() == (productInformationToUpdate.getQuantity() + quantityToAdd));
+		productInformationToUpdate.setQuantity(14+quantityToAdd);
+		productInformationDao.removeQuantityToProduct(product1, quantityToRemove);
+		updatedProductInfo = productInformationDao.findProductInformationByProduct(product1, false);
+		assertTrue("Should return the value -"+quantityToRemove,updatedProductInfo.getQuantity() == (productInformationToUpdate.getQuantity() - quantityToRemove));
+		productInformationToUpdate.setQuantity(19-quantityToRemove);
 	}
 	
 	@AfterClass

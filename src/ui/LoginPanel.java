@@ -1,7 +1,6 @@
 package ui;
 
-import java.awt.Color;
-import java.awt.Dimension;
+import java.awt.*;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;

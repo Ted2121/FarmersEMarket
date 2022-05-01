@@ -1,6 +1,9 @@
 package ui;
 
 import java.awt.Dimension;
+import java.awt.Frame;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 import java.awt.Color;
 
 import javax.swing.JFrame;
@@ -12,12 +15,14 @@ public class ProgramFrame{
 	private static Color bgcolor = new Color(0xdddddd);
 	
 	private ProgramFrame() {
+
 		frame = new JFrame();
-		frame.setTitle("Farmer's Emarket Management Software");
+		frame.setTitle("Farmer's E-market Management Software");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		changePanel(new LoginPanel());
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
+
 	}
 	
 	public static JFrame getFrame() {

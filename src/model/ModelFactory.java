@@ -70,6 +70,10 @@ public class ModelFactory {
         return new SaleOrder(id);
     }
 
+    public static SaleOrder getSaleOrderModel(Customer customer) {
+        return new SaleOrder(customer);
+    }
+
     public static SaleOrder getSaleOrderModel(int id, Customer customer) {
         return new SaleOrder(id, customer);
     }

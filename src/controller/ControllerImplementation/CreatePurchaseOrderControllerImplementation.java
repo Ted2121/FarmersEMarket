@@ -53,9 +53,12 @@ public class CreatePurchaseOrderControllerImplementation implements CreatePurcha
 			DaoFactory.getOrderDao().createOrder(purchaseOrder);
 			//Creating the PurchaseOrder in the database
 			DaoFactory.getPurchaseOrderDao().createPurchaseOrder(purchaseOrder);
-			//Creating LineItems in the database
+			//For each LineItems
 			for(LineItem lineItem : generatedLineItems) {
+				//Creating LineItems in the database
 				DaoFactory.getLineItemDao().createLineItem(lineItem);
+				//Adding the quantity to productInformation in the database
+				DaoFactory.getProductInformationDao().addQuantityToProduct(lineItem.getProduct(), lineItem.getQuantity());
 			}
 			
 			connection.commit();
@@ -89,7 +92,7 @@ public class CreatePurchaseOrderControllerImplementation implements CreatePurcha
 	private List<LineItem> generateLineItems() {
 		ArrayList<LineItem> generatedLineItems = new ArrayList<LineItem>();
 		for(Product key : productWithQuantity.keySet()) {
-			key.getId();
+
 			LineItem lineItem = ModelFactory.getLineItemModel(productWithQuantity.get(key), key, purchaseOrder);
 			generatedLineItems.add(lineItem);
 		}

@@ -26,7 +26,7 @@ public class MenuSelectorPanel extends JPanel{
 		    System.out.println(ex);
 		  }
 		Dimension buttonSize = new Dimension(100,40);
-		JButton productInfoButton = new JButton("Product Info");
+		JButton productInfoButton = new JButton("Products");
 		productInfoButton.setPreferredSize(buttonSize);
 		JButton customersButton = new JButton("Customers");
 		customersButton.setPreferredSize(buttonSize);
