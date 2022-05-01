@@ -28,6 +28,7 @@ public class SalesPopup extends PopupWindow{
 	private void addComponents() {
 		panel.add(searchable);
 		panel.add(searchBtn);
+		panel.add(resultedCustomer);
 		//panel.add(scrollPane);
 		add(panel);
 	}
