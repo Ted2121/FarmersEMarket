@@ -30,6 +30,7 @@ public abstract class PopupWindow extends JFrame{
 		JButton cancelButton = new JButton("Cancel");
 		buttonPanel.add(saveButton, BorderLayout.WEST);
 		buttonPanel.add(cancelButton, BorderLayout.EAST);
+		buttonPanel.add(DatabaseConnectionIndicator.getInstance(), BorderLayout.CENTER);
 		
 		cancelButton.addActionListener(e -> {
 			dispose();

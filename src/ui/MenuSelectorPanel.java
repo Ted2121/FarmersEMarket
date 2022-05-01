@@ -36,12 +36,14 @@ public class MenuSelectorPanel extends JPanel{
 		salesButton.setPreferredSize(buttonSize);
 		JButton purchasesButton = new JButton("Purchases");
 		purchasesButton.setPreferredSize(buttonSize);
+		JButton btn = new JButton("test");
 		add(productInfoButton);
 		add(customersButton);
 		add(providersButton);
 		add(salesButton);
 		add(purchasesButton);
 		add(hideShowButton);
+		add(DatabaseConnectionIndicator.getInstance());
 		
 		opened = false;
 		productInfoButton.setVisible(opened);
