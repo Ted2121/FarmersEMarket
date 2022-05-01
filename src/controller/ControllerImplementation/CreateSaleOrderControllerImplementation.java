@@ -26,7 +26,7 @@ public CreateSaleOrderControllerImplementation() {
     public void addProductToSaleOrder(Product product, int quantity) {
         if(productWithQuantity.containsKey(product)) {
             int oldQuantity = productWithQuantity.get(product);
-            productWithQuantity.replace(product, oldQuantity + quantity);
+            productWithQuantity.replace(product, oldQuantity - quantity);
         }else {
         	productWithQuantity.put(product, quantity);
         }

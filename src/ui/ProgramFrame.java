@@ -17,12 +17,11 @@ public class ProgramFrame{
 	private ProgramFrame() {
 
 		frame = new JFrame();
-		frame.setTitle("Farmer's Emarket Management Software");
+		frame.setTitle("Farmer's E-market Management Software");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		changePanel(new LoginPanel());
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
-		frame.setExtendedState(Frame.MAXIMIZED_BOTH);
 
 	}
 	
