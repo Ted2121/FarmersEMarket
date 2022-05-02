@@ -38,7 +38,7 @@ public class TestCreatePurchaseOrderControllerImplementation {
 		controller.createPurchaseOrder(provider);
 		int numberOfPurchaseOrderAfterTest = DaoFactory.getPurchaseOrderDao().findAllPurchaseOrders(false, false).size();
 		
-		assertNotEquals("Should retrieve 1 more PurchaseOrder", numberOfPurchaseOrderBeforeTest, numberOfPurchaseOrderAfterTest);
+		assertEquals("Should retrieve 1 more PurchaseOrder", numberOfPurchaseOrderBeforeTest+1, numberOfPurchaseOrderAfterTest);
 	}
 	
 	@AfterClass

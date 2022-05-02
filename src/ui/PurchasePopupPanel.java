@@ -1,6 +1,7 @@
 package ui;
 
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
@@ -12,6 +13,7 @@ import model.Provider;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.Choice;
+import java.awt.Color;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
@@ -21,6 +23,10 @@ import java.util.HashMap;
 import java.util.List;
 
 import javax.swing.JComboBox;
+import java.awt.Component;
+import java.awt.FlowLayout;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.GroupLayout;
 
 public class PurchasePopupPanel extends JPanel {
 	private JTextField providerNameTextField;
@@ -39,9 +45,9 @@ public class PurchasePopupPanel extends JPanel {
 		productNameLinkedToProductObject = new HashMap<>();
 		
 		GridBagLayout gridBagLayout = new GridBagLayout();
-		gridBagLayout.columnWidths = new int[]{0, 74, 0, 91, 0};
+		gridBagLayout.columnWidths = new int[]{0, 74, 0, 91};
 		gridBagLayout.rowHeights = new int[]{0, 0, 20, 0, 0, 24, 0, 0, 0, 0};
-		gridBagLayout.columnWeights = new double[]{0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE};
+		gridBagLayout.columnWeights = new double[]{0.0, 0.0, 1.0, 0.0};
 		gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
 		setLayout(gridBagLayout);
 		
@@ -147,20 +153,63 @@ public class PurchasePopupPanel extends JPanel {
 		
 		JButton addProductButton = new JButton("Add product to the list");
 		GridBagConstraints gbc_addProductButton = new GridBagConstraints();
-		gbc_addProductButton.gridwidth = 7;
+		gbc_addProductButton.gridwidth = 4;
 		gbc_addProductButton.insets = new Insets(0, 0, 5, 0);
 		gbc_addProductButton.gridx = 0;
 		gbc_addProductButton.gridy = 6;
 		add(addProductButton, gbc_addProductButton);
 		
+		JScrollPane productScrollPanel = new JScrollPane();
 		JPanel productPanel = new JPanel();
+		
+		productScrollPanel.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		
+		JPanel productLabelPanel = new JPanel();
+		productLabelPanel.setMaximumSize(new java.awt.Dimension(32767, 20));
+	
+		JLabel productLabel = new JLabel();
+		productLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+		productLabel.setText("Product List");
+		
+	
+		productPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+		productPanel.setToolTipText("");
+		productPanel.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+		productPanel.setFocusCycleRoot(true);
+		productPanel.setLayout(new javax.swing.BoxLayout(productPanel, javax.swing.BoxLayout.Y_AXIS));
+		
+		javax.swing.GroupLayout layout = new javax.swing.GroupLayout(productLabelPanel);
+		layout.setHorizontalGroup(
+			layout.createParallelGroup(Alignment.LEADING)
+				.addComponent(productLabel, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 448, Short.MAX_VALUE)
+		);
+		layout.setVerticalGroup(
+			layout.createParallelGroup(Alignment.TRAILING)
+				.addGroup(Alignment.LEADING, layout.createSequentialGroup()
+					.addComponent(productLabel)
+					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+		);
+		productLabelPanel.setLayout(layout);
+	    productPanel.add(productLabelPanel);
+
+		for(int i=0 ; i< 9 ; i++) {
+			JPanel panel = new JPanel();
+			JLabel label = new JLabel("test");
+			panel.add(label);
+			panel.setMaximumSize(new java.awt.Dimension(getMaximumSize().width, 20));
+			productPanel.add(panel);
+		}
+		
+		productScrollPanel.setViewportView(productPanel);
+		productPanel.setBackground(Color.black);
+		
 		GridBagConstraints gbc_productPanel = new GridBagConstraints();
 		gbc_productPanel.gridheight = 2;
 		gbc_productPanel.gridwidth = 4;
 		gbc_productPanel.fill = GridBagConstraints.BOTH;
 		gbc_productPanel.gridx = 0;
 		gbc_productPanel.gridy = 7;
-		add(productPanel, gbc_productPanel);
+		add(productScrollPanel, gbc_productPanel);
 		
 		searchProviderButton.addActionListener(new ActionListener() {
 			
@@ -195,7 +244,8 @@ public class PurchasePopupPanel extends JPanel {
 				productSelectionComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(productListArray));
 			}
 		});
-
+		
 	}
+
 
 }
