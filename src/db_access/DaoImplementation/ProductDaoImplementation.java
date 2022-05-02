@@ -65,7 +65,7 @@ public class ProductDaoImplementation implements ProductDao {
 	}
 
 	@Override
-	public List<Product> findProductByProductName(String productName, boolean retrieveLineItems, boolean retrieveProductInformation) throws SQLException, Exception {
+	public List<Product> findProductByProductName(String productName, boolean retrieveLineItems, boolean retrieveProductInformation) throws Exception {
 		//TODO changing the methods to retrieve more than 1 results.
 		//If you retrieve potatoes, you can retrive 3 products, potatoes of 1kg, 5kg and 10kg
 		String query = "SELECT * FROM Product WHERE [Name]=?";
@@ -89,8 +89,8 @@ public class ProductDaoImplementation implements ProductDao {
 			}
 			
 			if(retrieveProductInformation) {
-				ProductInformation retrievedProductInforamtionLinkedToThisProduct = DaoFactory.getProductInformationDao().findProductInformationByProduct(product, false);
-				product.setRelatedProductInformation(retrievedProductInforamtionLinkedToThisProduct);
+				ProductInformation retrievedProductInformationLinkedToThisProduct = DaoFactory.getProductInformationDao().findProductInformationByProduct(product, false);
+				product.setRelatedProductInformation(retrievedProductInformationLinkedToThisProduct);
 			}
 			return product;
 		}

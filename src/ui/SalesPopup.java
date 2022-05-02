@@ -1,36 +1,51 @@
 package ui;
 
+import controller.ControllerFactory;
+import controller.ControllerImplementation.CreateSaleOrderControllerImplementation;
+import controller.ControllerInterfaces.CreateSaleOrderController;
+import model.Customer;
+import model.Product;
+
 import java.awt.BorderLayout;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.GridBagConstraints;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.sql.SQLException;
 
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 
 public class SalesPopup extends PopupWindow{
 	private JPanel panel;
+	private JTextField customerField;
+	private JTextField productField;
+	private JTextField quantityField;
+	private JComboBox comboBox;
+	JButton addButton;
+	private JButton searchButton;
+
+	private CreateSaleOrderControllerImplementation createSaleOrderController;
+
+
 
 	public SalesPopup() {
+		createSaleOrderController = (CreateSaleOrderControllerImplementation) ControllerFactory.getCreateSaleOrderController();
 		setTitle("New Sale");
 		panel = new JPanel();
 		panel.setBackground(ProgramFrame.getBgcolor());
-		super.getPanel().add(panel, BorderLayout.CENTER);
+		super.getPanel().add(panel, BorderLayout.EAST);
 		panel.setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
 		JLabel customerLabel = new JLabel("Customer", SwingConstants.RIGHT);
 		JLabel productLabel = new JLabel("Product", SwingConstants.RIGHT);
 		JLabel quantityLabel = new JLabel("Quantity", SwingConstants.RIGHT);
-		JTextField customerField = new JTextField();
-		JTextField productField = new JTextField();
-		JTextField quantityField = new JTextField();
-		JTextField summaryField = new JTextField();
-		JButton addButton = new JButton("Add");
+		customerField = new JTextField();
+		productField = new JTextField();
+		quantityField = new JTextField();
+		//JTextField summaryField = new JTextField();
+		addButton = new JButton("Add");
+		searchButton = new JButton("Search");
 		JTable table = new JTable();
 		JScrollPane scrollPane = new JScrollPane(table);
 		
@@ -38,27 +53,60 @@ public class SalesPopup extends PopupWindow{
 		c.gridy = 0;
 		c.anchor = GridBagConstraints.EAST;
 		c.insets = new Insets(0,0, 30, 10);
+		c.ipadx = 150;
 		panel.add(customerLabel,c);
 		c.gridx = 1;
-		c.ipadx = 100;
+		c.gridy = 0;
 		c.anchor = GridBagConstraints.BASELINE;
 		panel.add(customerField,c);
+		c.gridx = 2;
+		c.gridy = 0;
+		c.ipadx = 10;
+		panel.add(searchButton, c);
+		c.insets = new Insets(0,0,5,10);
 		c.gridx = 0;
 		c.gridy = 1;
-		c.insets = new Insets(0,0,5,10);
+		c.ipadx = 150;
 		panel.add(productLabel,c);
 		c.gridx = 1;
+		c.gridy = 1;
 		panel.add(productField,c);
-		c.gridy = 2;
 		c.gridx = 0;
+		c.gridy = 2;
 		panel.add(quantityLabel,c);
 		c.gridx = 1;
+		c.gridy = 2;
 		panel.add(quantityField,c);
-		c.gridy = 3;
-		c.gridx = 1;
-		panel.add(summaryField,c);
-		c.gridx = 0;
-		c.ipadx = 0;
+//		c.gridy = 3;
+//		c.gridx = 1;
+//		panel.add(summaryField,c);
+		c.gridx = 2;
+		c.gridy = 2;
+		c.ipadx = 25;
 		panel.add(addButton,c);
+
 	}
+
+	private void createSaleOrderFromCustomerField() throws SQLException {
+		Customer customerToAdd = createSaleOrderController.findCustomerByFullName(customerField.getName());
+		createSaleOrderController.createSaleOrder(customerToAdd);
+
+	}
+
+
+
+
+//	private class TheHandler implements ItemListener {
+//		public void itemStateChanged(ItemEvent event) {
+//
+//			if(event.getStateChange() == ItemEvent.SELECTED) {
+//				Object source = event.getSource();
+//				if (source instanceof JComboBox) {
+//					JComboBox cb = (JComboBox)source;
+//					Object selectedItem = cb.getSelectedItem();
+//
+//				}
+//			}
+//		}
+//	}
 }
