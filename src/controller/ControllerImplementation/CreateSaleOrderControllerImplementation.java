@@ -11,6 +11,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
 
 
 public class CreateSaleOrderControllerImplementation implements CreateSaleOrderController {
@@ -106,6 +108,19 @@ public CreateSaleOrderControllerImplementation() {
 
     public Customer findCustomerByFullName(String fullName) throws SQLException {
         return customerDao.findCustomerByFullName(fullName);
+    }
+
+    public List<Customer> findAllCustomersWithThisName(String fullName)  {
+    CustomerDao customerDao = DaoFactory.getCustomerDao();
+        List<Customer> customerListMatchingTheSearch = null;
+        try {
+            customerListMatchingTheSearch = customerDao.findAllCustomersWithThisName(fullName, false);
+        } catch (SQLException e) {
+            System.out.println("Cannot retrieve provider in the Database");
+        } catch (Exception e) {
+            System.out.println("Error during provider search process");
+        }
+        return customerListMatchingTheSearch;
     }
 
     //Created for test reasons

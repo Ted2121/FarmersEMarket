@@ -13,6 +13,7 @@ public interface CustomerDao {
         void updateCustomer(Customer objectToUpdate) throws SQLException;
         void deleteCustomer(Customer objectToDelete) throws SQLException;
         Customer findCustomerByFullName(String fullName) throws SQLException;
+        public List<Customer> findAllCustomersWithThisName(String fullName, boolean retrieveSaleOrders) throws Exception;
 
 
 }

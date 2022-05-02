@@ -138,4 +138,19 @@ public class CustomerDaoImplementation implements CustomerDao {
         return retrievedCustomer;
     }
 
+    @Override
+    public List<Customer> findAllCustomersWithThisName(String fullName, boolean retrieveSaleOrders) throws Exception {
+        String query = "SELECT * FROM Customer WHERE FirstName LIKE ? OR LastName LIKE ? "
+                + "OR CONCAT(FirstName, ' ', LastName) LIKE ? OR CONCAT(LastName, ' ', FirstName) LIKE ?";;
+        PreparedStatement preparedSelectStatement = dbCon.prepareStatement(query);
+        preparedSelectStatement.setString(1, "%" + fullName + "%");
+        preparedSelectStatement.setString(2, "%" + fullName + "%");
+        preparedSelectStatement.setString(3, "%" + fullName + "%");
+        preparedSelectStatement.setString(4, "%" + fullName + "%");
+        ResultSet rs = preparedSelectStatement.executeQuery();
+        List<Customer> retrieveSaleOrder = buildObjects(rs, retrieveSaleOrders);
+        return retrieveSaleOrder;
+    }
+
+
 }
