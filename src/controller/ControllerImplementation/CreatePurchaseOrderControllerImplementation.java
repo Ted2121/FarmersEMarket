@@ -9,6 +9,8 @@ import java.util.List;
 import controller.ControllerInterfaces.CreatePurchaseOrderController;
 import db_access.DBConnection;
 import db_access.DaoFactory;
+import db_access.DaoInterfaces.ProductDao;
+import db_access.DaoInterfaces.ProviderDao;
 import model.LineItem;
 import model.ModelFactory;
 import model.Product;
@@ -111,6 +113,34 @@ public class CreatePurchaseOrderControllerImplementation implements CreatePurcha
 	//Created for test reasons
 	public PurchaseOrder getPurchaseOrder() {
 		return purchaseOrder;
+	}
+
+	@Override
+	public List<Provider> searchProviderUsingThisName(String providerName) {
+		ProviderDao providerDao = DaoFactory.getProviderDao();
+		List<Provider> providerListMatchingToTheSearch = null;
+		try {
+			providerListMatchingToTheSearch = providerDao.findProvidersByName(providerName, false);
+		} catch (SQLException e) {
+			System.out.println("Cannot retrieve provider in the Database");
+		} catch (Exception e) {
+			System.out.println("Error during provider search process");
+		}
+		return providerListMatchingToTheSearch;
+	}
+
+	@Override
+	public List<Product> searchProductUsingThisName(String productName) {
+		ProductDao productDao = DaoFactory.getProductDao();
+		List<Product> productListMatchingToTheSearch = null;
+		try {
+			productListMatchingToTheSearch = productDao.findProductsByPartialName(productName, false, false);
+		} catch (SQLException e) {
+			System.out.println("Cannot retrieve provider in the Database");
+		} catch (Exception e) {
+			System.out.println("Error during provider search process");
+		}
+		return productListMatchingToTheSearch;
 	}
 
 		
