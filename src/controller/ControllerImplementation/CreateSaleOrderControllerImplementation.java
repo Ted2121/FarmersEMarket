@@ -3,6 +3,8 @@ package controller.ControllerImplementation;
 import controller.ControllerInterfaces.CreateSaleOrderController;
 import db_access.DBConnection;
 import db_access.DaoFactory;
+import db_access.DaoImplementation.CustomerDaoImplementation;
+import db_access.DaoInterfaces.CustomerDao;
 import model.*;
 
 import java.sql.Connection;
@@ -15,11 +17,13 @@ public class CreateSaleOrderControllerImplementation implements CreateSaleOrderC
     private HashMap<Product, Integer> productWithQuantity;
     private SaleOrder saleOrder;
     private Connection connection;
+    private CustomerDao customerDao;
 
 public CreateSaleOrderControllerImplementation() {
 
         this.productWithQuantity = new HashMap<>();
         connection = DBConnection.getInstance().getDBCon();
+        customerDao = DaoFactory.getCustomerDao();
         }
 
     @Override
@@ -100,6 +104,9 @@ public CreateSaleOrderControllerImplementation() {
         return totalPrice;
     }
 
+    public Customer findCustomerByFullName(String fullName) throws SQLException {
+        return customerDao.findCustomerByFullName(fullName);
+    }
 
     //Created for test reasons
     public SaleOrder getSaleOrder() {

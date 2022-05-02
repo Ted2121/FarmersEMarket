@@ -16,7 +16,7 @@ public abstract class PopupWindow extends JFrame{
 	public PopupWindow() {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setLocationRelativeTo(ProgramFrame.getFrame());
-		setSize(new Dimension(300, 450));
+		setSize(new Dimension(400, 450));
 		setResizable(false);
 		setVisible(true);
 		panel = new JPanel();
