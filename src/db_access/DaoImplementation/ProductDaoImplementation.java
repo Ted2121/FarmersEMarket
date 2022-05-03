@@ -24,7 +24,7 @@ public class ProductDaoImplementation implements ProductDao {
 
 	Connection connection = DBConnection.getInstance().getDBCon();
 	
-	public Product buildObject(ResultSet rs) throws SQLException {
+	private Product buildObject(ResultSet rs) throws SQLException {
 		int result = rs.getInt("WeightCategory");
 		WeightCategory weightCategory = null;
 		switch(result) {
@@ -37,7 +37,19 @@ public class ProductDaoImplementation implements ProductDao {
 		return builtObject;
 	}
 	
-	public List<Product> buildObjects(ResultSet rs, boolean retrieveLineItems, boolean retrieveProductInformation) throws SQLException, Exception {
+	private Product buildObjectSubset(ResultSet rs) throws SQLException {
+		int result = rs.getInt("WeightCategory");
+		WeightCategory weightCategory = null;
+		switch(result) {
+			case 1 -> weightCategory = WeightCategory.ONE;
+			case 5 -> weightCategory = WeightCategory.FIVE;
+			case 10 -> weightCategory = WeightCategory.TEN;
+		}
+		Product builtObjectSubset = ModelFactory.getProductSubsetModel(rs.getInt("PK_idProduct"), rs.getString("Name"),weightCategory, Unit.valueOf(rs.getString("Unit")));
+		return builtObjectSubset;
+	}
+	
+	private List<Product> buildObjects(ResultSet rs, boolean retrieveLineItems, boolean retrieveProductInformation) throws SQLException, Exception {
 		List<Product> list = new ArrayList<Product>();
 		while(rs.next()) {
 			Product product = buildObject(rs);
@@ -54,6 +66,23 @@ public class ProductDaoImplementation implements ProductDao {
 			
 		}
 		return list;
+	}
+	
+	private List<Product> buildObjectsSubset(ResultSet rs) throws SQLException, Exception {
+		List<Product> list = new ArrayList<Product>();
+		while(rs.next()) {
+			Product productSubset = buildObjectSubset(rs);
+			list.add(productSubset);
+		}
+		return list;
+	}
+	
+	@Override
+	public List<Product> findAllProductSubset() throws SQLException, Exception{
+		String query = "SELECT PK_idProduct, [Name], Unit, WeightCategory FROM Product";
+		PreparedStatement statement = connection.prepareStatement(query);
+		ResultSet rs = statement.executeQuery();
+		return buildObjectsSubset(rs);
 	}
 	
 	@Override

@@ -4,6 +4,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
+import javax.swing.text.JTextComponent;
 
 import controller.ControllerImplementation.CreatePurchaseOrderControllerImplementation;
 import controller.ControllerInterfaces.CreatePurchaseOrderController;
@@ -19,6 +20,9 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.HashMap;
 import java.util.List;
 
@@ -30,20 +34,29 @@ import javax.swing.GroupLayout;
 
 public class PurchasePopupPanel extends JPanel {
 	private JTextField providerNameTextField;
-	private JTextField productNameTextField;
-	CreatePurchaseOrderController controller;
-	HashMap<String, Provider> providerNameLinkedToProviderObject;
-	HashMap<String, Product> productNameLinkedToProductObject;
 	private JTextField textField;
+	private List<Product> productSubsetList;
+	
+	private static boolean writingProductTimer;
+	private int testThreadCount =0;
+	
+	private CreatePurchaseOrderController controller;
 
 	/**
 	 * Create the panel.
 	 */
 	public PurchasePopupPanel() {
 		controller = new CreatePurchaseOrderControllerImplementation();
-		providerNameLinkedToProviderObject = new HashMap<>();
-		productNameLinkedToProductObject = new HashMap<>();
 		
+		initComponent();
+		
+		productSubsetList = controller.retrieveAllProductSubset();;
+		
+		
+		
+	}
+
+	private void initComponent() {
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{0, 74, 0, 91};
 		gridBagLayout.rowHeights = new int[]{0, 0, 20, 0, 0, 24, 0, 0, 0, 0};
@@ -100,15 +113,76 @@ public class PurchasePopupPanel extends JPanel {
 		gbc_productNameLabel.gridy = 3;
 		add(productNameLabel, gbc_productNameLabel);
 		
-		productNameTextField = new JTextField();
-		productNameTextField.setColumns(10);
-		GridBagConstraints gbc_productNameTextField = new GridBagConstraints();
-		gbc_productNameTextField.gridwidth = 2;
-		gbc_productNameTextField.insets = new Insets(0, 0, 5, 5);
-		gbc_productNameTextField.fill = GridBagConstraints.HORIZONTAL;
-		gbc_productNameTextField.gridx = 1;
-		gbc_productNameTextField.gridy = 3;
-		add(productNameTextField, gbc_productNameTextField);
+		JComboBox productSelectionComboBox = new JComboBox();
+		productSelectionComboBox.setEditable(true);
+		
+		productSelectionComboBox.addActionListener(productSelectionComboBox);
+		
+		productSelectionComboBox.getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
+
+		    @Override
+		    public void keyReleased(KeyEvent event) {
+		    	if (!writingProductTimer) {
+		        	writingProductTimer = true;
+			    	Thread searchingProductThread = new Thread( () ->
+			    			{
+			    				testThreadCount++;
+					        	Component sourceEvent = (Component) event.getSource();
+					        	JComboBox comboBoxSourceEvent = (JComboBox) sourceEvent.getParent();
+					        	JTextComponent textComponentOfTheComboBox = (JTextComponent) comboBoxSourceEvent.getEditor().getEditorComponent();
+					        	if(!textComponentOfTheComboBox.getText().isEmpty()) {
+					        		List<Product> productList = controller.searchProductUsingThisName(textComponentOfTheComboBox.getText());
+									if(productList.size()>0) {
+										Product[] productArray = productList.toArray(new Product[0]);
+									productSelectionComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(productArray));
+									}else {
+										productSelectionComboBox.removeAllItems();
+									}
+					        	}   
+					            try {
+									Thread.sleep(1000);
+									
+								} catch (InterruptedException e) {
+									System.out.println("Cannot sleep");
+								} finally {
+									writingProductTimer = false;
+								}
+					        }
+		    			);
+			    	searchingProductThread.start();
+		    	}
+		    	
+//		        if (!writingProductTimer) {
+//		        	writingProductTimer = true;
+//		        	Component sourceEvent = (Component) event.getSource();
+//		        	JComboBox comboBoxSourceEvent = (JComboBox) sourceEvent.getParent();
+//		        	JTextComponent textComponentOfTheComboBox = (JTextComponent) comboBoxSourceEvent.getEditor().getEditorComponent();
+//		        	if(!textComponentOfTheComboBox.getText().isEmpty()) {
+//		        		List<Product> productList = controller.searchProductUsingThisName(textComponentOfTheComboBox.getText());
+//						if(productList.size()>0) {
+//							Product[] productArray = productList.toArray(new Product[0]);
+//						productSelectionComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(productArray));
+//						}else {
+//							productSelectionComboBox.removeAllItems();
+//						}
+//		        	}
+//		        	
+//		        	
+//		            
+//		                
+//		        }
+		    }
+		});
+		
+
+		
+		GridBagConstraints gbc_productSelectionComboBox = new GridBagConstraints();
+		gbc_productSelectionComboBox.gridwidth = 2;
+		gbc_productSelectionComboBox.insets = new Insets(0, 0, 5, 0);
+		gbc_productSelectionComboBox.fill = GridBagConstraints.HORIZONTAL;
+		gbc_productSelectionComboBox.gridx = 1;
+		gbc_productSelectionComboBox.gridy = 3;
+		add(productSelectionComboBox, gbc_productSelectionComboBox);
 		
 		JButton searchProductButton = new JButton("Search");
 		GridBagConstraints gbc_searchProductButton = new GridBagConstraints();
@@ -124,15 +198,6 @@ public class PurchasePopupPanel extends JPanel {
 		gbc_productSelectionLabel.gridx = 0;
 		gbc_productSelectionLabel.gridy = 4;
 		add(productSelectionLabel, gbc_productSelectionLabel);
-		
-		JComboBox productSelectionComboBox = new JComboBox();
-		GridBagConstraints gbc_productSelectionComboBox = new GridBagConstraints();
-		gbc_productSelectionComboBox.gridwidth = 3;
-		gbc_productSelectionComboBox.insets = new Insets(0, 0, 5, 0);
-		gbc_productSelectionComboBox.fill = GridBagConstraints.HORIZONTAL;
-		gbc_productSelectionComboBox.gridx = 1;
-		gbc_productSelectionComboBox.gridy = 4;
-		add(productSelectionComboBox, gbc_productSelectionComboBox);
 		
 		JLabel lblQuantity = new JLabel("Quantity:");
 		GridBagConstraints gbc_lblQuantity = new GridBagConstraints();
@@ -216,35 +281,25 @@ public class PurchasePopupPanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				List<Provider> providerList = controller.searchProviderUsingThisName(providerNameTextField.getText());
-				String[] providerListArray = new String[providerList.size()];
-				providerNameLinkedToProviderObject.clear();
-				for(int i=0 ; i< providerList.size();i++) {
-					Provider provider = providerList.get(i);
-					String providerFullName = provider.getFullName();
-					providerNameLinkedToProviderObject.put(providerFullName, provider);
-					providerListArray[i] = providerFullName;
-				}
-				providerSelectionComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(providerListArray));
+				Provider[] providerArray = providerList.toArray(new Provider[0]);
+				
+				providerSelectionComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(providerArray));
 			}
 		});
 		
-		searchProductButton.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				List<Product> productList = controller.searchProductUsingThisName(productNameTextField.getText());
-				String[] productListArray = new String[productList.size()];
-				providerNameLinkedToProviderObject.clear();
-				for(int i=0 ; i< productList.size();i++) {
-					Product product = productList.get(i);
-					String productFullName = product.getProductName() + " " + product.getWeightCategory() + " " + product.getUnit();
-					productNameLinkedToProductObject.put(productFullName, product);
-					productListArray[i] = productFullName;
-				}
-				productSelectionComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(productListArray));
-			}
-		});
-		
+//		searchProductButton.addActionListener(new ActionListener() {
+//			
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+////				List<Product> productList = controller.searchProductUsingThisName(productNameTextField.getText());
+//				if(productList.size()>0) {
+//					Product[] productArray = productList.toArray(new Product[0]);
+//					productSelectionComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(productArray));
+//				}else {
+//					productSelectionComboBox.removeAllItems();
+//				}
+//			}
+//		});
 	}
 
 

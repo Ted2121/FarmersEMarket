@@ -21,13 +21,17 @@ public class CreatePurchaseOrderControllerImplementation implements CreatePurcha
 	private HashMap<Product, Integer> productWithQuantity;
 	private PurchaseOrder purchaseOrder;
 	private Connection connection;
+	private ProductDao productDao;
+	private ProviderDao providerDao;
 	
-	
+	List<List<Product>> productContainingLetter;
 
 	public CreatePurchaseOrderControllerImplementation() {
 		super();
 		this.productWithQuantity = new HashMap<Product, Integer>();
 		connection = DBConnection.getInstance().getDBCon();
+		productDao = DaoFactory.getProductDao();
+		providerDao = DaoFactory.getProviderDao();
 	}
 
 	@Override
@@ -109,7 +113,6 @@ public class CreatePurchaseOrderControllerImplementation implements CreatePurcha
 		return totalPrice;
 	}
 
-	
 	//Created for test reasons
 	public PurchaseOrder getPurchaseOrder() {
 		return purchaseOrder;
@@ -117,7 +120,6 @@ public class CreatePurchaseOrderControllerImplementation implements CreatePurcha
 
 	@Override
 	public List<Provider> searchProviderUsingThisName(String providerName) {
-		ProviderDao providerDao = DaoFactory.getProviderDao();
 		List<Provider> providerListMatchingToTheSearch = null;
 		try {
 			providerListMatchingToTheSearch = providerDao.findProvidersByName(providerName, false);
@@ -131,16 +133,106 @@ public class CreatePurchaseOrderControllerImplementation implements CreatePurcha
 
 	@Override
 	public List<Product> searchProductUsingThisName(String productName) {
-		ProductDao productDao = DaoFactory.getProductDao();
-		List<Product> productListMatchingToTheSearch = null;
-		try {
-			productListMatchingToTheSearch = productDao.findProductsByPartialName(productName, false, false);
-		} catch (SQLException e) {
-			System.out.println("Cannot retrieve provider in the Database");
-		} catch (Exception e) {
-			System.out.println("Error during provider search process");
+		List<Product> matchingProducts = new ArrayList<Product>();
+		List<Product> productMatchingTheLetters = sortLetterMatchingProducts(productName);
+		if(productMatchingTheLetters != null)
+			for(Product product : productMatchingTheLetters) {
+				if(product.getProductName().contains(productName)) {
+					matchingProducts.add(product);
+				}
+			}
+		
+		return matchingProducts;
+	}
+
+	private List<Product> sortLetterMatchingProducts(String productName) {
+		String lowerCaseProductNameWithoutSpaceCharacter = productName.toLowerCase().replaceAll(" ", "");
+		List<List<Product>> listOfListOfProductContainingTheLetterOfThisName = new ArrayList<List<Product>>();
+		
+		//Retrieving all the list of products containing the specified characteres of each list
+		for(int i=0 ; i<lowerCaseProductNameWithoutSpaceCharacter.length();i++) {
+			char character = lowerCaseProductNameWithoutSpaceCharacter.charAt(i);
+			
+			int characterListNumber = 0;
+			try {
+				characterListNumber = settingTheCharacterToAnHandledOne(character);
+				if(!listOfListOfProductContainingTheLetterOfThisName.contains(productContainingLetter.get(characterListNumber)))
+					listOfListOfProductContainingTheLetterOfThisName.add(productContainingLetter.get(characterListNumber));
+			} catch (Exception e) {
+				System.out.println(e.getMessage());
+			}	
 		}
-		return productListMatchingToTheSearch;
+		
+		//Making an intersection of all lists to retrieve only matching products
+		List<Product> matchingProducts = null;
+		if(listOfListOfProductContainingTheLetterOfThisName.size()>0)
+			matchingProducts = listOfListOfProductContainingTheLetterOfThisName.get(0);
+		for(List<Product> productList :  listOfListOfProductContainingTheLetterOfThisName) {
+			matchingProducts.retainAll(productList);
+		}
+		
+		return matchingProducts;
+	}
+
+	private int settingTheCharacterToAnHandledOne(char character) throws Exception {
+		switch(character) {
+			case 235 -> character = 101;
+			case 234 -> character = 101;
+			case 233 -> character = 101;
+			case 232 -> character = 101;
+		}
+		int numberOfTheListOfThisCharacter = character-97;
+		if(numberOfTheListOfThisCharacter < 0 || numberOfTheListOfThisCharacter >= 26) {
+			throw new Exception("Character unhandled by the application: " + character);
+		}
+		return numberOfTheListOfThisCharacter;
+	}
+
+	@Override
+	public List<Product> retrieveAllProductSubset() {
+		List<Product> productSubsetList =null;
+		productContainingLetter = new ArrayList<List<Product>>();
+		
+		for(int i=0;i<26;i++) {
+			productContainingLetter.add(new ArrayList<Product>());
+		}
+		
+		
+		try {
+			productSubsetList = productDao.findAllProductSubset();
+			for(Product product : productSubsetList) {
+				String lowerCaseProductNameWithoutSpaceCharacter = product.getProductName().toLowerCase().replaceAll(" ", "");
+				for(int i=0 ; i<lowerCaseProductNameWithoutSpaceCharacter.length();i++) {
+					char character = lowerCaseProductNameWithoutSpaceCharacter.charAt(i);
+
+					int characterListNumber = 0;
+					try {
+						characterListNumber = settingTheCharacterToAnHandledOne(character);
+					} catch (Exception e) {
+						System.out.println(e.getMessage());
+					}
+
+					List<Product> letterList = productContainingLetter.get(characterListNumber);
+					if(!letterList.contains(product)) {
+						letterList.add(product);
+					}
+				}
+				
+				
+			}
+		
+		
+		} catch (SQLException e) {
+			System.out.println("Cannot retrieve products subset from database");
+		} catch (Exception e) {
+			System.out.println("Cannot retrieve products subset");
+		}
+		
+		if(productSubsetList.size() < 31) {
+			return productSubsetList;
+		}
+		
+		return productSubsetList.subList(0, 30);
 	}
 
 		

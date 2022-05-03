@@ -20,8 +20,16 @@ public class ModelFactory {
     	return new ProductInformation(locationCode, quantity, id);
     }
     
-    public static Product getProductModelWithoutId(String name, double purchasingPrice, double sellingPrice, WeightCategory weightCategory, Unit unit) {
+    public static Product getProductModel(String name, double purchasingPrice, double sellingPrice, WeightCategory weightCategory, Unit unit) {
     	return new Product(name, purchasingPrice, sellingPrice, weightCategory, unit);
+    }
+    
+    public static Product getProductEmptyModel() {
+    	return new Product();
+    }
+    
+    public static Product getProductSubsetModel(int id, String name, WeightCategory weightCategory, Unit unit) {
+    	return new Product(id, name, weightCategory, unit);
     }
     
     public static Product getProductModel(int id, String name, double purchasingPrice, double sellingPrice, WeightCategory weightCategory, Unit unit) {

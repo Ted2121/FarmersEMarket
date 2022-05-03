@@ -44,9 +44,9 @@ public class TestProductDaoImplementation {
 		productDao = DaoFactory.getProductDao();
 		lineItemDao = DaoFactory.getLineItemDao();
 		productInformationDao = DaoFactory.getProductInformationDao();
-		productToCreate = ModelFactory.getProductModelWithoutId("TestCreate", 15d, 20d, WeightCategory.FIVE, Unit.KG);
-		productToUpdate = ModelFactory.getProductModelWithoutId("TestUpdate", 15d, 20d, WeightCategory.FIVE, Unit.KG);
-		productToDelete = ModelFactory.getProductModelWithoutId("TestDelete", 15d, 20d, WeightCategory.FIVE, Unit.KG);
+		productToCreate = ModelFactory.getProductModel("TestCreate", 15d, 20d, WeightCategory.FIVE, Unit.KG);
+		productToUpdate = ModelFactory.getProductModel("TestUpdate", 15d, 20d, WeightCategory.FIVE, Unit.KG);
+		productToDelete = ModelFactory.getProductModel("TestDelete", 15d, 20d, WeightCategory.FIVE, Unit.KG);
 		productDao.createProduct(productToUpdate);
 		productDao.createProduct(productToDelete);
 		idOrder = DaoFactory.getOrderDao().createEmptyOrder();
