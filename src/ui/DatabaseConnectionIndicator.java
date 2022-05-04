@@ -6,20 +6,17 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
+import db_access.ConnectionCheckerThread;
+
 public class DatabaseConnectionIndicator extends JLabel{
 	public static final boolean GREEN = true;
 	public static final boolean RED = false;
-	private boolean exit;
+	private static boolean state;
 	private Image red;
 	private Image green;
-	private static DatabaseConnectionIndicator instance;
+	private ConnectionCheckerThread connectionCheckerThread;
 	
-	public static DatabaseConnectionIndicator getInstance() {
-		if(instance == null) instance = new DatabaseConnectionIndicator();
-		return instance;
-	}
-	
-	private DatabaseConnectionIndicator() {
+	public DatabaseConnectionIndicator() {
 		try {
 		    Image img = ImageIO.read(getClass().getResource("/ui/assets/red.png"));
 		    red = img.getScaledInstance(10, 10, Image.SCALE_SMOOTH);
@@ -29,30 +26,19 @@ public class DatabaseConnectionIndicator extends JLabel{
 		  } catch (Exception ex) {
 		    System.out.println(ex);
 		  }
-		exit = false;
-		ConnectionCheckerThread connectionCheckerThread = new ConnectionCheckerThread();
-		connectionCheckerThread.start();
+		refresh();
+		connectionCheckerThread = ConnectionCheckerThread.getInstance();
+		ConnectionCheckerThread.addIndicator(this);
 		
 	}
 	
-	public void setState(boolean state) throws NullPointerException{
-		if(state) setIcon(new ImageIcon(green));
-		else setIcon(new ImageIcon(red));
+	public static void setState(boolean newState) {
+		state = newState;
 	}
 	
-	private class ConnectionCheckerThread extends Thread{
-		public void run() {
-			while(!exit) {
-				if(db_access.DBConnection.getInstance().getDBCon() != null) setState(GREEN);
-				else setState(RED);
-				try {
-					Thread.sleep(1000);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		}
+	public void refresh() {
+		if(state) setIcon(new ImageIcon(green));
+		else setIcon(new ImageIcon(red));
 	}
 	
 	
