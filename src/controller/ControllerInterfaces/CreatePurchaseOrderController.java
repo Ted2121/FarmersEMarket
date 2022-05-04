@@ -12,5 +12,7 @@ public interface CreatePurchaseOrderController {
 //	List<Product> retrieveAllProductSubset();
 	void addProductToPurchaseOrder(Product product, int quantity);
 	void createPurchaseOrder(Provider provider);
-	<T>List<T> retrieveAllObjectsSubset(Class<T> cls) throws Exception;
+	<T>List<T> retrieveAllObjectsSubset(Class<T> cls);
+	void deleteProductFromPurchaseOrder(Product product);
+	boolean isProductAlreadyInThePurchaseOrder(Product product);
 }
