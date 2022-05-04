@@ -3,7 +3,9 @@ package controller.ControllerImplementation;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 import controller.ControllerInterfaces.CreatePurchaseOrderController;
@@ -25,6 +27,7 @@ public class CreatePurchaseOrderControllerImplementation implements CreatePurcha
 	private ProviderDao providerDao;
 	
 	List<List<Product>> productContainingLetter;
+	List<List<Provider>> providerContainingLetter;
 
 	public CreatePurchaseOrderControllerImplementation() {
 		super();
@@ -120,58 +123,82 @@ public class CreatePurchaseOrderControllerImplementation implements CreatePurcha
 
 	@Override
 	public List<Provider> searchProviderUsingThisName(String providerName) {
-		List<Provider> providerListMatchingToTheSearch = null;
-		try {
-			providerListMatchingToTheSearch = providerDao.findProvidersByName(providerName, false);
-		} catch (SQLException e) {
-			System.out.println("Cannot retrieve provider in the Database");
-		} catch (Exception e) {
-			System.out.println("Error during provider search process");
-		}
-		return providerListMatchingToTheSearch;
+		List<Provider> matchingProvider = new ArrayList<Provider>();
+		List<Provider> providerMatchingTheLetters = sortLetterToMatchingObjects(providerName, Provider.class);
+		if(providerMatchingTheLetters != null)
+			for(Provider provider : providerMatchingTheLetters) {
+				if(provider.getFullName().contains(providerName)) {
+					matchingProvider.add(provider);
+				}
+			}
+		else matchingProvider.addAll(providerMatchingTheLetters);
+		
+		return matchingProvider;
 	}
 
 	@Override
 	public List<Product> searchProductUsingThisName(String productName) {
 		List<Product> matchingProducts = new ArrayList<Product>();
-		List<Product> productMatchingTheLetters = sortLetterMatchingProducts(productName);
+		List<Product> productMatchingTheLetters = sortLetterToMatchingObjects(productName, Product.class);
 		if(productMatchingTheLetters != null)
 			for(Product product : productMatchingTheLetters) {
 				if(product.getProductName().contains(productName)) {
 					matchingProducts.add(product);
 				}
 			}
+		else matchingProducts.addAll(productMatchingTheLetters);
 		
 		return matchingProducts;
 	}
 
-	private List<Product> sortLetterMatchingProducts(String productName) {
-		String lowerCaseProductNameWithoutSpaceCharacter = productName.toLowerCase().replaceAll(" ", "");
-		List<List<Product>> listOfListOfProductContainingTheLetterOfThisName = new ArrayList<List<Product>>();
+	private <T> List<T> sortLetterToMatchingObjects(String stringToSort, Class<T> cls ) {
+		String lowerCaseStringWithoutSpaceCharacter = stringToSort.toLowerCase().replaceAll(" ", "");
+		List<List<T>> listOfListOfObjectsContainingTheLetterOfThisName = new ArrayList<List<T>>();
 		
 		//Retrieving all the list of products containing the specified characteres of each list
-		for(int i=0 ; i<lowerCaseProductNameWithoutSpaceCharacter.length();i++) {
-			char character = lowerCaseProductNameWithoutSpaceCharacter.charAt(i);
+		for(int i=0 ; i<lowerCaseStringWithoutSpaceCharacter.length();i++) {
+			char character = lowerCaseStringWithoutSpaceCharacter.charAt(i);
 			
 			int characterListNumber = 0;
 			try {
 				characterListNumber = settingTheCharacterToAnHandledOne(character);
-				if(!listOfListOfProductContainingTheLetterOfThisName.contains(productContainingLetter.get(characterListNumber)))
-					listOfListOfProductContainingTheLetterOfThisName.add(productContainingLetter.get(characterListNumber));
+				if(cls.equals(Product.class) && !listOfListOfObjectsContainingTheLetterOfThisName.contains(productContainingLetter.get(characterListNumber)))
+					listOfListOfObjectsContainingTheLetterOfThisName.add((List<T>) productContainingLetter.get(characterListNumber));
+				else if(cls.equals(Provider.class) && !listOfListOfObjectsContainingTheLetterOfThisName.contains(providerContainingLetter.get(characterListNumber))) {
+					listOfListOfObjectsContainingTheLetterOfThisName.add((List<T>) providerContainingLetter.get(characterListNumber));
+				}
+					
 			} catch (Exception e) {
 				System.out.println(e.getMessage());
 			}	
 		}
 		
 		//Making an intersection of all lists to retrieve only matching products
-		List<Product> matchingProducts = null;
-		if(listOfListOfProductContainingTheLetterOfThisName.size()>0)
-			matchingProducts = listOfListOfProductContainingTheLetterOfThisName.get(0);
-		for(List<Product> productList :  listOfListOfProductContainingTheLetterOfThisName) {
-			matchingProducts.retainAll(productList);
+		List<T> matchingObjects = null;
+		if(listOfListOfObjectsContainingTheLetterOfThisName.size()>0)
+			matchingObjects = listOfListOfObjectsContainingTheLetterOfThisName.get(0);
+		for(List<T> list :  listOfListOfObjectsContainingTheLetterOfThisName) {
+			matchingObjects.retainAll(list);
 		}
 		
-		return matchingProducts;
+		if(matchingObjects == null) {
+			matchingObjects = new ArrayList<>();
+			if(cls.equals(Product.class)) {
+				for(List<Product> list : productContainingLetter) {
+					matchingObjects.addAll( (Collection<? extends T>) list);
+				}
+			}else if(cls.equals(Provider.class)) {
+				for(List<Provider> list : providerContainingLetter) {
+					matchingObjects.addAll((Collection<? extends T>) list);
+				}
+			}
+			
+			
+			//Delete duplicates
+			matchingObjects = new ArrayList<>(new LinkedHashSet<>(matchingObjects));
+		}
+		
+		return matchingObjects;
 	}
 
 	private int settingTheCharacterToAnHandledOne(char character) throws Exception {
@@ -188,22 +215,93 @@ public class CreatePurchaseOrderControllerImplementation implements CreatePurcha
 		return numberOfTheListOfThisCharacter;
 	}
 
+//	@Override
+//	public List<Product> retrieveAllProductSubset() {
+//		List<Product> productSubsetList =null;
+//		productContainingLetter = new ArrayList<List<Product>>();
+//		
+//		for(int i=0;i<26;i++) {
+//			productContainingLetter.add(new ArrayList<Product>());
+//		}
+//		
+//		
+//		try {
+//			productSubsetList = productDao.findAllProductSubset();
+//			for(Product product : productSubsetList) {
+//				String lowerCaseProductNameWithoutSpaceCharacter = product.getProductName().toLowerCase().replaceAll(" ", "");
+//				if(lowerCaseProductNameWithoutSpaceCharacter.isBlank()) {
+//					break;
+//				}
+//				for(int i=0 ; i<lowerCaseProductNameWithoutSpaceCharacter.length();i++) {
+//					char character = lowerCaseProductNameWithoutSpaceCharacter.charAt(i);
+//
+//					int characterListNumber = 0;
+//					try {
+//						characterListNumber = settingTheCharacterToAnHandledOne(character);
+//					} catch (Exception e) {
+//						System.out.println(e.getMessage());
+//					}
+//
+//					List<Product> letterList = productContainingLetter.get(characterListNumber);
+//					if(!letterList.contains(product)) {
+//						letterList.add(product);
+//					}
+//				}
+//				
+//				
+//			}
+//		
+//		
+//		} catch (SQLException e) {
+//			System.out.println("Cannot retrieve products subset from database");
+//		} catch (Exception e) {
+//			System.out.println("Cannot retrieve products subset");
+//		}
+//		
+//		if(productSubsetList.size() < 31) {
+//			return productSubsetList;
+//		}
+//		
+//		return productSubsetList.subList(0, 30);
+//	}
+
 	@Override
-	public List<Product> retrieveAllProductSubset() {
-		List<Product> productSubsetList =null;
-		productContainingLetter = new ArrayList<List<Product>>();
+	public <T> List<T> retrieveAllObjectsSubset(Class<T> cls) throws Exception {
+		if(!cls.equals(Product.class) && !cls.equals(Provider.class) )
+			throw new Exception("Class not suported by the retrieveAllObjectsSubset method");
+		
+		
+		List<T> objectSubsetList = null;
+		if(cls.equals(Product.class))
+			productContainingLetter = new ArrayList<List<Product>>();
+		else if(cls.equals(Provider.class))
+			providerContainingLetter = new ArrayList<List<Provider>>();
 		
 		for(int i=0;i<26;i++) {
-			productContainingLetter.add(new ArrayList<Product>());
+			if(cls.equals(Product.class))
+				productContainingLetter.add(new ArrayList<Product>());
+			else if(cls.equals(Provider.class))
+				providerContainingLetter.add(new ArrayList<Provider>());
 		}
 		
 		
 		try {
-			productSubsetList = productDao.findAllProductSubset();
-			for(Product product : productSubsetList) {
-				String lowerCaseProductNameWithoutSpaceCharacter = product.getProductName().toLowerCase().replaceAll(" ", "");
-				for(int i=0 ; i<lowerCaseProductNameWithoutSpaceCharacter.length();i++) {
-					char character = lowerCaseProductNameWithoutSpaceCharacter.charAt(i);
+			if(cls.equals(Product.class))
+				objectSubsetList = (List<T>) productDao.findAllProductSubset();
+			else if(cls.equals(Provider.class))
+				objectSubsetList = (List<T>) providerDao.findAllProviderSubset();
+			
+			for(T object : objectSubsetList) {
+				String lowerCaseObjectWithoutSpaceCharacter = null;
+				if(cls.equals(Product.class))
+					lowerCaseObjectWithoutSpaceCharacter = ((Product) object).getProductName().toLowerCase().replaceAll(" ", "");
+				else if(cls.equals(Provider.class))
+					lowerCaseObjectWithoutSpaceCharacter = ((Provider) object).getFullName().toLowerCase().replaceAll(" ", "");
+				if(lowerCaseObjectWithoutSpaceCharacter.isBlank()) {
+					break;
+				}
+				for(int i=0 ; i<lowerCaseObjectWithoutSpaceCharacter.length();i++) {
+					char character = lowerCaseObjectWithoutSpaceCharacter.charAt(i);
 
 					int characterListNumber = 0;
 					try {
@@ -211,10 +309,14 @@ public class CreatePurchaseOrderControllerImplementation implements CreatePurcha
 					} catch (Exception e) {
 						System.out.println(e.getMessage());
 					}
-
-					List<Product> letterList = productContainingLetter.get(characterListNumber);
-					if(!letterList.contains(product)) {
-						letterList.add(product);
+					
+					List<T> letterList = null;
+					if(cls.equals(Product.class))
+						letterList = (List<T>) productContainingLetter.get(characterListNumber);
+					else if(cls.equals(Provider.class)) 
+						letterList = (List<T>) providerContainingLetter.get(characterListNumber);
+					if(!letterList.contains(object)) {
+						letterList.add(object);
 					}
 				}
 				
@@ -228,13 +330,12 @@ public class CreatePurchaseOrderControllerImplementation implements CreatePurcha
 			System.out.println("Cannot retrieve products subset");
 		}
 		
-		if(productSubsetList.size() < 31) {
-			return productSubsetList;
+		if(objectSubsetList.size() < 31) {
+			return objectSubsetList;
 		}
 		
-		return productSubsetList.subList(0, 30);
+		return objectSubsetList.subList(0, 30);
 	}
-
 		
 	
 }

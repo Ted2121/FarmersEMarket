@@ -21,7 +21,14 @@ public abstract class Person {
     	this.id = id;
     }
 
-    public int getId() {
+    public Person(int id, String firstName, String lastName) {
+		this.id = id;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.fullName = firstName + " " + lastName;
+	}
+
+	public int getId() {
         return id;
     }
 
@@ -65,4 +72,11 @@ public abstract class Person {
     public void setCountry(String country) {
         this.country = country;
     }
+
+	@Override
+	public String toString() {
+		return this.getFullName();
+	}
+    
+    
 }

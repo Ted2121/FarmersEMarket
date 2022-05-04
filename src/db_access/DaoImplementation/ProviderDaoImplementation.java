@@ -12,8 +12,11 @@ import db_access.DBConnection;
 import db_access.DaoFactory;
 import db_access.DaoInterfaces.ProviderDao;
 import model.ModelFactory;
+import model.Product;
 import model.Provider;
 import model.PurchaseOrder;
+import model.Product.Unit;
+import model.Product.WeightCategory;
 
 public class ProviderDaoImplementation implements ProviderDao {
 	//TODO this class needs to be checked
@@ -23,6 +26,12 @@ public class ProviderDaoImplementation implements ProviderDao {
 		Provider builtObject = ModelFactory.getProviderModel(rs.getInt("PK_idProvider"),rs.getString("FirstName"),rs.getString("LastName"),rs.getString("City"),
 				rs.getString("Country"));
 		return builtObject;
+	}
+	
+	private Provider buildObjectSubset(ResultSet rs) throws SQLException {
+		
+		Provider builtObjectSubset = ModelFactory.getProviderSubsetModel(rs.getInt("PK_idProvider"), rs.getString("FirstName"),rs.getString("LastName"));
+		return builtObjectSubset;
 	}
 	
 	private List<Provider> buildObjects(ResultSet rs, boolean retrievePurchaseOrder) throws Exception{
@@ -38,6 +47,15 @@ public class ProviderDaoImplementation implements ProviderDao {
 		}
 		
 		return providerList;
+	}
+	
+	private List<Provider> buildObjectsSubset(ResultSet rs) throws SQLException, Exception {
+		List<Provider> list = new ArrayList<Provider>();
+		while(rs.next()) {
+			Provider productSubset = buildObjectSubset(rs);
+			list.add(productSubset);
+		}
+		return list;
 	}
 	
 	@Override
@@ -91,6 +109,16 @@ public class ProviderDaoImplementation implements ProviderDao {
 		ResultSet rs = preparedFindProviderStatement.executeQuery();
 		List<Provider> retrievedProviders = buildObjects(rs, retrievePurchaseOrder);
 		return retrievedProviders;
+	}
+	
+	@Override
+	public List<Provider> findAllProviderSubset() throws SQLException, Exception {
+		String query = "SELECT PK_idProvider, FirstName, LastName  FROM Provider";
+		PreparedStatement preparedSelectStatement = connectionDB.prepareStatement(query);
+		ResultSet rs = preparedSelectStatement.executeQuery();
+		List<Provider> retrievedProvidersList = buildObjectsSubset(rs);
+		
+		return retrievedProvidersList;
 	}
 	
 	@Override

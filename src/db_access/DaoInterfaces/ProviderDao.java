@@ -18,6 +18,7 @@ public interface ProviderDao {
     void deleteProvider(Provider objectToDelete) throws SQLException;
     Provider findProviderByFullName(String fullName, boolean retrievePurchaseOrder) throws SQLException, Exception;
 	List<Provider> findProvidersByName(String name, boolean retrievePurchaseOrder) throws SQLException, Exception;
+	List<Provider> findAllProviderSubset() throws SQLException, Exception;
 	
 	
 	

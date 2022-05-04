@@ -51,6 +51,11 @@ public class ModelFactory {
     public static Provider getProviderModel(String firstName, String lastName, String city, String country){
         return new Provider(firstName, lastName, city, country);
     }
+    
+    public static Provider getProviderSubsetModel(int id, String FirstName, String LastName) {
+		
+		return new Provider(id, FirstName, LastName);
+	}
 
     public static Customer getCustomerModel(int id, String firstName, String lastName, String city, String country, String address, int postalCode){
 

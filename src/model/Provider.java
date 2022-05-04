@@ -13,13 +13,24 @@ public class Provider extends Person{
     public Provider(String firstName, String lastName, String city, String country) {
         super(firstName, lastName, city, country);
     }
+    
+    public Provider(int id, String firstName, String lastName) {
+    	super(id, firstName, lastName);
+	}
 
-    public ArrayList<PurchaseOrder> getPurchaseOrders() {
+	public ArrayList<PurchaseOrder> getPurchaseOrders() {
         return purchaseOrders;
     }
 
     public void setPurchaseOrders(ArrayList<PurchaseOrder> purchaseOrders) {
         this.purchaseOrders = purchaseOrders;
     }
+
+	@Override
+	public String toString() {
+		return super.toString();
+	}
+    
+    
 
 }
