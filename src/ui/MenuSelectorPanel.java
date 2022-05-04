@@ -7,6 +7,7 @@ import java.awt.Image;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public class MenuSelectorPanel extends JPanel{
@@ -43,7 +44,8 @@ public class MenuSelectorPanel extends JPanel{
 		add(salesButton);
 		add(purchasesButton);
 		add(hideShowButton);
-		add(DatabaseConnectionIndicator.getInstance());
+		JLabel connectionIndicator = new DatabaseConnectionIndicator();
+		add(connectionIndicator);
 		
 		opened = false;
 		productInfoButton.setVisible(opened);

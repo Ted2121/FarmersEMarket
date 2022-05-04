@@ -5,6 +5,7 @@ import java.awt.BorderLayout;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
@@ -33,7 +34,8 @@ public abstract class PopupWindow extends JFrame{
 		JButton cancelButton = new JButton("Cancel");
 		buttonPanel.add(saveButton, BorderLayout.WEST);
 		buttonPanel.add(cancelButton, BorderLayout.EAST);
-		buttonPanel.add(DatabaseConnectionIndicator.getInstance(), BorderLayout.CENTER);
+		JLabel connectionIndicator = new DatabaseConnectionIndicator();
+		buttonPanel.add(connectionIndicator, BorderLayout.CENTER);
 		
 		cancelButton.addActionListener(e -> {
 			dispose();
