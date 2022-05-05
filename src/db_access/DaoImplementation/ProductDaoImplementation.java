@@ -54,12 +54,17 @@ public class ProductDaoImplementation implements ProductDao {
 		while(rs.next()) {
 			Product product = buildObject(rs);
 			if(retrieveLineItems) {
-				List<LineItem> retrievedLineItemsLinkedToThisProduct = DaoFactory.getLineItemDao().findLineItemsByProduct(product, false);
+				List<LineItem> retrievedLineItemsLinkedToThisProduct = new ArrayList<>();
+				retrievedLineItemsLinkedToThisProduct.addAll(DaoFactory.getLineItemDao().findLineItemsByProduct(product, false));
 				product.setRelatedLineItems(retrievedLineItemsLinkedToThisProduct);
 			}
 			
 			if(retrieveProductInformation) {
 				ProductInformation retrievedProductInforamtionLinkedToThisProduct = DaoFactory.getProductInformationDao().findProductInformationByProduct(product, false);
+				if(retrievedProductInforamtionLinkedToThisProduct == null) {
+					retrievedProductInforamtionLinkedToThisProduct = new ProductInformation(0, 0, 0);
+				}
+				
 				product.setRelatedProductInformation(retrievedProductInforamtionLinkedToThisProduct);
 			}
 			list.add(product);

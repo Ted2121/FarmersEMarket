@@ -33,7 +33,7 @@ import model.Product;
 import model.Provider;
 
 public class PurchasesPopup extends PopupWindow{
-	private PurchasesPopup self;
+	private static PurchasesPopup self;
 	private JPanel mainPanel;
 	
 	private JFormattedTextField quantityTextField;
@@ -261,7 +261,7 @@ public class PurchasesPopup extends PopupWindow{
 					Provider selectedProvider = (Provider) providerSelectionComboBox.getSelectedItem();
 					controller.createPurchaseOrder(selectedProvider);
 					self.dispose();
-					
+					self = null;
 				}else {
 					JOptionPane.showMessageDialog(null, "No products have been registered in the order");
 				}
@@ -281,6 +281,7 @@ public class PurchasesPopup extends PopupWindow{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				self.dispose();
+				self = null;
 			}
 		});
 		
@@ -296,4 +297,5 @@ public class PurchasesPopup extends PopupWindow{
 		add(mainPanel);
 		
 	}
+
 }

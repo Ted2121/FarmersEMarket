@@ -1,7 +1,12 @@
 package test.ControllerTests;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
+import java.util.List;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -24,6 +29,8 @@ public class TestCreatePurchaseOrderControllerImplementation {
 	public static void setUp() {
 		controller = ControllerFactory.getCreatePurchaseOrderController();
 		quantityOfEachLineItem = 3;
+		controller.retrieveAllObjectsSubset(Product.class);
+		controller.retrieveAllObjectsSubset(Provider.class);
 	}
 	
 	@Test
@@ -39,6 +46,37 @@ public class TestCreatePurchaseOrderControllerImplementation {
 		int numberOfPurchaseOrderAfterTest = DaoFactory.getPurchaseOrderDao().findAllPurchaseOrders(false, false).size();
 		
 		assertEquals("Should retrieve 1 more PurchaseOrder", numberOfPurchaseOrderBeforeTest+1, numberOfPurchaseOrderAfterTest);
+	}
+	
+	@Test
+	public void testSearchProviderUsingThisName() {
+		String name = "Ca";
+		List<Provider> providersUsingTheName = controller.searchProviderUsingThisName(name);
+		assertTrue("Should return a list with more than 0 results", providersUsingTheName.size()>0);
+	}
+	
+	@Test
+	public void testSearchProductUsingThisName() {
+		String name = "Ca";
+		List<Product> productsUsingTheName = controller.searchProductUsingThisName(name);
+		assertTrue("Should return a list with more than 0 results", productsUsingTheName.size()>0);
+	}
+
+	@Test
+	public void testRetrieveAllObjectsSubset() {
+		assertTrue("Should retrieve a list of product subsets with more than 0 items",controller.retrieveAllObjectsSubset(Product.class).size()>0);
+		assertTrue("Should retrieve a list of provider subsets with more than 0 items",controller.retrieveAllObjectsSubset(Provider.class).size()>0);
+		assertNull("Shouldn't return anything because an exception occured and have been handled in the controller",controller.retrieveAllObjectsSubset(LineItem.class));
+	}
+	
+	@Test
+	public void testAddDeleteProductFromPurchaseOrder() {
+		Product product = new Product();
+		controller.addProductToPurchaseOrder(product, 2);
+		assertTrue("The product should have been added to the PurchaseOrder", controller.isProductAlreadyInThePurchaseOrder(product));
+		controller.deleteProductFromPurchaseOrder(product);
+		assertFalse("The product should have been removed from the PurchaseOrder", controller.isProductAlreadyInThePurchaseOrder(product));
+
 	}
 	
 	@AfterClass

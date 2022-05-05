@@ -4,6 +4,7 @@ import db_access.DBConnection;
 import db_access.DaoFactory;
 import db_access.DaoInterfaces.ProviderDao;
 import model.ModelFactory;
+import model.Product;
 import model.Provider;
 import model.PurchaseOrder;
 
@@ -44,7 +45,6 @@ public class TestProviderDaoImplementation {
 		assertNotNull("The retrieved object shouldn't be null.", result);
 		assertNotNull("The provider PurchaseOrder list should be set",result.getPurchaseOrders());
 	}
-
 	
 	@Test
 	public void testFindAllProviderWithoutAssociation() throws SQLException, Exception {
@@ -115,6 +115,13 @@ public class TestProviderDaoImplementation {
 	public void testDeleteProvider() throws SQLException, Exception {
 		providerDao.deleteProvider(providerToDelete);
 		assertNull("Should return null.", providerDao.findProviderById(providerToDelete.getId(), false));
+	}
+	
+	@Test
+	public void testFindAllProviderSubset() throws SQLException, Exception{
+		List<Provider> providerSubsetList = providerDao.findAllProviderSubset();
+		assertTrue("Should retrieve a none empty list", providerSubsetList.size()>0);
+		assertNull("Should retrieve products without selling price", providerSubsetList.get(0).getCountry());
 	}
 	
 	@AfterClass

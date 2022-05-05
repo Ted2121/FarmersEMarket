@@ -296,6 +296,10 @@ public class CreatePurchaseOrderControllerImplementation implements CreatePurcha
 			System.out.println("Cannot retrieve products subset");
 		}
 		
+		if(objectSubsetList == null) {
+			return null;
+		}
+		
 		if(objectSubsetList.size() < 31) {
 			return objectSubsetList;
 		}

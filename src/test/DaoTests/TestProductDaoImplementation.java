@@ -1,6 +1,7 @@
 package test.DaoTests;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -91,6 +92,7 @@ public class TestProductDaoImplementation {
 		}
 		assertTrue(count>0);
 	}
+	
 	@Test
 	public void testFindAllWithProductInformationAssociation() throws SQLException, Exception {
 		List<Product> list =  productDao.findAllProducts(false, true);
@@ -100,8 +102,8 @@ public class TestProductDaoImplementation {
 				assertTrue(p.getRelatedLineItems() == null);
 			}
 			else {
-				assertTrue(p.getRelatedProductInformation() == null);
-				assertTrue(p.getRelatedLineItems() == null);
+				assertNotNull(p.getRelatedProductInformation());
+				assertNull(p.getRelatedLineItems());
 			}
 		}
 		
@@ -116,8 +118,8 @@ public class TestProductDaoImplementation {
 				assertTrue(p.getRelatedProductInformation() == null);
 			}
 			else {
-				assertTrue(p.getRelatedLineItems().isEmpty());
-				assertTrue(p.getRelatedProductInformation() == null);
+				assertNotNull(p.getRelatedLineItems());
+				assertNull(p.getRelatedProductInformation());
 			}
 		}
 		
@@ -128,12 +130,12 @@ public class TestProductDaoImplementation {
 		List<Product> list =  productDao.findAllProducts(true, true);
 		for(Product p : list) {
 			if(p.getId() == productToUpdate.getId()) {
-				assertTrue(!p.getRelatedLineItems().isEmpty());
+				assertFalse(p.getRelatedLineItems().isEmpty());
 				assertTrue(p.getRelatedProductInformation().getQuantity() == productInformation.getQuantity());
 			}
 			else {
-				assertTrue(p.getRelatedLineItems().isEmpty());
-				assertTrue(p.getRelatedProductInformation() == null);
+				assertNotNull(p.getRelatedLineItems());
+				assertNotNull(p.getRelatedProductInformation());
 			}
 		}
 		
@@ -311,6 +313,13 @@ public class TestProductDaoImplementation {
 				assertTrue(p.getRelatedProductInformation() == null);
 			}
 		}
+	}
+	
+	@Test
+	public void testFindAllProductSubset() throws SQLException, Exception{
+		List<Product> productSubsetList = productDao.findAllProductSubset();
+		assertTrue("Should retrieve a none empty list", productSubsetList.size()>0);
+		assertTrue("Should retrieve products without selling price", productSubsetList.get(0).getSellingPrice()==0);
 	}
 	
 	@AfterClass
