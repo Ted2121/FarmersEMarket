@@ -19,7 +19,9 @@ import model.Product;
 import model.Provider;
 import model.PurchaseOrder;
 
-public class CreatePurchaseOrderControllerImplementation extends RetrievingSubsetControllerImplementation implements CreatePurchaseOrderController {
+public class CreatePurchaseOrderControllerImplementation extends RetrievingSubsetControllerImplementation 
+implements CreatePurchaseOrderController {
+	
 	private HashMap<Product, Integer> productWithQuantity;
 	private PurchaseOrder purchaseOrder;
 	

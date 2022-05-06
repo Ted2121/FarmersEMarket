@@ -13,6 +13,7 @@ import javax.swing.JTable;
 public abstract class TablePanel extends JPanel{
 	private JTable table;
 	private JButton newButton;
+	private JButton deleteButton;
 	private JButton editButton;
 	private PopupWindow relatedPopupWindow;
 	
@@ -38,7 +39,7 @@ public abstract class TablePanel extends JPanel{
 		buttonsPanel.setPreferredSize(new Dimension(800, 50));
 		buttonsPanel.setLayout(new FlowLayout());
 		newButton = new JButton();
-		JButton deleteButton = new JButton("Delete");
+		deleteButton = new JButton("Delete");
 		editButton = new JButton("Edit");
 		JButton backButton = new JButton("Back");
 		buttonsPanel.add(newButton);
@@ -63,5 +64,9 @@ public abstract class TablePanel extends JPanel{
 	
 	public JButton getEditButton() {
 		return editButton;
+	}
+	
+	public JButton getDeleteButton() {
+		return deleteButton;
 	}
 }

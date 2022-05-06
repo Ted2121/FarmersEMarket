@@ -27,10 +27,15 @@ import javax.swing.border.LineBorder;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.NumberFormatter;
 
+import controller.ControllerImplementation.CRUDPurchaseOrderControllerImplementation;
 import controller.ControllerImplementation.CreatePurchaseOrderControllerImplementation;
+import controller.ControllerInterfaces.CRUDPurchaseOrderController;
 import controller.ControllerInterfaces.CreatePurchaseOrderController;
+import controller.ControllerInterfaces.RetrievingSubsetController;
+import model.LineItem;
 import model.Product;
 import model.Provider;
+import model.PurchaseOrder;
 
 public class PurchasesPopup extends PopupWindow{
 	private static PurchasesPopup self;
@@ -40,27 +45,76 @@ public class PurchasesPopup extends PopupWindow{
 	private JPanel productPanel;
 	private JButton addProductButton;
 	private JButton createPurchaseOrderButton;
+	private JComboBox providerSelectionComboBox;
+	private JComboBox productSelectionComboBox;
 
 	private List<Product> productSubsetList;
 	private List<Provider> providerSubsetList;
 	
-	CreatePurchaseOrderController controller;
+	private PurchaseOrder purchaseOrder;
+	
+	CreatePurchaseOrderController createController;
+	CRUDPurchaseOrderController crudController;
+	
+	private RetrievingSubsetController retrieveController;
 	
 	public PurchasesPopup() {
 		setTitle("New Purchase");
 		this.self = this;
 		
-		controller = new CreatePurchaseOrderControllerImplementation();
+		createController = new CreatePurchaseOrderControllerImplementation();
+		retrieveController = createController; 
 		
+		initSaveButton();
 		initComponent();
+		
 		try {
-			productSubsetList = controller.retrieveAllObjectsSubset(Product.class);
-			providerSubsetList = controller.retrieveAllObjectsSubset(Provider.class);
+			productSubsetList = retrieveController.retrieveAllObjectsSubset(Product.class);
+			providerSubsetList = retrieveController.retrieveAllObjectsSubset(Provider.class);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+	}
+
+	public PurchasesPopup(PurchaseOrder purchaseOrder) {
+		setTitle("Edit Purchase");
+		this.self = this;
+		
+		crudController = new CRUDPurchaseOrderControllerImplementation();
+		retrieveController = crudController; 
+		this.purchaseOrder = purchaseOrder;
+		
+		initEditButton();
+		initComponent();
+		
+		initComponentWithInformations();
+		
+		try {
+			productSubsetList = retrieveController.retrieveAllObjectsSubset(Product.class);
+			providerSubsetList = retrieveController.retrieveAllObjectsSubset(Provider.class);
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
 	}
 	
+	private void initComponentWithInformations() {
+		List<LineItem> relatedLineItem = crudController.finAllLineItemRelatedToThisPurchaseOrder(purchaseOrder);
+		for(LineItem lineItem : relatedLineItem) {
+			JPanel productWithQuantityPanel = new PurchasePopUpProductListedPanel(crudController, productPanel, lineItem);
+			productWithQuantityPanel.setPreferredSize(new java.awt.Dimension(productPanel.getPreferredSize().width, 32));
+			productWithQuantityPanel.setMaximumSize(new java.awt.Dimension(getWidth(), 32));
+			
+			productPanel.add(productWithQuantityPanel);
+			productPanel.revalidate();
+			productPanel.repaint();
+			
+			
+		}
+		
+		providerSelectionComboBox.setSelectedItem(purchaseOrder.getProvider());
+		
+	}
+
 	private void initComponent() {
 		mainPanel = new JPanel();
 		
@@ -79,7 +133,7 @@ public class PurchasesPopup extends PopupWindow{
 		gbc_providerNameLabel.gridy = 1;
 		mainPanel.add(providerNameLabel, gbc_providerNameLabel);
 		
-		JComboBox providerSelectionComboBox = new JComboBox();
+		providerSelectionComboBox = new JComboBox();
 		providerSelectionComboBox.setEditable(true);
 		GridBagConstraints gbc_providerSelectionComboBox = new GridBagConstraints();
 		gbc_providerSelectionComboBox.gridwidth = 2;
@@ -100,7 +154,7 @@ public class PurchasesPopup extends PopupWindow{
 					        	JComboBox comboBoxSourceEvent = (JComboBox) sourceEvent.getParent();
 					        	JTextComponent textComponentOfTheComboBox = (JTextComponent) comboBoxSourceEvent.getEditor().getEditorComponent();
 					        	
-				        		List<Provider> providerList = controller.searchProviderUsingThisName(textComponentOfTheComboBox.getText());
+				        		List<Provider> providerList = retrieveController.searchProviderUsingThisName(textComponentOfTheComboBox.getText());
 								if(providerList.size()>0) {
 									Provider[] providerArray = providerList.toArray(new Provider[0]);
 								providerSelectionComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(providerArray));
@@ -117,7 +171,7 @@ public class PurchasesPopup extends PopupWindow{
 		    }
 		});
 		
-		JComboBox productSelectionComboBox = new JComboBox();
+		productSelectionComboBox = new JComboBox();
 		productSelectionComboBox.setEditable(true);
 		
 		productSelectionComboBox.addActionListener(productSelectionComboBox);
@@ -134,7 +188,7 @@ public class PurchasesPopup extends PopupWindow{
 					        	JComboBox comboBoxSourceEvent = (JComboBox) sourceEvent.getParent();
 					        	JTextComponent textComponentOfTheComboBox = (JTextComponent) comboBoxSourceEvent.getEditor().getEditorComponent();
 					        	
-				        		List<Product> productList = controller.searchProductUsingThisName(textComponentOfTheComboBox.getText());
+				        		List<Product> productList = retrieveController.searchProductUsingThisName(textComponentOfTheComboBox.getText());
 								if(productList.size()>0) {
 									Product[] productArray = productList.toArray(new Product[0]);
 								productSelectionComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(productArray));
@@ -188,31 +242,6 @@ public class PurchasesPopup extends PopupWindow{
 	    gbc_lblQuantity.gridy = 4;
 	    mainPanel.add(lblQuantity, gbc_lblQuantity);
 		
-		addProductButton = new JButton("Add product to the list");
-		addProductButton.setEnabled(false);
-		addProductButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				Product selectedProduct = (Product) productSelectionComboBox.getSelectedItem();
-				int quantity=1;
-				if(!controller.isProductAlreadyInThePurchaseOrder(selectedProduct)) {
-					
-					if(!quantityTextField.getText().isEmpty())
-						quantity = (int) Integer.parseInt(quantityTextField.getText());
-					JPanel productWithQuantityPanel = new PurchasePopUpProductListedPanel(controller, productPanel, selectedProduct, quantity);
-					productWithQuantityPanel.setPreferredSize(new java.awt.Dimension(productPanel.getPreferredSize().width, 32));
-					productWithQuantityPanel.setMaximumSize(new java.awt.Dimension(getWidth(), 32));
-					
-					controller.addProductToPurchaseOrder(selectedProduct, quantity);
-					
-					productPanel.add(productWithQuantityPanel);
-					productPanel.revalidate();
-					productPanel.repaint();
-				}else {
-					JOptionPane.showMessageDialog(null, selectedProduct + " already present in the order");
-				}
-			}
-		});
 		quantityTextField = new JFormattedTextField(formatter);
 		
 		
@@ -251,24 +280,6 @@ public class PurchasesPopup extends PopupWindow{
 		gbc_productPanel.gridy = 6;
 		mainPanel.add(productScrollPanel, gbc_productPanel);
 		
-		createPurchaseOrderButton = new JButton("Create purchase order");
-		createPurchaseOrderButton.setEnabled(false);
-		
-		createPurchaseOrderButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if(productPanel.getComponentCount()!=0) {
-					Provider selectedProvider = (Provider) providerSelectionComboBox.getSelectedItem();
-					controller.createPurchaseOrder(selectedProvider);
-					self.dispose();
-					self = null;
-				}else {
-					JOptionPane.showMessageDialog(null, "No products have been registered in the order");
-				}
-				
-			}
-		});
-		
 		GridBagConstraints gbc_createPurchaseOrderButton = new GridBagConstraints();
 		gbc_createPurchaseOrderButton.insets = new Insets(0, 0, 5, 5);
 		gbc_createPurchaseOrderButton.gridx = 3;
@@ -298,4 +309,90 @@ public class PurchasesPopup extends PopupWindow{
 		
 	}
 
+	private void initSaveButton() {
+		createPurchaseOrderButton = new JButton("Create purchase order");
+		createPurchaseOrderButton.setEnabled(false);
+		
+		createPurchaseOrderButton.addActionListener(e -> {
+			if(productPanel.getComponentCount()!=0) {
+				Provider selectedProvider = (Provider) providerSelectionComboBox.getSelectedItem();
+				createController.createPurchaseOrder(selectedProvider);
+				self.dispose();
+				self = null;
+			}else {
+				JOptionPane.showMessageDialog(null, "No products have been registered in the order");
+			}
+			
+			}
+		);
+		
+		addProductButton = new JButton("Add product to the list");
+		addProductButton.setEnabled(false);
+		
+		addProductButton.addActionListener(e -> {
+			
+			Product selectedProduct = (Product) productSelectionComboBox.getSelectedItem();
+			int quantity=1;
+			if(!createController.isProductAlreadyInThePurchaseOrder(selectedProduct)) {
+				
+				if(!quantityTextField.getText().isEmpty())
+					quantity = (int) Integer.parseInt(quantityTextField.getText());
+				JPanel productWithQuantityPanel = new PurchasePopUpProductListedPanel(createController, productPanel, selectedProduct, quantity);
+				productWithQuantityPanel.setPreferredSize(new java.awt.Dimension(productPanel.getPreferredSize().width, 32));
+				productWithQuantityPanel.setMaximumSize(new java.awt.Dimension(getWidth(), 32));
+				
+				createController.addProductToPurchaseOrder(selectedProduct, quantity);
+				
+				productPanel.add(productWithQuantityPanel);
+				productPanel.revalidate();
+				productPanel.repaint();
+			}else {
+				JOptionPane.showMessageDialog(null, selectedProduct + " already present in the order");
+			}
+		}
+	);
+	}
+	
+	private void initEditButton() {
+		createPurchaseOrderButton = new JButton("Save modification");
+		createPurchaseOrderButton.setEnabled(true);
+		
+		createPurchaseOrderButton.addActionListener(e -> {
+			if(productPanel.getComponentCount()!=0) {
+				Provider selectedProvider = (Provider) providerSelectionComboBox.getSelectedItem();
+				purchaseOrder.setProvider(selectedProvider);
+				crudController.updatePurchaseOrder(purchaseOrder);
+				self.dispose();
+			}else {
+				JOptionPane.showMessageDialog(null, "No products have been registered in the order");
+			}
+		});	
+		
+		addProductButton = new JButton("Add product to the list");
+		addProductButton.setEnabled(false);
+		
+		addProductButton.addActionListener(e -> {
+			
+			Product selectedProduct = (Product) productSelectionComboBox.getSelectedItem();
+			int quantity=1;
+			if(!crudController.isProductAlreadyInThePurchaseOrder(selectedProduct)) {
+				
+				if(!quantityTextField.getText().isEmpty())
+					quantity = (int) Integer.parseInt(quantityTextField.getText());
+				JPanel productWithQuantityPanel = new PurchasePopUpProductListedPanel(crudController, productPanel, selectedProduct, quantity);
+				productWithQuantityPanel.setPreferredSize(new java.awt.Dimension(productPanel.getPreferredSize().width, 32));
+				productWithQuantityPanel.setMaximumSize(new java.awt.Dimension(getWidth(), 32));
+				
+				crudController.addProductToPurchaseOrder(selectedProduct, quantity);
+				
+				productPanel.add(productWithQuantityPanel);
+				productPanel.revalidate();
+				productPanel.repaint();
+			}else {
+				JOptionPane.showMessageDialog(null, selectedProduct + " already present in the order");
+			}
+		}
+	);
+	}
+	
 }

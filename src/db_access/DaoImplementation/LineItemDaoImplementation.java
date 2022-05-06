@@ -98,6 +98,10 @@ public class LineItemDaoImplementation implements LineItemDao {
 		ArrayList<LineItem> retrievedLineItem = null;
 		retrievedLineItem = buildObjects(rs, retrieveProduct, false);
 		
+		for(LineItem lineItem : retrievedLineItem) {
+			lineItem.setOrder(order);
+		}
+		
 		return retrievedLineItem;
 	}
 
@@ -109,6 +113,10 @@ public class LineItemDaoImplementation implements LineItemDao {
 		ResultSet rs = preparedSelectStatement.executeQuery();
 		ArrayList<LineItem> retrievedLineItem = null;
 		retrievedLineItem = buildObjects(rs, false, retrieveOrder);
+		
+		for(LineItem lineItem : retrievedLineItem) {
+			lineItem.setProduct(product);
+		}
 		
 		return retrievedLineItem;
 	}

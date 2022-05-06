@@ -1,9 +1,11 @@
 package controller;
 
 import controller.ControllerImplementation.CRUDProductInformationControllerImplementation;
+import controller.ControllerImplementation.CRUDPurchaseOrderControllerImplementation;
 import controller.ControllerImplementation.CreatePurchaseOrderControllerImplementation;
 import controller.ControllerImplementation.CreateSaleOrderControllerImplementation;
 import controller.ControllerInterfaces.CRUDProductInformationController;
+import controller.ControllerInterfaces.CRUDPurchaseOrderController;
 import controller.ControllerInterfaces.CreatePurchaseOrderController;
 import controller.ControllerInterfaces.CreateSaleOrderController;
 
@@ -20,5 +22,9 @@ public class ControllerFactory {
 	
 	public static CRUDProductInformationController getCRUDProductInformationController() {
 		return new CRUDProductInformationControllerImplementation();
+	}
+	
+	public static CRUDPurchaseOrderController getCRUDPurchaseOrderController() {
+		return new CRUDPurchaseOrderControllerImplementation();
 	}
 }
