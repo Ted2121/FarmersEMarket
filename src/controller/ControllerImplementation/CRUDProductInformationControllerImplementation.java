@@ -1,6 +1,9 @@
 package controller.ControllerImplementation;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 import controller.ControllerInterfaces.CRUDProductInformationController;
@@ -12,10 +15,13 @@ import model.Product;
 import model.Product.Unit;
 import model.Product.WeightCategory;
 import model.ProductInformation;
+import model.Provider;
 
-public class CRUDProductInformationControllerImplementation implements CRUDProductInformationController{
+public class CRUDProductInformationControllerImplementation extends RetrievingSubsetControllerImplementation implements CRUDProductInformationController{
 	private ProductDao productDao;
 	private ProductInformationDao productInformationDao;
+	
+	List<List<Product>> productContainingLetter;
 	
 	public CRUDProductInformationControllerImplementation() {
 		productDao = DaoFactory.getProductDao();
@@ -23,15 +29,16 @@ public class CRUDProductInformationControllerImplementation implements CRUDProdu
 	}
 
 	@Override
-	public List<ProductInformation> searchAllProductAndProductInformation() {
+	public List<Product> searchAllProductAndProductInformation() {
 		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<ProductInformation> searchProductByProductInformation() {
-		// TODO Auto-generated method stub
-		return null;
+		List<Product> list = new ArrayList<Product>();
+		try {
+			list = productDao.findAllProducts(false, true);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return list;
 	}
 
 	@Override

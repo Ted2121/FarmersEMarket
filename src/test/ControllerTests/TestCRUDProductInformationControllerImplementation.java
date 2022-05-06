@@ -49,6 +49,11 @@ public class TestCRUDProductInformationControllerImplementation {
 	}
 	
 	@Test
+	public void testSearchAllProductAndProductInformation() {
+		assertTrue(!crudProductInformationController.searchAllProductAndProductInformation().isEmpty());
+	}
+	
+	@Test
 	public void testCreateProductInformationAndProduct() {
 		crudProductInformationController.createProductInformationAndProduct("ProductToCreate", 15d, 20d, "KG", 5, 455, 10);
 		try {
