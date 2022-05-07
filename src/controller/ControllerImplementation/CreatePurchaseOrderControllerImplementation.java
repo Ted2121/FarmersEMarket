@@ -5,10 +5,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import controller.HelperClass;
 import controller.ControllerInterfaces.CreatePurchaseOrderController;
 import db_access.DBConnection;
 import db_access.DaoFactory;
@@ -66,25 +68,19 @@ implements CreatePurchaseOrderController {
 		
 		//First, we retrieve a new PurchaseOrder from the model factory by specifying its provider
 		purchaseOrder = ModelFactory.getPurchaseOrderModel(provider);
-		Set<Product> keyOfHashMap = productWithQuantity.keySet();
-		for(Product key : keyOfHashMap) {
-			
-			Product completeProduct;
-			try {
-				completeProduct = DaoFactory.getProductDao().findProductById(key.getId(), false, false);
-				int quantity = productWithQuantity.get(key);
-				productWithQuantity.remove(key);
-				productWithQuantity.put(completeProduct, quantity);
-			} catch (SQLException e) {
-				System.out.println("Cannot retrieve the full product object due to database error");
-			} catch (Exception e) {
-				System.out.println("Cannot retrieve the full product object due to software");
-			}
-			
+		
+		try {
+			//We retrieve the wholes product to have its selling price
+			HelperClass.exchangeProductSubsetWithQuantityHashMapToCompleteProducts(productWithQuantity);
+		} catch (SQLException e) {
+			System.out.println("Cannot retrieve the full product object due to database error");
+		} catch (Exception e) {
+			System.out.println("Cannot retrieve the full product object due to software");
 		}
 		
-		//Then we calculate the total price of the order and set it
-		purchaseOrder.setOrderPrice(calculateTotalPrice());
+		
+		//Then we calculate the total price of the order and set it (will return 0 if we don't have its sellig price)
+		purchaseOrder.setOrderPrice(HelperClass.calculateTotalPrice(productWithQuantity));
 		
 		//We set a list of LineItems wich contains every generated LineItems from the hashmap
 		List<LineItem> generatedLineItems = (ArrayList<LineItem>) generateLineItems(); 
@@ -118,6 +114,7 @@ implements CreatePurchaseOrderController {
 			try {
 				//And we try to rollback as if we never tried to start the transaction
 				connection.rollback();
+				System.out.println("Connection rolled back");
 			} catch (SQLException e1) {
 				//If the rollback cannot be done, we print this line
 				System.out.println("System cannot rollback the database instruction");
@@ -128,6 +125,7 @@ implements CreatePurchaseOrderController {
 			try {
 				//And we try to rollback as if we never tried to start the transaction
 				connection.rollback();
+				System.out.println("Connection rolled back");
 			}catch (SQLException e1) {
 				//If the rollback cannot be done, we print this line
 				System.out.println("System cannot rollback the database instruction");
@@ -158,18 +156,6 @@ implements CreatePurchaseOrderController {
 		}
 		//Once every LineItems have been created, we return the list
 		return generatedLineItems;
-	}
-
-	private double calculateTotalPrice() {
-		//We set the total price to 0
-		double totalPrice = 0;
-		//For each product as a key in the hashmap
-		for(Product key : productWithQuantity.keySet()) {
-			//We calculate its price and add it to the total price
-			totalPrice += key.getPurchasingPrice() * productWithQuantity.get(key);
-		}
-		//Once every price of each product have been added to the total, we return it
-		return totalPrice;
 	}
 
 	//Created for test reasons
