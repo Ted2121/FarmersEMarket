@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import controller.HelperClass;
 import controller.ControllerInterfaces.CRUDPurchaseOrderController;
 import db_access.DaoFactory;
 import db_access.DaoInterfaces.LineItemDao;
@@ -47,7 +48,14 @@ public class CRUDPurchaseOrderControllerImplementation extends RetrievingSubsetC
 
 	@Override
 	public void updatePurchaseOrder(PurchaseOrder purchaseOrder) {
-		purchaseOrder.setOrderPrice(calculateTotalPrice());
+		try {
+			HelperClass.exchangeProductSubsetWithQuantityHashMapToCompleteProducts(productsAlreadyPresent);
+		} catch (SQLException e2) {
+			System.out.println("Cannot retrieve the full product object due to database error");
+		} catch (Exception e2) {
+			System.out.println("Cannot retrieve the full product object due to software");
+		}
+		purchaseOrder.setOrderPrice(HelperClass.calculateTotalPrice(productsAlreadyPresent));
 		//Transaction
 		try {
 			connection.setAutoCommit(false);
@@ -69,6 +77,7 @@ public class CRUDPurchaseOrderControllerImplementation extends RetrievingSubsetC
 		}catch(SQLException e) {
 			try {
 				connection.rollback();
+				System.out.println("Transaction rolled back");
 			} catch (SQLException e1) {
 				System.out.println("Cannot rollback the transaction");
 			}
@@ -183,18 +192,12 @@ public class CRUDPurchaseOrderControllerImplementation extends RetrievingSubsetC
 	
 	@Override
 	public boolean isProductAlreadyInThePurchaseOrder(Product selectedProduct) {
-		return productsAlreadyPresent.containsKey(selectedProduct);
+		for(Product product : productsAlreadyPresent.keySet()) {
+			if(product.getId() == selectedProduct.getId()) 
+				return true;
+		}
+		return false;
 	}
 
-	private double calculateTotalPrice() {
-		//We set the total price to 0
-		double totalPrice = 0;
-		//For each product as a key in the hashmap
-		for(Product key : productsAlreadyPresent.keySet()) {
-			//We calculate its price and add it to the total price
-			totalPrice += key.getPurchasingPrice() * productsAlreadyPresent.get(key);
-		}
-		//Once every price of each product have been added to the total, we return it
-		return totalPrice;
-	}
+
 }

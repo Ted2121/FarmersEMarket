@@ -62,13 +62,35 @@ public class PurchasesPopup extends PopupWindow{
 	public PurchasesPopup() {
 		setTitle("New Purchase");
 		this.self = this;
+		initSubsetsList();
 		
 		createController = new CreatePurchaseOrderControllerImplementation();
 		retrieveController = createController; 
 		
-		initSaveButton();
+		initSpecificCreatePurchaseOrderComponent();
 		initComponent();
 		
+		
+	}
+
+	public PurchasesPopup(PurchaseOrder purchaseOrder) {
+		setTitle("Edit Purchase");
+		this.self = this;
+		initSubsetsList();
+		
+		crudController = new CRUDPurchaseOrderControllerImplementation();
+		retrieveController = crudController; 
+		
+		this.purchaseOrder = purchaseOrder;
+		
+		initSpecificCRUDPurchaseOrderComponent();
+		initComponent();
+		
+		initComponentWithInformations();
+		
+	}
+	
+	private void initSubsetsList() {
 		try {
 			productSubsetList = retrieveController.retrieveAllObjectsSubset(Product.class);
 			providerSubsetList = retrieveController.retrieveAllObjectsSubset(Provider.class);
@@ -77,27 +99,6 @@ public class PurchasesPopup extends PopupWindow{
 		}
 	}
 
-	public PurchasesPopup(PurchaseOrder purchaseOrder) {
-		setTitle("Edit Purchase");
-		this.self = this;
-		
-		crudController = new CRUDPurchaseOrderControllerImplementation();
-		retrieveController = crudController; 
-		this.purchaseOrder = purchaseOrder;
-		
-		initEditButton();
-		initComponent();
-		
-		initComponentWithInformations();
-		
-		try {
-			productSubsetList = retrieveController.retrieveAllObjectsSubset(Product.class);
-			providerSubsetList = retrieveController.retrieveAllObjectsSubset(Provider.class);
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
-	}
-	
 	private void initComponentWithInformations() {
 		List<LineItem> relatedLineItem = crudController.finAllLineItemRelatedToThisPurchaseOrder(purchaseOrder);
 		for(LineItem lineItem : relatedLineItem) {
@@ -310,7 +311,7 @@ public class PurchasesPopup extends PopupWindow{
 		
 	}
 
-	private void initSaveButton() {
+	private void initSpecificCreatePurchaseOrderComponent() {
 		createPurchaseOrderButton = new JButton("Create purchase order");
 		createPurchaseOrderButton.setEnabled(false);
 		
@@ -355,7 +356,7 @@ public class PurchasesPopup extends PopupWindow{
 	);
 	}
 	
-	private void initEditButton() {
+	private void initSpecificCRUDPurchaseOrderComponent() {
 		createPurchaseOrderButton = new JButton("Save modification");
 		createPurchaseOrderButton.setEnabled(true);
 		

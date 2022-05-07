@@ -83,7 +83,7 @@ public abstract class RetrievingSubsetControllerImplementation implements Retrie
 		return matchingProducts;
 	}
 
-	private <T> List<T> sortLetterToMatchingObjects(String stringToSort, Class<T> cls ) {
+	private <T> List<T> sortLetterToMatchingObjects(String stringToSort, Class<T> cls) {
 		//This methods use generics and can use eatcher Product or Provider class
 		
 		//First, we take the string, change capitals letter to normals letter and delete white spaces
@@ -204,9 +204,9 @@ public abstract class RetrievingSubsetControllerImplementation implements Retrie
 		//Then we instanciate a new List for all 26 letter of the alphabete (special charactere should have already been handled)
 		for(int i=0;i<26;i++) {
 			if(cls.equals(Product.class))
-				productContainingLetter.add(new ArrayList<Product>());
+				productContainingLetter.add(new ArrayList<>());
 			else if(cls.equals(Provider.class))
-				providerContainingLetter.add(new ArrayList<Provider>());
+				providerContainingLetter.add(new ArrayList<>());
 		}
 		
 		
