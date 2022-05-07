@@ -38,7 +38,8 @@ import model.Provider;
 import model.PurchaseOrder;
 
 public class PurchasesPopup extends PopupWindow{
-	private static PurchasesPopup self;
+	private PurchasesPopup self;
+	private PurchasesPanel parent;
 	private JPanel mainPanel;
 	
 	private JFormattedTextField quantityTextField;
@@ -318,6 +319,7 @@ public class PurchasesPopup extends PopupWindow{
 				Provider selectedProvider = (Provider) providerSelectionComboBox.getSelectedItem();
 				createController.createPurchaseOrder(selectedProvider);
 				self.dispose();
+				parent.refreshTable();
 				self = null;
 			}else {
 				JOptionPane.showMessageDialog(null, "No products have been registered in the order");
@@ -362,6 +364,7 @@ public class PurchasesPopup extends PopupWindow{
 				Provider selectedProvider = (Provider) providerSelectionComboBox.getSelectedItem();
 				purchaseOrder.setProvider(selectedProvider);
 				crudController.updatePurchaseOrder(purchaseOrder);
+				parent.refreshTable();
 				self.dispose();
 			}else {
 				JOptionPane.showMessageDialog(null, "No products have been registered in the order");
@@ -393,6 +396,10 @@ public class PurchasesPopup extends PopupWindow{
 			}
 		}
 	);
+	}
+	
+	public void setParent(PurchasesPanel parent) {
+		this.parent = parent;
 	}
 	
 }

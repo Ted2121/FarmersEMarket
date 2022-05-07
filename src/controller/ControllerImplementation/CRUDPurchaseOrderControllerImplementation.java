@@ -47,6 +47,7 @@ public class CRUDPurchaseOrderControllerImplementation extends RetrievingSubsetC
 
 	@Override
 	public void updatePurchaseOrder(PurchaseOrder purchaseOrder) {
+		purchaseOrder.setOrderPrice(calculateTotalPrice());
 		//Transaction
 		try {
 			connection.setAutoCommit(false);
@@ -185,4 +186,15 @@ public class CRUDPurchaseOrderControllerImplementation extends RetrievingSubsetC
 		return productsAlreadyPresent.containsKey(selectedProduct);
 	}
 
+	private double calculateTotalPrice() {
+		//We set the total price to 0
+		double totalPrice = 0;
+		//For each product as a key in the hashmap
+		for(Product key : productsAlreadyPresent.keySet()) {
+			//We calculate its price and add it to the total price
+			totalPrice += key.getPurchasingPrice() * productsAlreadyPresent.get(key);
+		}
+		//Once every price of each product have been added to the total, we return it
+		return totalPrice;
+	}
 }

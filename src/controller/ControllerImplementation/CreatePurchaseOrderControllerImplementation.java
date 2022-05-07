@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import controller.ControllerInterfaces.CreatePurchaseOrderController;
 import db_access.DBConnection;
@@ -65,6 +66,22 @@ implements CreatePurchaseOrderController {
 		
 		//First, we retrieve a new PurchaseOrder from the model factory by specifying its provider
 		purchaseOrder = ModelFactory.getPurchaseOrderModel(provider);
+		Set<Product> keyOfHashMap = productWithQuantity.keySet();
+		for(Product key : keyOfHashMap) {
+			
+			Product completeProduct;
+			try {
+				completeProduct = DaoFactory.getProductDao().findProductById(key.getId(), false, false);
+				int quantity = productWithQuantity.get(key);
+				productWithQuantity.remove(key);
+				productWithQuantity.put(completeProduct, quantity);
+			} catch (SQLException e) {
+				System.out.println("Cannot retrieve the full product object due to database error");
+			} catch (Exception e) {
+				System.out.println("Cannot retrieve the full product object due to software");
+			}
+			
+		}
 		
 		//Then we calculate the total price of the order and set it
 		purchaseOrder.setOrderPrice(calculateTotalPrice());

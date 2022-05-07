@@ -17,23 +17,22 @@ import model.PurchaseOrder;
 public class PurchasesPanel extends TablePanel{
 	private CRUDPurchaseOrderController controller;
 	private HashMap<Integer, PurchaseOrder> idRelatedToPurchaseOrder;
+	private PurchasesPanel self;
+	
+	private JTable table;
 
 	public PurchasesPanel() {
+		self=this;
+		table = getTable();
 		controller = ControllerFactory.getCRUDPurchaseOrderController();
 		ProgramFrame.getFrame().setTitle("Purchases");
 		getNewButton().setText("New Purchase");
-		getNewButton().addActionListener(e -> new PurchasesPopup());
+		getNewButton().addActionListener(e -> {
+			PurchasesPopup popup = new PurchasesPopup();
+			popup.setParent(self);
+		});
 		
-		JTable table = getTable();
-		
-		String col[] = {"id", "Provider name","Date / Time", "Total price"};
-		idRelatedToPurchaseOrder = controller.retrieveIdRelatedToPurchaseOrderHashMap();
-		String data[][] = controller.retrieveTableData();
-		
-		DefaultTableModel tableModel = new DefaultTableModel(data,col);
-		table.setModel(tableModel);
-		
-//		table.;
+		refreshTable();
 		
 		getEditButton().setEnabled(true);
 		getEditButton().addActionListener(e -> {
@@ -44,7 +43,8 @@ public class PurchasesPanel extends TablePanel{
 				int id = Integer.parseInt(table.getValueAt(table.getSelectedRow(), 0).toString());
 				
 				PurchaseOrder purchaseOrder = idRelatedToPurchaseOrder.get(id);
-				new PurchasesPopup(purchaseOrder);
+				PurchasesPopup popup = new PurchasesPopup(purchaseOrder);
+				popup.setParent(self);
 			}else if(table.getSelectedRowCount()>1){
 				JOptionPane.showMessageDialog(null, "More than 1 line have been selected");
 			}else {
@@ -62,11 +62,11 @@ public class PurchasesPanel extends TablePanel{
 				int id = Integer.parseInt(table.getValueAt(table.getSelectedRow(), 0).toString());
 				PurchaseOrder purchaseOrder = idRelatedToPurchaseOrder.get(id);
 						
-//				JOptionPane.showConfirmDialog(null, e, D, id)
 				int choice = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this order?","Delete confirmation", JOptionPane.YES_NO_OPTION);
 				switch(choice) {
-					case 0 -> controller.deletePurchaseOrder(purchaseOrder);
-					
+					case 0 -> {controller.deletePurchaseOrder(purchaseOrder);
+						refreshTable();
+					}
 				}
 
 			}else if(table.getSelectedRowCount()>1){
@@ -77,7 +77,16 @@ public class PurchasesPanel extends TablePanel{
 			
 		});
 		
-//		new PurchasesPopup(new PurchaseOrder(new Provider(0, "", "")))
 		
+	}
+
+	public void refreshTable() {
+		
+		String col[] = {"id", "Provider name","Date / Time", "Total price"};
+		idRelatedToPurchaseOrder = controller.retrieveIdRelatedToPurchaseOrderHashMap();
+		String data[][] = controller.retrieveTableData();
+		
+		DefaultTableModel tableModel = new DefaultTableModel(data,col);
+		table.setModel(tableModel);
 	}
 }
