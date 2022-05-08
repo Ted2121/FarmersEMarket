@@ -100,4 +100,8 @@ public class ModelFactory {
     }
 
 
+    public static Customer getCustomerSubsetModel(int id, String FirstName, String LastName) {
+
+        return new Customer(id, FirstName, LastName);
+    }
 }

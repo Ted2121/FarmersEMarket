@@ -152,5 +152,28 @@ public class CustomerDaoImplementation implements CustomerDao {
         return retrieveSaleOrder;
     }
 
+    @Override
+    public List<Customer> findAllCustomerSubset() throws Exception {
+        String query = "SELECT PK_idCustomer, FirstName, LastName  FROM Customer";
+        PreparedStatement preparedSelectStatement = dbCon.prepareStatement(query);
+        ResultSet rs = preparedSelectStatement.executeQuery();
+        List<Customer> retrievedCustomerList = buildObjectsSubset(rs);
 
+        return retrievedCustomerList;
+    }
+
+    private List<Customer> buildObjectsSubset(ResultSet rs) throws Exception {
+        List<Customer> list = new ArrayList<>();
+        while(rs.next()) {
+            Customer customerSubset = buildObjectSubset(rs);
+            list.add(customerSubset);
+        }
+        return list;
+    }
+
+    private Customer buildObjectSubset(ResultSet rs) throws SQLException {
+
+        Customer builtObjectSubset = ModelFactory.getCustomerSubsetModel(rs.getInt("PK_idCustomer"), rs.getString("FirstName"),rs.getString("LastName"));
+        return builtObjectSubset;
+    }
 }

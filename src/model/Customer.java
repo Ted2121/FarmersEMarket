@@ -20,6 +20,10 @@ public class Customer extends Person{
         super.setId(id);
     }
 
+    public Customer(int id, String firstName, String lastName) {
+        super(id, firstName, lastName);
+    }
+
     public String getAddress() {
         return address;
     }

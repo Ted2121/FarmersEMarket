@@ -19,7 +19,7 @@ import model.Product.Unit;
 import model.Product.WeightCategory;
 
 public class ProviderDaoImplementation implements ProviderDao {
-	//TODO this class needs to be checked
+
 	Connection connectionDB = DBConnection.getInstance().getDBCon();
 
 	private Provider buildObject(ResultSet rs) throws SQLException{

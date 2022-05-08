@@ -3,6 +3,7 @@ package ui;
 import controller.ControllerFactory;
 import controller.ControllerInterfaces.CRUDPurchaseOrderController;
 import model.PurchaseOrder;
+import model.SaleOrder;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -10,20 +11,20 @@ import java.util.HashMap;
 
 public class SalesPanel extends TablePanel{
 
-	private CRUDPurchaseOrderController controller;
-	private HashMap<Integer, PurchaseOrder> idRelatedToPurchaseOrder;
-	private PurchasesPanel self;
+	//private CRUDSaleOrderController controller;
+	private HashMap<Integer, SaleOrder> idRelatedToPurchaseOrder;
+	private SalesPanel self;
 
 	private JTable table;
 
 	public SalesPanel() {
 		self=this;
 		table = getTable();
-		controller = ControllerFactory.getCRUDPurchaseOrderController();
-		ProgramFrame.getFrame().setTitle("Purchases");
-		getNewButton().setText("New Purchase");
+		//controller = ControllerFactory.getCRUDSaleOrderController();
+		ProgramFrame.getFrame().setTitle("Sales");
+		getNewButton().setText("New Sales");
 		getNewButton().addActionListener(e -> {
-			PurchasesPopup popup = new PurchasesPopup();
+			SalesPopup popup = new SalesPopup();
 			popup.setParent(self);
 		});
 
@@ -32,14 +33,14 @@ public class SalesPanel extends TablePanel{
 		getEditButton().setEnabled(true);
 		getEditButton().addActionListener(e -> {
 
-			controller = ControllerFactory.getCRUDPurchaseOrderController();
+			//controller = ControllerFactory.getCRUDSaleOrderController();
 
 			if(table.getSelectedRowCount() == 1) {
 				int id = Integer.parseInt(table.getValueAt(table.getSelectedRow(), 0).toString());
 
-				PurchaseOrder purchaseOrder = idRelatedToPurchaseOrder.get(id);
+				SaleOrder saleOrder = idRelatedToSaleOrder.get(id);
 				PurchasesPopup popup = new PurchasesPopup(purchaseOrder);
-				popup.setParent(self);
+				popup.setParent(this);
 			}else if(table.getSelectedRowCount()>1){
 				JOptionPane.showMessageDialog(null, "More than 1 line have been selected");
 			}else {
