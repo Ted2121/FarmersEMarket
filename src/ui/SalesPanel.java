@@ -1,18 +1,15 @@
 package ui;
 
-import controller.ControllerFactory;
-import controller.ControllerInterfaces.CRUDPurchaseOrderController;
-import model.PurchaseOrder;
 import model.SaleOrder;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
+
 import java.util.HashMap;
 
 public class SalesPanel extends TablePanel{
 
 	//private CRUDSaleOrderController controller;
-	private HashMap<Integer, SaleOrder> idRelatedToPurchaseOrder;
+	private HashMap<Integer, SaleOrder> idRelatedToSaleOrder;
 	private SalesPanel self;
 
 	private JTable table;
@@ -39,12 +36,12 @@ public class SalesPanel extends TablePanel{
 				int id = Integer.parseInt(table.getValueAt(table.getSelectedRow(), 0).toString());
 
 				SaleOrder saleOrder = idRelatedToSaleOrder.get(id);
-				PurchasesPopup popup = new PurchasesPopup(purchaseOrder);
+				SalesPopup popup = new SalesPopup(saleOrder);
 				popup.setParent(this);
 			}else if(table.getSelectedRowCount()>1){
-				JOptionPane.showMessageDialog(null, "More than 1 line have been selected");
+				JOptionPane.showMessageDialog(null, "More than 1 line has been selected");
 			}else {
-				JOptionPane.showMessageDialog(null, "No line have been selected");
+				JOptionPane.showMessageDialog(null, "No line has been selected");
 			}
 
 		});
@@ -52,23 +49,24 @@ public class SalesPanel extends TablePanel{
 
 		getDeleteButton().addActionListener(e -> {
 
-			controller = ControllerFactory.getCRUDPurchaseOrderController();
+			//controller = ControllerFactory.getCRUDSaleOrderController();
 
 			if(table.getSelectedRowCount() == 1) {
 				int id = Integer.parseInt(table.getValueAt(table.getSelectedRow(), 0).toString());
-				PurchaseOrder purchaseOrder = idRelatedToPurchaseOrder.get(id);
+				SaleOrder purchaseOrder = idRelatedToSaleOrder.get(id);
 
 				int choice = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this order?","Delete confirmation", JOptionPane.YES_NO_OPTION);
+				// Not Implemented
 				switch(choice) {
-					case 0 -> {controller.deletePurchaseOrder(purchaseOrder);
-						refreshTable();
+					case 0 -> {//controller.deleteSaleOrder(saleOrder);
+						//refreshTable();
 					}
 				}
 
 			}else if(table.getSelectedRowCount()>1){
-				JOptionPane.showMessageDialog(null, "More than 1 line have been selected");
+				JOptionPane.showMessageDialog(null, "More than 1 line has been selected");
 			}else {
-				JOptionPane.showMessageDialog(null, "No line have been selected");
+				JOptionPane.showMessageDialog(null, "No line has been selected");
 			}
 
 		});
@@ -78,11 +76,11 @@ public class SalesPanel extends TablePanel{
 
 	public void refreshTable() {
 
-		String col[] = {"id", "Provider name","Date / Time", "Total price"};
-		idRelatedToPurchaseOrder = controller.retrieveIdRelatedToPurchaseOrderHashMap();
-		String data[][] = controller.retrieveTableData();
+		String col[] = {"id", "Customer name","Date / Time", "Total price"};
+		//idRelatedToSaleOrder = controller.retrieveIdRelatedToSaleOrderHashMap();
+		//String data[][] = controller.retrieveTableData();
 
-		DefaultTableModel tableModel = new DefaultTableModel(data,col);
-		table.setModel(tableModel);
+		//DefaultTableModel tableModel = new DefaultTableModel(data,col);
+		//table.setModel(tableModel);
 	}
 }
