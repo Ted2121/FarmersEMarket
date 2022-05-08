@@ -49,12 +49,11 @@ public class ProductInformationDaoImplementation implements ProductInformationDa
 		statement.setInt(1, product.getId());
 		ResultSet rs = statement.executeQuery();
 		ProductInformation retrievedProductInformation = null;
-		while(rs.next()) {
-			List<ProductInformation> retrievedList = buildObjects(rs, retrieveProduct);
-            retrievedProductInformation = retrievedList.get(0);
-			if(retrievedList.size()>1) {
-				throw new Exception("More than 1 item in the retrieved list of ProductInformation");
-			}
+		List<ProductInformation> retrievedList = buildObjects(rs, retrieveProduct);
+		if(retrievedList.size()>0)
+			retrievedProductInformation = retrievedList.get(0);
+		if(retrievedList.size()>1) {
+			throw new Exception("More than 1 item in the retrieved list of ProductInformation");
 		}
 		return retrievedProductInformation;
 	}
@@ -75,12 +74,11 @@ public class ProductInformationDaoImplementation implements ProductInformationDa
 		statement.setInt(1, productId);
 		ResultSet rs = statement.executeQuery();
 		ProductInformation retrievedProductInformation = null;
-		while(rs.next()) {
-			List<ProductInformation> retrievedList = buildObjects(rs, retrieveProduct);
-            retrievedProductInformation = retrievedList.get(0);
-			if(retrievedList.size()>1) {
-				throw new Exception("More than 1 item in the retrieved list of ProductInformation");
-			}
+		List<ProductInformation> retrievedList = buildObjects(rs, retrieveProduct);
+		if(retrievedList.size()>0)
+			retrievedProductInformation = retrievedList.get(0);
+		if(retrievedList.size()>1) {
+			throw new Exception("More than 1 item in the retrieved list of ProductInformation");
 		}
 		return retrievedProductInformation;
 	}

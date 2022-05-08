@@ -18,12 +18,11 @@ public class CustomerDaoImplementation implements CustomerDao {
 
         List<Customer> customerList = new ArrayList<>();
 		while(rs.next()) {
-        Customer retrievedCustomer = buildObject(rs);
-        if(retrieveSaleOrder) {
-            ArrayList<SaleOrder> linkedSaleOrder = DaoFactory.getSaleOrderDao().findSaleOrderByCustomerId(rs.getInt("PK_IdCustomer"), false, false);
-            retrievedCustomer.setSaleOrders(linkedSaleOrder);
-        }
-
+	        Customer retrievedCustomer = buildObject(rs);
+	        if(retrieveSaleOrder) {
+	            ArrayList<SaleOrder> linkedSaleOrder = DaoFactory.getSaleOrderDao().findSaleOrderByCustomerId(rs.getInt("PK_IdCustomer"), false, false);
+	            retrievedCustomer.setSaleOrders(linkedSaleOrder);
+	        }
             customerList.add(retrievedCustomer);
     }
 
@@ -65,13 +64,11 @@ public class CustomerDaoImplementation implements CustomerDao {
         preparedSelectStatement.setInt(1, customerId);
         ResultSet rs = preparedSelectStatement.executeQuery();
         Customer retrievedCustomer = null;
-        while (rs.next()) {
-            List<Customer> retrievedList = buildObjects(rs, retrieveSaleOrder);
-            retrievedCustomer = retrievedList.get(0);
-			if(retrievedList.size()>1) {
-				throw new Exception("More than 1 item in the retrieved list of Customer");
-			}
-        }
+        List<Customer> retrievedList = buildObjects(rs, retrieveSaleOrder);
+        if(retrievedList.size()>0)
+        	retrievedCustomer = retrievedList.get(0);
+		if(retrievedList.size()>1) 
+			throw new Exception("More than 1 item in the retrieved list of Customer");
 
         return retrievedCustomer;
     }

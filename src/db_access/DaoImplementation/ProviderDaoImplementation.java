@@ -59,12 +59,11 @@ public class ProviderDaoImplementation implements ProviderDao {
 		preparedSelectStatement.setInt(1, providerId);
 		ResultSet rs = preparedSelectStatement.executeQuery();
 		Provider retrievedProvider = null;
-		while(rs.next()) {
-			List<Provider> retrievedList = buildObjects(rs, retrievePurchaseOrder);
+		List<Provider> retrievedList = buildObjects(rs, retrievePurchaseOrder);
+		if(retrievedList.size()>0)
 			retrievedProvider = retrievedList.get(0);
-			if(retrievedList.size()>1) {
-				throw new Exception("More than 1 item in the retrieved list of Provider");
-			}
+		if(retrievedList.size()>1) {
+			throw new Exception("More than 1 item in the retrieved list of Provider");
 		}
 		return retrievedProvider;
 	}
@@ -80,12 +79,10 @@ public class ProviderDaoImplementation implements ProviderDao {
 		preparedFindProviderStatement.setString(4, fullNameArray[1]);
 		ResultSet rs = preparedFindProviderStatement.executeQuery();
 		Provider retrievedProvider = null;
-		while(rs.next()) {
-			List<Provider> retrievedList = buildObjects(rs, retrievePurchaseOrder);
-			retrievedProvider = retrievedList.get(0);
-			if(retrievedList.size()>1) {
-				throw new Exception("More than 1 item in the retrieved list of provider");
-			}
+		List<Provider> retrievedList = buildObjects(rs, retrievePurchaseOrder);
+		retrievedProvider = retrievedList.get(0);
+		if(retrievedList.size()>1) {
+			throw new Exception("More than 1 item in the retrieved list of provider");
 		}
 		return retrievedProvider;
 	}

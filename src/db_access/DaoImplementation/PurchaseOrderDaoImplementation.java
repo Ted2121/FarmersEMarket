@@ -52,13 +52,12 @@ public class PurchaseOrderDaoImplementation implements PurchaseOrderDao {
 		preparedSelectStatement.setInt(1, id);
 		ResultSet rs = preparedSelectStatement.executeQuery();
 		PurchaseOrder retrievedPurchaseOrder = null;
-		while(rs.next()) {
-			//Building the PurchaseOrder object
-			List<PurchaseOrder> retrievedList = buildObjects(rs, retrieveProvider, retrieveLineItem);
+		//Building the PurchaseOrder object
+		List<PurchaseOrder> retrievedList = buildObjects(rs, retrieveProvider, retrieveLineItem);
+		if(retrievedList.size()>0)
 			retrievedPurchaseOrder = retrievedList.get(0);
-			if(retrievedList.size()>1) {
-				throw new Exception("More than 1 item in the retrieved list of PurchaseOrder");
-			}
+		if(retrievedList.size()>1) {
+			throw new Exception("More than 1 item in the retrieved list of PurchaseOrder");
 		}
 		
 		return retrievedPurchaseOrder;

@@ -57,13 +57,12 @@ public class LineItemDaoImplementation implements LineItemDao {
 		preparedSelectStatement.setInt(2, productId);
 		ResultSet rs = preparedSelectStatement.executeQuery();
 		LineItem retrievedLineItem = null;
-		while(rs.next()) {
-			//Building the PurchaseOrder object
-			List<LineItem> retrievedList = buildObjects(rs, retrieveProduct, retrieveOrder);
-            retrievedLineItem = retrievedList.get(0);
-			if(retrievedList.size()>1) {
-				throw new Exception("More than 1 item in the retrieved list of LineItem");
-			}
+		//Building the PurchaseOrder object
+		List<LineItem> retrievedList = buildObjects(rs, retrieveProduct, retrieveOrder);
+		if(retrievedList.size()>0)
+			retrievedLineItem = retrievedList.get(0);
+		if(retrievedList.size()>1) {
+			throw new Exception("More than 1 item in the retrieved list of LineItem");
 		}
 		
 		return retrievedLineItem;

@@ -55,12 +55,11 @@ public class SaleOrderDaoImplementation implements SaleOrderDao {
 		preparedSelectStatement.setInt(1, saleOrderId);
 		ResultSet rs = preparedSelectStatement.executeQuery();
 		SaleOrder retrievedSaleOrder = null;
-		while(rs.next()) {
-			List<SaleOrder> retrievedList = buildObjects(rs, retrieveCustomer, retrieveLineItem);
+		List<SaleOrder> retrievedList = buildObjects(rs, retrieveCustomer, retrieveLineItem);
+		if(retrievedList.size()>0)
 			retrievedSaleOrder = retrievedList.get(0);
-			if(retrievedList.size()>1) {
-				throw new Exception("More than 1 item in the retrieved list of SaleOrder");
-			}
+		if(retrievedList.size()>1) {
+			throw new Exception("More than 1 item in the retrieved list of SaleOrder");
 		}
 
 		return retrievedSaleOrder;
