@@ -2,20 +2,14 @@ package controller.ControllerImplementation;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedHashSet;
 import java.util.List;
 
 import controller.ControllerInterfaces.CRUDProductInformationController;
 import db_access.DaoFactory;
-import db_access.DaoInterfaces.ProductDao;
-import db_access.DaoInterfaces.ProductInformationDao;
+import db_access.DaoInterfaces.*;
 import model.ModelFactory;
-import model.Product;
-import model.Product.Unit;
-import model.Product.WeightCategory;
-import model.ProductInformation;
-import model.Provider;
+import model.Product.*;
+import model.*;
 
 public class CRUDProductInformationControllerImplementation extends RetrievingSubsetControllerImplementation implements CRUDProductInformationController{
 	private ProductDao productDao;

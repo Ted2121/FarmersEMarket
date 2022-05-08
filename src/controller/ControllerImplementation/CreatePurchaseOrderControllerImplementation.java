@@ -1,26 +1,14 @@
 package controller.ControllerImplementation;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 
 import controller.HelperClass;
 import controller.ControllerInterfaces.CreatePurchaseOrderController;
-import db_access.DBConnection;
 import db_access.DaoFactory;
-import db_access.DaoInterfaces.ProductDao;
-import db_access.DaoInterfaces.ProviderDao;
-import model.LineItem;
-import model.ModelFactory;
-import model.Product;
-import model.Provider;
-import model.PurchaseOrder;
+import model.*;
 
 public class CreatePurchaseOrderControllerImplementation extends RetrievingSubsetControllerImplementation 
 implements CreatePurchaseOrderController {

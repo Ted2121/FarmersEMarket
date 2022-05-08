@@ -8,15 +8,9 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import db_access.DBConnection;
-import db_access.DaoFactory;
+import db_access.*;
 import db_access.DaoInterfaces.ProviderDao;
-import model.ModelFactory;
-import model.Product;
-import model.Provider;
-import model.PurchaseOrder;
-import model.Product.Unit;
-import model.Product.WeightCategory;
+import model.*;
 
 public class ProviderDaoImplementation implements ProviderDao {
 
@@ -64,16 +58,15 @@ public class ProviderDaoImplementation implements ProviderDao {
 		PreparedStatement preparedSelectStatement = connectionDB.prepareStatement(query);
 		preparedSelectStatement.setInt(1, providerId);
 		ResultSet rs = preparedSelectStatement.executeQuery();
-		Provider retrievedPerson = null;
+		Provider retrievedProvider = null;
 		while(rs.next()) {
-			retrievedPerson = buildObject(rs);
-			
-			if(retrievePurchaseOrder) {
-				ArrayList<PurchaseOrder> linkedPurchaseOrder = DaoFactory.getPurchaseOrderDao().findPurchaseOrderByProviderId(rs.getInt("PK_IdProvider"), false, false);
-				retrievedPerson.setPurchaseOrders(linkedPurchaseOrder);
+			List<Provider> retrievedList = buildObjects(rs, retrievePurchaseOrder);
+			retrievedProvider = retrievedList.get(0);
+			if(retrievedList.size()>1) {
+				throw new Exception("More than 1 item in the retrieved list of provider");
 			}
 		}
-		return retrievedPerson;
+		return retrievedProvider;
 	}
 
 	@Override
@@ -88,10 +81,10 @@ public class ProviderDaoImplementation implements ProviderDao {
 		ResultSet rs = preparedFindProviderStatement.executeQuery();
 		Provider retrievedProvider = null;
 		while(rs.next()) {
-			retrievedProvider = buildObject(rs);
-			if(retrievePurchaseOrder) {
-				ArrayList<PurchaseOrder> linkedPurchaseOrder = DaoFactory.getPurchaseOrderDao().findPurchaseOrderByProviderId(rs.getInt("PK_IdProvider"), false, false);
-				retrievedProvider.setPurchaseOrders(linkedPurchaseOrder);
+			List<Provider> retrievedList = buildObjects(rs, retrievePurchaseOrder);
+			retrievedProvider = retrievedList.get(0);
+			if(retrievedList.size()>1) {
+				throw new Exception("More than 1 item in the retrieved list of provider");
 			}
 		}
 		return retrievedProvider;

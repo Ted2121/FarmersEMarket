@@ -8,17 +8,10 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import db_access.DBConnection;
-import db_access.DaoFactory;
+import db_access.*;
 import db_access.DaoInterfaces.ProductDao;
-import model.LineItem;
-import model.ModelFactory;
-import model.Product;
-import model.ProductInformation;
-import model.Provider;
-import model.PurchaseOrder;
-import model.Product.Unit;
-import model.Product.WeightCategory;
+import model.*;
+import model.Product.*;
 
 public class ProductDaoImplementation implements ProductDao {
 
@@ -116,16 +109,7 @@ public class ProductDaoImplementation implements ProductDao {
 		statement.setInt(1, productId);
 		ResultSet rs = statement.executeQuery();
 		while(rs.next()) {
-			Product product = buildObject(rs);
-			if(retrieveLineItems) {
-				List<LineItem> retrievedLineItemsLinkedToThisProduct = DaoFactory.getLineItemDao().findLineItemsByProduct(product, false);
-				product.setRelatedLineItems(retrievedLineItemsLinkedToThisProduct);
-			}
-			
-			if(retrieveProductInformation) {
-				ProductInformation retrievedProductInformationLinkedToThisProduct = DaoFactory.getProductInformationDao().findProductInformationByProduct(product, false);
-				product.setRelatedProductInformation(retrievedProductInformationLinkedToThisProduct);
-			}
+			Product product = buildObjects(rs, retrieveLineItems, retrieveProductInformation).get(0);
 			return product;
 		}
 		return null;

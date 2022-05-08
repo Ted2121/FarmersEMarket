@@ -3,9 +3,6 @@ package db_access.DaoImplementation;
 import db_access.DBConnection;
 import db_access.DaoFactory;
 import db_access.DaoInterfaces.LineItemDao;
-import db_access.DaoInterfaces.ProductDao;
-import db_access.DaoInterfaces.PurchaseOrderDao;
-import db_access.DaoInterfaces.SaleOrderDao;
 import model.*;
 
 import java.sql.Connection;
@@ -61,29 +58,7 @@ public class LineItemDaoImplementation implements LineItemDao {
 		LineItem retrievedLineItem = null;
 		while(rs.next()) {
 			//Building the PurchaseOrder object
-			retrievedLineItem = buildObject(rs);
-			
-			//If we want to set the Provider, we just specify we want to retrieve the Provider as a parameter of this method
-			if(retrieveOrder) {
-				//If we want to retrieve the provider, we get it from the Provider Dao
-				Order retrievedPurchaseOrderLinkedToThisLineItem = DaoFactory.getPurchaseOrderDao().findPurchaseOrderById(rs.getInt("PK_FK_OrderId"), false, false);
-				Order retrievedSaleOrderLinkedToThisLineItem = DaoFactory.getSaleOrderDao().findSaleOrderById(rs.getInt("PK_FK_OrderId"), false, false);
-				
-				if(retrievedPurchaseOrderLinkedToThisLineItem  != null) {
-					retrievedLineItem.setOrder(retrievedPurchaseOrderLinkedToThisLineItem);
-				}else if(retrievedSaleOrderLinkedToThisLineItem != null) {
-					retrievedLineItem.setOrder(retrievedSaleOrderLinkedToThisLineItem);
-				}else {
-					throw new Exception("Cannot find the order");
-				}
-			}
-			
-			//If we want to set the LineItems, we just specify we want to retrieve the LineItem as a parameter of this method
-			if(retrieveProduct) {
-				//If we want to retrieve the LineItems, we get the ArrayList of the retrieved PurchaseOrder
-				Product productRelatedToThisLineItem = DaoFactory.getProductDao().findProductById(rs.getInt("PK_FK_ProductId"), false, false);
-				retrievedLineItem.setProduct(productRelatedToThisLineItem);
-			}
+			retrievedLineItem = buildObjects(rs, retrieveProduct, retrieveOrder).get(0);
 		}
 		
 		return retrievedLineItem;

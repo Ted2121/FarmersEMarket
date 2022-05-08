@@ -1,7 +1,5 @@
 package controller.ControllerInterfaces;
 
-import java.util.HashMap;
-import java.util.List;
 
 import model.Product;
 import model.Provider;

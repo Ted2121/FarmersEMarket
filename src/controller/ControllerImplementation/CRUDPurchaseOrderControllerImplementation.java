@@ -8,13 +8,8 @@ import java.util.List;
 import controller.HelperClass;
 import controller.ControllerInterfaces.CRUDPurchaseOrderController;
 import db_access.DaoFactory;
-import db_access.DaoInterfaces.LineItemDao;
-import db_access.DaoInterfaces.OrderDao;
-import db_access.DaoInterfaces.PurchaseOrderDao;
-import model.LineItem;
-import model.ModelFactory;
-import model.Product;
-import model.PurchaseOrder;
+import db_access.DaoInterfaces.*;
+import model.*;
 
 public class CRUDPurchaseOrderControllerImplementation extends RetrievingSubsetControllerImplementation implements CRUDPurchaseOrderController{
 	private LineItemDao lineItemDao;

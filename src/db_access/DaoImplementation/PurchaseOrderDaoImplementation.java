@@ -7,14 +7,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import db_access.DBConnection;
-import db_access.DaoFactory;
+import db_access.*;
 import db_access.DaoInterfaces.PurchaseOrderDao;
-import model.LineItem;
-import model.ModelFactory;
-import model.Person;
-import model.Provider;
-import model.PurchaseOrder;
+import model.*;
 
 public class PurchaseOrderDaoImplementation implements PurchaseOrderDao {
 	private Connection connectionDB = DBConnection.getInstance().getDBCon();
@@ -59,26 +54,10 @@ public class PurchaseOrderDaoImplementation implements PurchaseOrderDao {
 		PurchaseOrder retrievedPurchaseOrder = null;
 		while(rs.next()) {
 			//Building the PurchaseOrder object
-			retrievedPurchaseOrder = buildObject(rs);
-			
-			//If we want to set the Provider, we just specify we want to retrieve the Provider as a parameter of this method
-			if(retrieveProvider) {
-				//If we want to retrieve the provider, we get it from the Provider Dao
-				Provider retrievedProviderLinkedToThisPurchaseOrder = DaoFactory.getProviderDao().findProviderById(rs.getInt("FK_Provider"), false);
-				//And we set it as the provider of its object
-				retrievedPurchaseOrder.setProvider(retrievedProviderLinkedToThisPurchaseOrder);
-			}
-			
-			//If we want to set the LineItems, we just specify we want to retrieve the LineItem as a parameter of this method
-			if(retrieveLineItem) {
-				//If we want to retrieve the LineItems, we get the ArrayList of the retrieved PurchaseOrder
-				retrievedPurchaseOrder.setLineItems(new ArrayList<LineItem>());
-				ArrayList<LineItem> lineItemOfTheOrder = retrievedPurchaseOrder.getLineItems();
-				
-				//We get all the LineItmes from the LineItemDao and add each of them to the ArrayList we retrieve earlier
-				for(LineItem lineItem : DaoFactory.getLineItemDao().findLineItemsByOrder(retrievedPurchaseOrder, true)) {
-					lineItemOfTheOrder.add(lineItem);
-				}
+			List<PurchaseOrder> retrievedList = buildObjects(rs, retrieveProvider, retrieveLineItem);
+			retrievedPurchaseOrder = retrievedList.get(0);
+			if(retrievedList.size()>1) {
+				throw new Exception("More than 1 item in the retrieved list of purchaseOrder");
 			}
 		}
 		
@@ -92,7 +71,6 @@ public class PurchaseOrderDaoImplementation implements PurchaseOrderDao {
 		PreparedStatement preparedSelectStatement = connectionDB.prepareStatement(query);
 		preparedSelectStatement.setInt(1, idProvider);
 		ResultSet rs = preparedSelectStatement.executeQuery();
-		PurchaseOrder retrievedPurchaseOrder = null;
 		ArrayList<PurchaseOrder> retrievedPurchaseOrders = buildObjects(rs, retrieveProvider, retrieveLineItem);
 		
 		return retrievedPurchaseOrders;

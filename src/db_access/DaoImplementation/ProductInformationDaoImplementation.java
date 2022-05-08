@@ -7,16 +7,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import db_access.DBConnection;
-import db_access.DaoFactory;
-import db_access.DaoInterfaces.ProductDao;
+import db_access.*;
 import db_access.DaoInterfaces.ProductInformationDao;
-import model.LineItem;
-import model.ModelFactory;
-import model.Product;
-import model.ProductInformation;
-import model.Product.Unit;
-import model.Product.WeightCategory;
+import model.*;
 
 public class ProductInformationDaoImplementation implements ProductInformationDao {
 	
@@ -56,11 +49,7 @@ public class ProductInformationDaoImplementation implements ProductInformationDa
 		statement.setInt(1, product.getId());
 		ResultSet rs = statement.executeQuery();
 		while(rs.next()) {
-			ProductInformation productInformation = buildObject(rs);
-			if(retrieveProduct) {
-				Product retrievedProductLinkedToThisProductInformation = DaoFactory.getProductDao().findProductById(productInformation.getId(), false, false);
-				productInformation.setRelatedProduct(retrievedProductLinkedToThisProductInformation);
-			}
+			ProductInformation productInformation = buildObjects(rs, retrieveProduct).get(0);
 			return productInformation;
 		}
 		return null;
@@ -82,11 +71,7 @@ public class ProductInformationDaoImplementation implements ProductInformationDa
 		statement.setInt(1, productId);
 		ResultSet rs = statement.executeQuery();
 		while(rs.next()) {
-			ProductInformation productInformation = buildObject(rs);
-			if(retrieveProduct) {
-				Product retrievedProductLinkedToThisProductInformation = DaoFactory.getProductDao().findProductById(productInformation.getId(), false, false);
-				productInformation.setRelatedProduct(retrievedProductLinkedToThisProductInformation);
-			}
+			ProductInformation productInformation = buildObjects(rs, retrieveProduct).get(0);
 			return productInformation;
 		}
 		return null;
@@ -130,9 +115,8 @@ public class ProductInformationDaoImplementation implements ProductInformationDa
 		
 	}
 
-
-		@Override
-		public void removeQuantityToProduct (Product product, int quantity) throws SQLException {
+	@Override
+	public void removeQuantityToProduct (Product product, int quantity) throws SQLException {
 			String addQuantity = "UPDATE ProductInformation SET quantity -= ? WHERE PK_FK_Product = ?";
 			PreparedStatement statement = connection.prepareStatement(addQuantity);
 			statement.setInt(1, quantity);

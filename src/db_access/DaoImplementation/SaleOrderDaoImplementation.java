@@ -56,23 +56,10 @@ public class SaleOrderDaoImplementation implements SaleOrderDao {
 		ResultSet rs = preparedSelectStatement.executeQuery();
 		SaleOrder retrievedSaleOrder = null;
 		while(rs.next()) {
-			retrievedSaleOrder = buildObject(rs);
-
-			if(retrieveCustomer) {
-
-				Customer retrievedCustomerLinkedToThisSaleOrder = DaoFactory.getCustomerDao().findCustomerById(rs.getInt("FK_Customer"), false);
-
-				retrievedSaleOrder.setCustomer(retrievedCustomerLinkedToThisSaleOrder);
-			}
-
-			if(retrieveLineItem) {
-
-				retrievedSaleOrder.setLineItems(new ArrayList<LineItem>());
-				ArrayList<LineItem> lineItemOfTheOrder = retrievedSaleOrder.getLineItems();
-
-				for(LineItem lineItem : DaoFactory.getLineItemDao().findLineItemsByOrder(retrievedSaleOrder, true)) {
-					lineItemOfTheOrder.add(lineItem);
-				}
+			List<SaleOrder> retrievedList = buildObjects(rs, retrieveCustomer, retrieveLineItem);
+			retrievedSaleOrder = retrievedList.get(0);
+			if(retrievedList.size()>1) {
+				throw new Exception("More than 1 item in the retrieved list of SaleOrder");
 			}
 		}
 

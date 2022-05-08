@@ -3,7 +3,6 @@ package controller.ControllerInterfaces;
 import java.util.List;
 
 import model.Product;
-import model.ProductInformation;
 
 public interface CRUDProductInformationController extends RetrievingSubsetController {
 	public List<Product> searchAllProductAndProductInformation();

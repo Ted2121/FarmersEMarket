@@ -43,6 +43,21 @@ public class CustomerDaoImplementation implements CustomerDao {
         return builtCustomer;
     }
 
+    private List<Customer> buildObjectsSubset(ResultSet rs) throws Exception {
+        List<Customer> list = new ArrayList<>();
+        while(rs.next()) {
+            Customer customerSubset = buildObjectSubset(rs);
+            list.add(customerSubset);
+        }
+        return list;
+    }
+
+    private Customer buildObjectSubset(ResultSet rs) throws SQLException {
+
+        Customer builtObjectSubset = ModelFactory.getCustomerSubsetModel(rs.getInt("PK_idCustomer"), rs.getString("FirstName"),rs.getString("LastName"));
+        return builtObjectSubset;
+    }
+    
     @Override
     public Customer findCustomerById(int customerId, boolean retrieveSaleOrder) throws Exception {
         String query = "SELECT * FROM Customer WHERE PK_idCustomer = ?";
@@ -51,12 +66,7 @@ public class CustomerDaoImplementation implements CustomerDao {
         ResultSet rs = preparedSelectStatement.executeQuery();
         Customer retrievedCustomer = null;
         while (rs.next()) {
-            retrievedCustomer = buildObject(rs);
-
-            if(retrieveSaleOrder) {
-                ArrayList<SaleOrder> linkedSaleOrder = DaoFactory.getSaleOrderDao().findSaleOrderByCustomerId(rs.getInt("PK_IdCustomer"), false, false);
-                retrievedCustomer.setSaleOrders(linkedSaleOrder);
-            }
+            retrievedCustomer = buildObjects(rs, retrieveSaleOrder).get(0);
         }
 
         return retrievedCustomer;
@@ -119,7 +129,6 @@ public class CustomerDaoImplementation implements CustomerDao {
         preparedDeleteCustomerStatement.execute();
     }
 
-
     @Override
     public Customer findCustomerByFullName(String fullName) throws SQLException {
         String query = "SELECT * FROM Customer WHERE FirstName = ? AND LastName = ?";
@@ -162,18 +171,4 @@ public class CustomerDaoImplementation implements CustomerDao {
         return retrievedCustomerList;
     }
 
-    private List<Customer> buildObjectsSubset(ResultSet rs) throws Exception {
-        List<Customer> list = new ArrayList<>();
-        while(rs.next()) {
-            Customer customerSubset = buildObjectSubset(rs);
-            list.add(customerSubset);
-        }
-        return list;
-    }
-
-    private Customer buildObjectSubset(ResultSet rs) throws SQLException {
-
-        Customer builtObjectSubset = ModelFactory.getCustomerSubsetModel(rs.getInt("PK_idCustomer"), rs.getString("FirstName"),rs.getString("LastName"));
-        return builtObjectSubset;
-    }
 }

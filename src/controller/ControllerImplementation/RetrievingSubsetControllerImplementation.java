@@ -4,19 +4,13 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 
 import controller.ControllerInterfaces.RetrievingSubsetController;
-import db_access.DBConnection;
-import db_access.DaoFactory;
-import db_access.DaoInterfaces.CustomerDao;
-import db_access.DaoInterfaces.ProductDao;
-import db_access.DaoInterfaces.ProviderDao;
-import model.Customer;
-import model.Product;
-import model.Provider;
+import db_access.*;
+import db_access.DaoInterfaces.*;
+import model.*;
 
 public abstract class RetrievingSubsetControllerImplementation implements RetrievingSubsetController{
 
