@@ -1,25 +1,16 @@
 package test.ControllerTests;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.util.List;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
 
 import controller.ControllerFactory;
 import controller.ControllerImplementation.CreatePurchaseOrderControllerImplementation;
 import controller.ControllerInterfaces.CreatePurchaseOrderController;
 import db_access.DaoFactory;
-import model.LineItem;
-import model.Product;
-import model.Provider;
-import model.PurchaseOrder;
+import model.*;
 
 public class TestCreatePurchaseOrderControllerImplementation {
 	private static CreatePurchaseOrderController controller;

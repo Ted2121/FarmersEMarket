@@ -1,12 +1,8 @@
 package test.DaoTests;
 
-import db_access.DBConnection;
-import db_access.DaoFactory;
+import db_access.*;
 import db_access.DaoInterfaces.ProviderDao;
-import model.ModelFactory;
-import model.Product;
-import model.Provider;
-import model.PurchaseOrder;
+import model.*;
 
 import static org.junit.Assert.*;
 

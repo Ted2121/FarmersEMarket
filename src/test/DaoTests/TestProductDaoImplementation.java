@@ -1,10 +1,6 @@
 package test.DaoTests;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -15,18 +11,10 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import db_access.DaoFactory;
-import db_access.DaoInterfaces.LineItemDao;
-import db_access.DaoInterfaces.OrderDao;
-import db_access.DaoInterfaces.ProductDao;
-import db_access.DaoInterfaces.ProductInformationDao;
-import model.LineItem;
-import model.ModelFactory;
-import model.Order;
-import model.Product;
-import model.ProductInformation;
+import db_access.DaoInterfaces.*;
+import model.*;
 import test.testingClass.TestingSaleOrder;
-import model.Product.Unit;
-import model.Product.WeightCategory;
+import model.Product.*;
 
 public class TestProductDaoImplementation {
 	private static ProductDao productDao;

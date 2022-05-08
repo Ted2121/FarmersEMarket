@@ -4,14 +4,8 @@ import controller.ControllerFactory;
 import controller.ControllerImplementation.CreateSaleOrderControllerImplementation;
 import controller.ControllerInterfaces.CreateSaleOrderController;
 import db_access.DaoFactory;
-import model.LineItem;
-import model.Product;
-import model.Customer;
-import model.SaleOrder;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
+import model.*;
+import org.junit.*;
 import static org.junit.Assert.assertNotEquals;
 
 public class TestCreateSaleOrderControllerImplementation {

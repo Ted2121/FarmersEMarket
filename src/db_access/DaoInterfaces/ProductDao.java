@@ -1,10 +1,8 @@
 package db_access.DaoInterfaces;
 
 import model.Product;
-import model.Provider;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 public interface ProductDao {

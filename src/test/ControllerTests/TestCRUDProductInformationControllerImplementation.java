@@ -1,15 +1,11 @@
 package test.ControllerTests;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.sql.SQLException;
 import java.util.List;
 
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -18,8 +14,7 @@ import controller.ControllerInterfaces.CRUDProductInformationController;
 import db_access.DaoFactory;
 import db_access.DaoInterfaces.ProductDao;
 import db_access.DaoInterfaces.ProductInformationDao;
-import model.Product;
-import model.ProductInformation;
+import model.*;
 
 public class TestCRUDProductInformationControllerImplementation {
 	private static Product productToCreate, productToUpdate, productToDelete;

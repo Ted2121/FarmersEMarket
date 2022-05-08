@@ -1,9 +1,5 @@
 package db_access.DaoInterfaces;
 
-import model.Person;
-import model.Provider;
-
-
 import model.Provider;
 
 import java.sql.SQLException;

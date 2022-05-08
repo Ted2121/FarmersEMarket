@@ -8,20 +8,12 @@ import static org.junit.Assert.assertTrue;
 import java.sql.SQLException;
 import java.util.List;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
 
 import db_access.DaoFactory;
-import db_access.DaoInterfaces.ProductDao;
-import db_access.DaoInterfaces.ProductInformationDao;
-import model.ModelFactory;
-import model.Product;
-import model.Product.Unit;
-import model.Product.WeightCategory;
-import model.ProductInformation;
+import db_access.DaoInterfaces.*;
+import model.*;
+import model.Product.*;
 
 public class TestProductInformationDaoImplementation {
 	private static ProductInformationDao productInformationDao;

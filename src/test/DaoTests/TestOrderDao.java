@@ -1,21 +1,14 @@
 package test.DaoTests;
 
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.sql.SQLException;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
 
 import db_access.DaoFactory;
 import db_access.DaoInterfaces.OrderDao;
-import model.Customer;
-import model.ModelFactory;
-import model.Provider;
-import model.PurchaseOrder;
-import model.SaleOrder;
+import model.*;
 import test.testingClass.TestingSaleOrder;
 
 public class TestOrderDao {

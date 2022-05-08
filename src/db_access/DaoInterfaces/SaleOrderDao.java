@@ -2,7 +2,6 @@ package db_access.DaoInterfaces;
 
 import model.SaleOrder;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 

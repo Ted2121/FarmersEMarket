@@ -1,10 +1,8 @@
 package db_access.DaoInterfaces;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 import model.Order;
-import model.SaleOrder;
 
 public interface OrderDao {
     void createOrder(Order objectToCreate) throws SQLException;

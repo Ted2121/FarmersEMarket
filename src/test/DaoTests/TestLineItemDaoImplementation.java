@@ -1,26 +1,16 @@
 package test.DaoTests;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.sql.SQLException;
 import java.util.List;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
 
 import db_access.DaoFactory;
-import db_access.DaoInterfaces.CustomerDao;
 import db_access.DaoInterfaces.LineItemDao;
-import model.Customer;
-import model.LineItem;
-import model.ModelFactory;
-import model.Order;
-import model.Product;
-import model.Product.Unit;
-import model.Product.WeightCategory;
+import model.*;
+import model.Product.*;
 import test.testingClass.TestingSaleOrder;
 
 public class TestLineItemDaoImplementation {
