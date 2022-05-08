@@ -10,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class LineItemDaoImplementation implements LineItemDao {
 	private Connection connectionDB = DBConnection.getInstance().getDBCon();
@@ -58,7 +59,11 @@ public class LineItemDaoImplementation implements LineItemDao {
 		LineItem retrievedLineItem = null;
 		while(rs.next()) {
 			//Building the PurchaseOrder object
-			retrievedLineItem = buildObjects(rs, retrieveProduct, retrieveOrder).get(0);
+			List<LineItem> retrievedList = buildObjects(rs, retrieveProduct, retrieveOrder);
+            retrievedLineItem = retrievedList.get(0);
+			if(retrievedList.size()>1) {
+				throw new Exception("More than 1 item in the retrieved list of LineItem");
+			}
 		}
 		
 		return retrievedLineItem;

@@ -48,11 +48,15 @@ public class ProductInformationDaoImplementation implements ProductInformationDa
 		PreparedStatement statement = connection.prepareStatement(query);
 		statement.setInt(1, product.getId());
 		ResultSet rs = statement.executeQuery();
+		ProductInformation retrievedProductInformation = null;
 		while(rs.next()) {
-			ProductInformation productInformation = buildObjects(rs, retrieveProduct).get(0);
-			return productInformation;
+			List<ProductInformation> retrievedList = buildObjects(rs, retrieveProduct);
+            retrievedProductInformation = retrievedList.get(0);
+			if(retrievedList.size()>1) {
+				throw new Exception("More than 1 item in the retrieved list of ProductInformation");
+			}
 		}
-		return null;
+		return retrievedProductInformation;
 	}
 
 	@Override
@@ -70,11 +74,15 @@ public class ProductInformationDaoImplementation implements ProductInformationDa
 		PreparedStatement statement = connection.prepareStatement(query);
 		statement.setInt(1, productId);
 		ResultSet rs = statement.executeQuery();
+		ProductInformation retrievedProductInformation = null;
 		while(rs.next()) {
-			ProductInformation productInformation = buildObjects(rs, retrieveProduct).get(0);
-			return productInformation;
+			List<ProductInformation> retrievedList = buildObjects(rs, retrieveProduct);
+            retrievedProductInformation = retrievedList.get(0);
+			if(retrievedList.size()>1) {
+				throw new Exception("More than 1 item in the retrieved list of ProductInformation");
+			}
 		}
-		return null;
+		return retrievedProductInformation;
 	}
 	
 	@Override

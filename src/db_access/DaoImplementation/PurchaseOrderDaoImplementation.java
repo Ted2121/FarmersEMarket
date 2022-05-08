@@ -57,7 +57,7 @@ public class PurchaseOrderDaoImplementation implements PurchaseOrderDao {
 			List<PurchaseOrder> retrievedList = buildObjects(rs, retrieveProvider, retrieveLineItem);
 			retrievedPurchaseOrder = retrievedList.get(0);
 			if(retrievedList.size()>1) {
-				throw new Exception("More than 1 item in the retrieved list of purchaseOrder");
+				throw new Exception("More than 1 item in the retrieved list of PurchaseOrder");
 			}
 		}
 		
@@ -75,7 +75,6 @@ public class PurchaseOrderDaoImplementation implements PurchaseOrderDao {
 		
 		return retrievedPurchaseOrders;
 	}
-	
 	
 	@Override
 	public List<PurchaseOrder> findAllPurchaseOrders(boolean retrieveProvider, boolean retrieveLineItem) throws Exception {

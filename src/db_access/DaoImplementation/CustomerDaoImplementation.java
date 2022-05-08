@@ -66,7 +66,11 @@ public class CustomerDaoImplementation implements CustomerDao {
         ResultSet rs = preparedSelectStatement.executeQuery();
         Customer retrievedCustomer = null;
         while (rs.next()) {
-            retrievedCustomer = buildObjects(rs, retrieveSaleOrder).get(0);
+            List<Customer> retrievedList = buildObjects(rs, retrieveSaleOrder);
+            retrievedCustomer = retrievedList.get(0);
+			if(retrievedList.size()>1) {
+				throw new Exception("More than 1 item in the retrieved list of Customer");
+			}
         }
 
         return retrievedCustomer;

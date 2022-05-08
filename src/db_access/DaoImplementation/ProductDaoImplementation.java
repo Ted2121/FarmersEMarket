@@ -108,11 +108,15 @@ public class ProductDaoImplementation implements ProductDao {
 		PreparedStatement statement = connection.prepareStatement(query);
 		statement.setInt(1, productId);
 		ResultSet rs = statement.executeQuery();
+		Product retrievedProduct = null;
 		while(rs.next()) {
-			Product product = buildObjects(rs, retrieveLineItems, retrieveProductInformation).get(0);
-			return product;
+			List<Product> retrievedList = buildObjects(rs, retrieveLineItems, retrieveProductInformation);
+            retrievedProduct = retrievedList.get(0);
+			if(retrievedList.size()>1) {
+				throw new Exception("More than 1 item in the retrieved list of Product");
+			}
 		}
-		return null;
+		return retrievedProduct;
 	}
 
 	@Override

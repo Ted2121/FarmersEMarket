@@ -63,7 +63,7 @@ public class ProviderDaoImplementation implements ProviderDao {
 			List<Provider> retrievedList = buildObjects(rs, retrievePurchaseOrder);
 			retrievedProvider = retrievedList.get(0);
 			if(retrievedList.size()>1) {
-				throw new Exception("More than 1 item in the retrieved list of provider");
+				throw new Exception("More than 1 item in the retrieved list of Provider");
 			}
 		}
 		return retrievedProvider;
