@@ -29,9 +29,9 @@ public abstract class RetrievingSubsetControllerImplementation implements Retrie
 	
 	
 	public RetrievingSubsetControllerImplementation() {
-		
+
 		super();
-		//This hashmap will records all the selected products and their quantity
+
 		connection = DBConnection.getInstance().getDBCon();
 		
 		//To create a purchase order we need this 2 Dao
@@ -41,64 +41,64 @@ public abstract class RetrievingSubsetControllerImplementation implements Retrie
 
 	@Override
 	public List<Provider> searchProviderUsingThisName(String providerName) {
-		//We set a new list of Provider wich will contains all the providers matching the search
+		//We set a new list of Providers which will contain all the providers matching the search
 		List<Provider> matchingProvider = new ArrayList<Provider>();
-		//We ask a method to get all the providers containng each letter of the providerName
+		//We ask a method to get all the providers containing each letter of the providerName
 		List<Provider> providerMatchingTheLetters = sortLetterToMatchingObjects(providerName, Provider.class);
 		//If we have a result
 		if(providerMatchingTheLetters != null)
 			//For each provider in the list of results
 			for(Provider provider : providerMatchingTheLetters) {
-				//We get the FullName of this provider, change capitals letter to normals letter, delete white spaces and try if they contained the specific string
+				//We get the FullName of this provider, change capitals letter to normals letter, delete white spaces and check if they contained the specific string
 				if(provider.getFullName().toLowerCase().replace(" ", "").contains(providerName.toLowerCase().replace(" ", ""))) {
-					//If they contains it, we add them to the matching list
+					//If they contain it, we add them to the matching list
 					matchingProvider.add(provider);
 				}
 			}
 		//If we don't have any results, we add all the providers
 		else matchingProvider.addAll(providerMatchingTheLetters);
-		//Finally we retrun all the providers matching th search
+		//Finally, we return all the providers matching the search
 		return matchingProvider;
 	}
 
 	@Override
 	public List<Product> searchProductUsingThisName(String productName) {
-		//We set a new list of Product wich will contains all the providers matching the search
+		//We set a new list of Product which will contain all the providers matching the search
 		List<Product> matchingProducts = new ArrayList<Product>();
-		//We ask a method to get all the Products containng each letter of the productName
+		//We ask a method to get all the Products containing each letter of the productName
 		List<Product> productMatchingTheLetters = sortLetterToMatchingObjects(productName, Product.class);
 		//If we have a result
 		if(productMatchingTheLetters != null)
 			//For each product in the list of results
 			for(Product product : productMatchingTheLetters) {
-				//We get the name of this products, change capitals letter to normals letter, delete white spaces and try if they contained the specific string
+				//We get the name of the products, change capitals letters to normal letters, delete white spaces and check if they contained the specific string
 				if(product.getProductName().toLowerCase().replace(" ", "").contains(productName.toLowerCase().replace(" ", ""))) {
-					//If they contains it, we add them to the matching list
+					//If they contain it, we add them to the matching list
 					matchingProducts.add(product);
 				}
 			}
 		//If we don't have any results, we add all the products
 		else matchingProducts.addAll(productMatchingTheLetters);
-		//Finally we retrun all the products matching th search
+		//Finally, we return all the products matching th search
 		return matchingProducts;
 	}
 
 	private <T> List<T> sortLetterToMatchingObjects(String stringToSort, Class<T> cls) {
-		//This methods use generics and can use eatcher Product or Provider class
+		//This method uses generics and can use either Product or Provider class
 		
-		//First, we take the string, change capitals letter to normals letter and delete white spaces
+		//First, we take the string, change capital letters to normal letters and delete white spaces
 		String lowerCaseStringWithoutSpaceCharacter = stringToSort.toLowerCase().replaceAll(" ", "");
-		//We create a list of list of the objects we want to sort
+		//We create a list of lists for the objects we want to sort
 		List<List<T>> listOfListOfObjectsContainingTheLetterOfThisName = new ArrayList<List<T>>();
 		
-		//Retrieving all the list of objects containing the specified characteres of each list
+		//Retrieving all the lists of objects containing the specified characters of each list
 		for(int i=0 ; i<lowerCaseStringWithoutSpaceCharacter.length();i++) {
-			//We take 1 caractere of the string
+			//We take 1 character of the string
 			char character = lowerCaseStringWithoutSpaceCharacter.charAt(i);
 			//We set the index at 0;
 			int characterListNumber = 0;
 			try {
-				//We use a methods to retrieve only handled charactere (usefull for éèëê)
+				//We use a method to retrieve only handled characters (usefull for )
 				characterListNumber = settingTheCharacterToAnHandledOne(character);
 				
 				//If we need to sort Products, and we don't already have a list containing this letter
@@ -159,15 +159,15 @@ public abstract class RetrievingSubsetControllerImplementation implements Retrie
 	private int settingTheCharacterToAnHandledOne(char character) throws Exception {
 		//This methods take a characrete and if it's a non handled charactere will set it to an handled one
 		switch(character) {
-			case 239 -> character = 105; //ï -> i
-			case 238 -> character = 105; //î -> i
-			case 237 -> character = 105; //í -> i
-			case 236 -> character = 105; //ì -> i
-			case 235 -> character = 101; //ë -> e
-			case 234 -> character = 101; //ê -> e
-			case 233 -> character = 101; //é -> e
-			case 232 -> character = 101; //è -> e
-			case 231 -> character = 99;  //ç -> c
+			case 239 -> character = 105; //ï¿½ -> i
+			case 238 -> character = 105; //ï¿½ -> i
+			case 237 -> character = 105; //ï¿½ -> i
+			case 236 -> character = 105; //ï¿½ -> i
+			case 235 -> character = 101; //ï¿½ -> e
+			case 234 -> character = 101; //ï¿½ -> e
+			case 233 -> character = 101; //ï¿½ -> e
+			case 232 -> character = 101; //ï¿½ -> e
+			case 231 -> character = 99;  //ï¿½ -> c
 		}
 		//We retrieve the charactere - 97 to get the index in the list of list
 		int numberOfTheListOfThisCharacter = character-97;
