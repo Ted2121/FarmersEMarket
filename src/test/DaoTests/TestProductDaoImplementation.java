@@ -265,8 +265,8 @@ public class TestProductDaoImplementation {
 				assertTrue(p.getRelatedLineItems() == null);
 			}
 			else {
-				assertTrue(p.getRelatedProductInformation() == null);
-				assertTrue(p.getRelatedLineItems() == null);
+				assertNotNull(p.getRelatedProductInformation());
+				assertNull(p.getRelatedLineItems());
 			}
 		}
 	}
@@ -281,8 +281,8 @@ public class TestProductDaoImplementation {
 				assertTrue(p.getRelatedProductInformation() == null);
 			}
 			else {
-				assertTrue(p.getRelatedLineItems().isEmpty());
-				assertTrue(p.getRelatedProductInformation() == null);
+				assertNotNull(p.getRelatedLineItems());
+				assertNull(p.getRelatedProductInformation());
 			}
 		}
 	}
@@ -297,8 +297,8 @@ public class TestProductDaoImplementation {
 				assertTrue(p.getRelatedProductInformation().getQuantity() == productInformation.getQuantity());
 			}
 			else {
-				assertTrue(p.getRelatedLineItems().isEmpty());
-				assertTrue(p.getRelatedProductInformation() == null);
+				assertNotNull(p.getRelatedLineItems());
+				assertNotNull(p.getRelatedProductInformation());
 			}
 		}
 	}
