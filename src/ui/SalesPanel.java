@@ -21,8 +21,8 @@ public class SalesPanel extends TablePanel{
 		ProgramFrame.getFrame().setTitle("Sales");
 		getNewButton().setText("New Sales");
 		getNewButton().addActionListener(e -> {
-			SalesPopup popup = new SalesPopup();
-			popup.setParent(self);
+//			SalesPopup popup = new SalesPopup();
+//			popup.setParent(self);
 		});
 
 		refreshTable();
@@ -36,8 +36,8 @@ public class SalesPanel extends TablePanel{
 				int id = Integer.parseInt(table.getValueAt(table.getSelectedRow(), 0).toString());
 
 				SaleOrder saleOrder = idRelatedToSaleOrder.get(id);
-				SalesPopup popup = new SalesPopup(saleOrder);
-				popup.setParent(this);
+//				SalesPopup popup = new SalesPopup(saleOrder);
+//				popup.setParent(this);
 			}else if(table.getSelectedRowCount()>1){
 				JOptionPane.showMessageDialog(null, "More than 1 line has been selected");
 			}else {

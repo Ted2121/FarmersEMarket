@@ -42,6 +42,10 @@ public abstract class PopupWindow extends JFrame{
 		});
 	}
 	
+	public JButton getSaveButton() {
+		return saveButton;
+	}
+	
 	public JPanel getPanel() {
 		return panel;
 	}

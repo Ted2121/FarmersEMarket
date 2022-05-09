@@ -7,7 +7,6 @@ import java.util.List;
 import controller.ControllerInterfaces.CRUDProductInformationController;
 import db_access.DaoFactory;
 import db_access.DaoInterfaces.*;
-import model.ModelFactory;
 import model.Product.*;
 import model.*;
 
@@ -33,6 +32,37 @@ public class CRUDProductInformationControllerImplementation extends RetrievingSu
 			e.printStackTrace();
 		}
 		return list;
+	}
+	
+	@Override
+	public String[][] retrieveTableData() {
+		List<Product> productList = searchAllProductAndProductInformation();
+		String[][] productData = new String[productList.size()][8];
+		int index=0;
+		for(Product product : productList) {
+			productData[index][0] = product.getId()+"";
+			productData[index][1] = product.getProductName();
+			productData[index][2] = Double.toString(product.getPurchasingPrice());
+			productData[index][3] = Double.toString(product.getSellingPrice());
+			productData[index][4] = product.getUnit();
+			productData[index][5] = Integer.toString(product.getWeightCategory());
+			productData[index][6] = Integer.toString(product.getRelatedProductInformation().getLocationCode());
+			productData[index][7] = Integer.toString(product.getRelatedProductInformation().getQuantity());
+			index++;
+		}
+		return productData;
+	}
+	
+	@Override
+	public Product searchAProductById(int id) {
+		Product product = null;
+		try {
+			product = productDao.findProductById(id, false, true);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return product;
 	}
 
 	@Override

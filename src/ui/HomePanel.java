@@ -33,7 +33,7 @@ public class HomePanel extends JPanel{
 		leftTable.getJumpToTableButton().addActionListener(e -> ProgramFrame.changePanel(new PurchasesPanel()));
 		leftTable.getNewButton().addActionListener(f -> new PurchasesPopup());
 		rightTable.getJumpToTableButton().addActionListener(g -> ProgramFrame.changePanel(new SalesPanel()));
-		rightTable.getNewButton().addActionListener(h -> new SalesPopup());
+//		rightTable.getNewButton().addActionListener(h -> new SalesPopup());
 		add(tablesPanel, BorderLayout.CENTER);
 	}
 	
