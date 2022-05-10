@@ -77,6 +77,18 @@ public class TestCRUDProductInformationControllerImplementation {
 		assertTrue(productDao.findProductByProductName("ProductToDelete", false, false).isEmpty());
 	}
 	
+	@Test
+	public void testRetrieveTableData() {
+		String [][] datas = crudProductInformationController.retrieveTableData();
+		assertTrue(datas != null);
+	}
+	
+	@Test
+	public void testSearchById() {
+		Product product = crudProductInformationController.searchAProductById(productToUpdate.getId());
+		assertTrue(product.getProductName().equals(productToUpdate.getProductName()));
+	}
+	
 	@AfterClass
 	public static void cleanUp() throws SQLException {
 		productInformationDao.deleteProductInformation(productInformationToCreate);
