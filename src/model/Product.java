@@ -3,7 +3,9 @@ package model;
 
 import java.util.List;
 
-public class Product {
+import controller.SearchableByName;
+
+public class Product implements SearchableByName{
     private int id;
     private String productName;
     private double purchasingPrice;
@@ -122,6 +124,11 @@ public class Product {
 	@Override
 	public String toString() {
 		return getProductName() + " " + getWeightCategory() + " " + getUnit();
+	}
+
+	@Override
+	public String getStringToSearch() {
+		return getProductName();
 	}
     
     

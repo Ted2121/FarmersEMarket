@@ -1,6 +1,8 @@
 package model;
 
-public abstract class Person {
+import controller.SearchableByName;
+
+public abstract class Person implements SearchableByName{
     private int id;
     private String firstName;
     private String lastName;
@@ -78,5 +80,9 @@ public abstract class Person {
 		return this.getFullName();
 	}
     
+	@Override
+	public String getStringToSearch() {
+		return getFullName();
+	}
     
 }
