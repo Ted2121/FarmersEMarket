@@ -1,17 +1,23 @@
 package controller.ControllerImplementation;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import controller.FastSearchFactory;
+import controller.FastSearchHelperClass;
 import controller.HelperClass;
 import controller.ControllerInterfaces.CRUDPurchaseOrderController;
+import controller.ControllerInterfaces.SearchProductInterface;
+import controller.ControllerInterfaces.SearchProviderInterface;
+import db_access.DBConnection;
 import db_access.DaoFactory;
 import db_access.DaoInterfaces.*;
 import model.*;
 
-public class CRUDPurchaseOrderControllerImplementation extends RetrievingSubsetControllerImplementation implements CRUDPurchaseOrderController{
+public class CRUDPurchaseOrderControllerImplementation implements CRUDPurchaseOrderController, SearchProductInterface, SearchProviderInterface{
 	private LineItemDao lineItemDao;
 	private OrderDao orderDao;
 	private PurchaseOrderDao purchaseOrderDao;
@@ -20,10 +26,16 @@ public class CRUDPurchaseOrderControllerImplementation extends RetrievingSubsetC
 	private List<Product> productToAdd;
 	private HashMap<Integer, PurchaseOrder> idRelatedToPurchaseOrder;
 	private HashMap<Product, Integer> productsAlreadyPresent;
-
 	
+	private FastSearchHelperClass<Product> productFastSearch;
+	private FastSearchHelperClass<Provider> providerFastSearch;
+
+	private Connection connection;
 	
 	public CRUDPurchaseOrderControllerImplementation() {
+		connection = DBConnection.getInstance().getDBCon();
+		productFastSearch = FastSearchFactory.getProductFastSearch();
+		providerFastSearch = FastSearchFactory.getProviderFastSearch();
 		
 		purchaseOrdersList = findAllPurchaseOrder();
 		
@@ -194,5 +206,14 @@ public class CRUDPurchaseOrderControllerImplementation extends RetrievingSubsetC
 		return false;
 	}
 
+	@Override
+	public List<Provider> searchProviderUsingThisName(String providerName) {
+		return providerFastSearch.searchUsingThisName(providerName);
+	}
+
+	@Override
+	public List<Product> searchProductUsingThisName(String productName) {
+		return productFastSearch.searchUsingThisName(productName);
+	}
 
 }

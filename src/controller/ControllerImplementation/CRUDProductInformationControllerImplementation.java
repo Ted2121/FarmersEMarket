@@ -4,13 +4,14 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import controller.FastSearchHelperClass;
 import controller.ControllerInterfaces.CRUDProductInformationController;
 import db_access.DaoFactory;
 import db_access.DaoInterfaces.*;
 import model.Product.*;
 import model.*;
 
-public class CRUDProductInformationControllerImplementation extends RetrievingSubsetControllerImplementation implements CRUDProductInformationController{
+public class CRUDProductInformationControllerImplementation implements CRUDProductInformationController{
 	private ProductDao productDao;
 	private ProductInformationDao productInformationDao;
 	

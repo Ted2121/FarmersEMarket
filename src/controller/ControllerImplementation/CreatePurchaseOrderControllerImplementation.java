@@ -1,24 +1,35 @@
 package controller.ControllerImplementation;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import controller.FastSearchFactory;
+import controller.FastSearchHelperClass;
 import controller.HelperClass;
 import controller.ControllerInterfaces.CreatePurchaseOrderController;
+import controller.ControllerInterfaces.SearchProductInterface;
+import controller.ControllerInterfaces.SearchProviderInterface;
+import db_access.DBConnection;
 import db_access.DaoFactory;
 import model.*;
 
-public class CreatePurchaseOrderControllerImplementation extends RetrievingSubsetControllerImplementation 
-implements CreatePurchaseOrderController {
+public class CreatePurchaseOrderControllerImplementation implements CreatePurchaseOrderController, SearchProductInterface, SearchProviderInterface {
 	
+	private Connection connection; 
 	private HashMap<Product, Integer> productWithQuantity;
 	private PurchaseOrder purchaseOrder;
+	private FastSearchHelperClass<Product> productFastSearch;
+	private FastSearchHelperClass<Provider> providerFastSearch;
 	
 
 	public CreatePurchaseOrderControllerImplementation() {
 		super();
+		connection = DBConnection.getInstance().getDBCon();
+		productFastSearch = FastSearchFactory.getProductFastSearch();
+		providerFastSearch = FastSearchFactory.getProviderFastSearch();
 		//This hashmap will records all the selected products and their quantity
 		this.productWithQuantity = new HashMap<Product, Integer>();
 	}
@@ -156,6 +167,18 @@ implements CreatePurchaseOrderController {
 		//We return true if the product is already in the hashmap
 		return productWithQuantity.containsKey(product);
 	}
+
+	
+	@Override
+	public List<Provider> searchProviderUsingThisName(String providerName) {
+		return providerFastSearch.searchUsingThisName(providerName);
+	}
+	
+	@Override
+	public List<Product> searchProductUsingThisName(String productName) {
+		return productFastSearch.searchUsingThisName(productName);
+	}
+
 		
 	
 }
