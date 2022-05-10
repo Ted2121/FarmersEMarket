@@ -1,6 +1,5 @@
 package ui;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.GridBagConstraints;
@@ -20,22 +19,14 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.NumberFormatter;
 
-import controller.ControllerImplementation.CRUDPurchaseOrderControllerImplementation;
-import controller.ControllerImplementation.CreatePurchaseOrderControllerImplementation;
-import controller.ControllerInterfaces.CRUDPurchaseOrderController;
-import controller.ControllerInterfaces.CreatePurchaseOrderController;
-import controller.ControllerInterfaces.RetrievingSubsetController;
-import model.LineItem;
-import model.Product;
-import model.Provider;
-import model.PurchaseOrder;
+import controller.FastSearchHelperClass;
+import controller.ControllerImplementation.*;
+import controller.ControllerInterfaces.*;
+import model.*;
 
 public class PurchasesPopup extends PopupWindow{
 	private PurchasesPopup self;
@@ -46,8 +37,8 @@ public class PurchasesPopup extends PopupWindow{
 	private JPanel productPanel;
 	private JButton addProductButton;
 	private JButton createPurchaseOrderButton;
-	private JComboBox providerSelectionComboBox;
-	private JComboBox productSelectionComboBox;
+	private JComboBox<Provider> providerSelectionComboBox;
+	private JComboBox<Product> productSelectionComboBox;
 
 	private List<Product> productSubsetList;
 	private List<Provider> providerSubsetList;
@@ -56,16 +47,18 @@ public class PurchasesPopup extends PopupWindow{
 	
 	CreatePurchaseOrderController createController;
 	CRUDPurchaseOrderController crudController;
+	SearchProductInterface productSearchControllerPart;
+	SearchProviderInterface providerSearchControllerPart;
 	
-	private RetrievingSubsetController retrieveController;
 	
 	public PurchasesPopup() {
 		setTitle("New Purchase");
 		this.self = this;
-		initSubsetsList();
+//		initSubsetsList();
 		
 		createController = new CreatePurchaseOrderControllerImplementation();
-		retrieveController = createController; 
+		productSearchControllerPart = (SearchProductInterface) createController;
+		providerSearchControllerPart = (SearchProviderInterface) createController;
 		
 		initSpecificCreatePurchaseOrderComponent();
 		initComponent();
@@ -76,10 +69,11 @@ public class PurchasesPopup extends PopupWindow{
 	public PurchasesPopup(PurchaseOrder purchaseOrder) {
 		setTitle("Edit Purchase");
 		this.self = this;
-		initSubsetsList();
+//		initSubsetsList();
 		
 		crudController = new CRUDPurchaseOrderControllerImplementation();
-		retrieveController = crudController; 
+		productSearchControllerPart = (SearchProductInterface) crudController;
+		providerSearchControllerPart = (SearchProviderInterface) crudController;
 		
 		this.purchaseOrder = purchaseOrder;
 		
@@ -88,15 +82,6 @@ public class PurchasesPopup extends PopupWindow{
 		
 		initComponentWithInformations();
 		
-	}
-	
-	private void initSubsetsList() {
-		try {
-			productSubsetList = retrieveController.retrieveAllObjectsSubset(Product.class);
-			providerSubsetList = retrieveController.retrieveAllObjectsSubset(Provider.class);
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
 	}
 
 	private void initComponentWithInformations() {
@@ -156,7 +141,7 @@ public class PurchasesPopup extends PopupWindow{
 					        	JComboBox comboBoxSourceEvent = (JComboBox) sourceEvent.getParent();
 					        	JTextComponent textComponentOfTheComboBox = (JTextComponent) comboBoxSourceEvent.getEditor().getEditorComponent();
 					        	
-				        		List<Provider> providerList = retrieveController.searchProviderUsingThisName(textComponentOfTheComboBox.getText());
+				        		List<Provider> providerList = providerSearchControllerPart.searchProviderUsingThisName(textComponentOfTheComboBox.getText());
 								if(providerList.size()>0) {
 									Provider[] providerArray = providerList.toArray(new Provider[0]);
 								providerSelectionComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(providerArray));
@@ -179,7 +164,6 @@ public class PurchasesPopup extends PopupWindow{
 		productSelectionComboBox.addActionListener(productSelectionComboBox);
 		
 		productSelectionComboBox.getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
-
 		    @Override
 		    public void keyReleased(KeyEvent event) {
 		    	if (event.getKeyChar() == KeyEvent.VK_ENTER) {
@@ -190,7 +174,7 @@ public class PurchasesPopup extends PopupWindow{
 					        	JComboBox comboBoxSourceEvent = (JComboBox) sourceEvent.getParent();
 					        	JTextComponent textComponentOfTheComboBox = (JTextComponent) comboBoxSourceEvent.getEditor().getEditorComponent();
 					        	
-				        		List<Product> productList = retrieveController.searchProductUsingThisName(textComponentOfTheComboBox.getText());
+				        		List<Product> productList = productSearchControllerPart.searchProductUsingThisName(textComponentOfTheComboBox.getText());
 								if(productList.size()>0) {
 									Product[] productArray = productList.toArray(new Product[0]);
 								productSelectionComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(productArray));
@@ -365,7 +349,8 @@ public class PurchasesPopup extends PopupWindow{
 				Provider selectedProvider = (Provider) providerSelectionComboBox.getSelectedItem();
 				purchaseOrder.setProvider(selectedProvider);
 				crudController.updatePurchaseOrder(purchaseOrder);
-				parent.refreshTable();
+				if(parent != null)
+					parent.refreshTable();
 				self.dispose();
 			}else {
 				JOptionPane.showMessageDialog(null, "No products have been registered in the order");
@@ -376,7 +361,6 @@ public class PurchasesPopup extends PopupWindow{
 		addProductButton.setEnabled(false);
 		
 		addProductButton.addActionListener(e -> {
-			
 			Product selectedProduct = (Product) productSelectionComboBox.getSelectedItem();
 			int quantity=1;
 			if(!crudController.isProductAlreadyInThePurchaseOrder(selectedProduct)) {
