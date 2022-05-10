@@ -7,21 +7,28 @@ import java.util.List;
 import org.junit.*;
 
 import controller.ControllerFactory;
+import controller.FastSearchFactory;
 import controller.ControllerImplementation.CreatePurchaseOrderControllerImplementation;
 import controller.ControllerInterfaces.CreatePurchaseOrderController;
+import controller.ControllerInterfaces.SearchProductInterface;
+import controller.ControllerInterfaces.SearchProviderInterface;
 import db_access.DaoFactory;
 import model.*;
 
 public class TestCreatePurchaseOrderControllerImplementation {
 	private static CreatePurchaseOrderController controller;
+	private static SearchProductInterface productSearchControllerPart;
+	private static SearchProviderInterface providerSearchControllerPart;
+	
 	private static int quantityOfEachLineItem;
 	
 	@BeforeClass
 	public static void setUp() {
 		controller = ControllerFactory.getCreatePurchaseOrderController();
+		productSearchControllerPart = (SearchProductInterface) controller;
+		providerSearchControllerPart = (SearchProviderInterface) controller;
+		
 		quantityOfEachLineItem = 3;
-		controller.retrieveAllObjectsSubset(Product.class);
-		controller.retrieveAllObjectsSubset(Provider.class);
 	}
 	
 	@Test
@@ -42,23 +49,23 @@ public class TestCreatePurchaseOrderControllerImplementation {
 	@Test
 	public void testSearchProviderUsingThisName() {
 		String name = "Ca";
-		List<Provider> providersUsingTheName = controller.searchProviderUsingThisName(name);
+		List<Provider> providersUsingTheName = providerSearchControllerPart.searchProviderUsingThisName(name);
 		assertTrue("Should return a list with more than 0 results", providersUsingTheName.size()>0);
 	}
 	
 	@Test
 	public void testSearchProductUsingThisName() {
 		String name = "Ca";
-		List<Product> productsUsingTheName = controller.searchProductUsingThisName(name);
+		List<Product> productsUsingTheName = productSearchControllerPart.searchProductUsingThisName(name);
 		assertTrue("Should return a list with more than 0 results", productsUsingTheName.size()>0);
 	}
 
-	@Test
-	public void testRetrieveAllObjectsSubset() {
-		assertTrue("Should retrieve a list of product subsets with more than 0 items",controller.retrieveAllObjectsSubset(Product.class).size()>0);
-		assertTrue("Should retrieve a list of provider subsets with more than 0 items",controller.retrieveAllObjectsSubset(Provider.class).size()>0);
-		assertNull("Shouldn't return anything because an exception occured and have been handled in the controller",controller.retrieveAllObjectsSubset(LineItem.class));
-	}
+//	@Test
+//	public void testRetrieveAllObjectsSubset() {
+//		assertTrue("Should retrieve a list of product subsets with more than 0 items",productSearchControllerPart.retrieveAllObjectsSubset(Product.class).size()>0);
+//		assertTrue("Should retrieve a list of provider subsets with more than 0 items",providerSearchControllerPart.retrieveAllObjectsSubset(Provider.class).size()>0);
+//		assertNull("Shouldn't return anything because an exception occured and have been handled in the controller",controller.retrieveAllObjectsSubset(LineItem.class));
+//	}
 	
 	@Test
 	public void testAddDeleteProductFromPurchaseOrder() {
