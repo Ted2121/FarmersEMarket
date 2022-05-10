@@ -1,4 +1,4 @@
-package controller.ControllerImplementation;
+package controller;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -7,13 +7,15 @@ import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
 
-import controller.ControllerInterfaces.RetrievingSubsetController;
 import db_access.*;
 import db_access.DaoInterfaces.*;
 import model.*;
 
-public abstract class RetrievingSubsetControllerImplementation implements RetrievingSubsetController{
 
+public class FastSearchHelperClass<T extends SearchableByName> 
+//implements FastSearchHelperClass
+{
+	private final Class<T> cls;
 
 	private ProductDao productDao;
 	private ProviderDao providerDao;
@@ -21,89 +23,51 @@ public abstract class RetrievingSubsetControllerImplementation implements Retrie
 	
 	protected Connection connection;
 	
-	private List<List<Product>> productContainingLetter;
-	private List<List<Provider>> providerContainingLetter;
-	private List<List<Customer>> customerContainingLetter;
+	private List<List<T>> tObjectsContainingLetter;
 	
 	
-	public RetrievingSubsetControllerImplementation() {
-
-		super();
-
-		connection = DBConnection.getInstance().getDBCon();
+	public FastSearchHelperClass(Class<T> cls) {
+		this.cls = cls;
 		
-		//To create a purchase order we need this 2 Dao
+		connection = DBConnection.getInstance().getDBCon();
 		productDao = DaoFactory.getProductDao();
 		providerDao = DaoFactory.getProviderDao();
 		customerDao = DaoFactory.getCustomerDao();
+		
+		
+		
+		refreshData();
+		
+		
+		
 	}
 
-	@Override
-	public List<Provider> searchProviderUsingThisName(String providerName) {
-		//We set a new list of Providers which will contain all the providers matching the search
-		List<Provider> matchingProvider = new ArrayList<Provider>();
+	public void refreshData() {
+		retrieveAllObjectsSubset();
+	}
+
+	public List<T> searchUsingThisName(String name) {
+		//We set a new list of T which will contain all the providers matching the search
+		List<T> matchingTObjects = new ArrayList<T>();
 		//We ask a method to get all the providers containing each letter of the providerName
-		List<Provider> providerMatchingTheLetters = sortLetterToMatchingObjects(providerName, Provider.class);
+		List<T> tObjectsMatchingTheLetters = sortLetterToMatchingObjects(name);
 		//If we have a result
-		if(providerMatchingTheLetters != null)
+		if(tObjectsMatchingTheLetters != null)
 			//For each provider in the list of results
-			for(Provider provider : providerMatchingTheLetters) {
+			for(T object : tObjectsMatchingTheLetters) {
 				//We get the FullName of this provider, change capitals letter to normals letter, delete white spaces and check if they contained the specific string
-				if(provider.getFullName().toLowerCase().replace(" ", "").contains(providerName.toLowerCase().replace(" ", ""))) {
+				if(object.getStringToSearch().toLowerCase().replace(" ", "").contains(name.toLowerCase().replace(" ", ""))) {
 					//If they contain it, we add them to the matching list
-					matchingProvider.add(provider);
+					matchingTObjects.add(object);
 				}
 			}
 		//If we don't have any results, we add all the providers
-		else matchingProvider.addAll(providerMatchingTheLetters);
+		else matchingTObjects.addAll(tObjectsMatchingTheLetters);
 		//Finally, we return all the providers matching the search
-		return matchingProvider;
+		return matchingTObjects;
 	}
 
-	@Override
-	public List<Customer> searchCustomerUsingThisName(String customerName) {
-
-		List<Customer> matchingCustomer = new ArrayList<Customer>();
-		List<Customer> customerMatchingTheLetters = sortLetterToMatchingObjects(customerName, Customer.class);
-
-		if(customerMatchingTheLetters != null)
-			//For each provider in the list of results
-			for(Customer customer : customerMatchingTheLetters) {
-
-				if(customer.getFullName().toLowerCase().replace(" ", "").contains(customerName.toLowerCase().replace(" ", ""))) {
-
-					matchingCustomer.add(customer);
-				}
-			}
-
-		else matchingCustomer.addAll(customerMatchingTheLetters);
-
-		return matchingCustomer;
-	}
-
-	@Override
-	public List<Product> searchProductUsingThisName(String productName) {
-		//We set a new list of Product which will contain all the providers matching the search
-		List<Product> matchingProducts = new ArrayList<Product>();
-		//We ask a method to get all the Products containing each letter of the productName
-		List<Product> productMatchingTheLetters = sortLetterToMatchingObjects(productName, Product.class);
-		//If we have a result
-		if(productMatchingTheLetters != null)
-			//For each product in the list of results
-			for(Product product : productMatchingTheLetters) {
-				//We get the name of the products, change capitals letters to normal letters, delete white spaces and check if they contained the specific string
-				if(product.getProductName().toLowerCase().replace(" ", "").contains(productName.toLowerCase().replace(" ", ""))) {
-					//If they contain it, we add them to the matching list
-					matchingProducts.add(product);
-				}
-			}
-		//If we don't have any results, we add all the products
-		else matchingProducts.addAll(productMatchingTheLetters);
-		//Finally, we return all the products matching th search
-		return matchingProducts;
-	}
-
-	private <T> List<T> sortLetterToMatchingObjects(String stringToSort, Class<T> cls) {
+	private List<T> sortLetterToMatchingObjects(String stringToSort) {
 		//This method uses generics and can use either Product or Provider class
 		
 		//First, we take the string, change capital letters to normal letters and delete white spaces
@@ -122,17 +86,9 @@ public abstract class RetrievingSubsetControllerImplementation implements Retrie
 				characterListNumber = settingTheCharacterToAnHandledOne(character);
 				
 				//If we need to sort Products, and we don't already have a list containing this letter
-				if(cls.equals(Product.class) && !listOfListOfObjectsContainingTheLetterOfThisName.contains(productContainingLetter.get(characterListNumber)))
+				if(!listOfListOfObjectsContainingTheLetterOfThisName.contains(tObjectsContainingLetter.get(characterListNumber)))
 					//We add the list of this letter to the list of list of letters
-					listOfListOfObjectsContainingTheLetterOfThisName.add((List<T>) productContainingLetter.get(characterListNumber));
-				//Else if we need to sort Provider, and we don't already have a list containing this letter
-				else if(cls.equals(Provider.class) && !listOfListOfObjectsContainingTheLetterOfThisName.contains(providerContainingLetter.get(characterListNumber))) {
-					//We add the list of this letter to the list of list of letters
-					listOfListOfObjectsContainingTheLetterOfThisName.add((List<T>) providerContainingLetter.get(characterListNumber));
-				}else if(cls.equals(Customer.class) && !listOfListOfObjectsContainingTheLetterOfThisName.contains(customerContainingLetter.get(characterListNumber))) {
-					//We add the list of this letter to the list of list of letters
-					listOfListOfObjectsContainingTheLetterOfThisName.add((List<T>) customerContainingLetter.get(characterListNumber));
-				}
+					listOfListOfObjectsContainingTheLetterOfThisName.add((List<T>) tObjectsContainingLetter.get(characterListNumber));
 					
 			} catch (Exception e) {
 				//If a Exception occurs during settingTheCharacterToAnHandledOne method, we print the message
@@ -156,25 +112,10 @@ public abstract class RetrievingSubsetControllerImplementation implements Retrie
 		if(matchingObjects == null) {
 			//We create a new ArrayList
 			matchingObjects = new ArrayList<>();
-			//If we search for products
-			if(cls.equals(Product.class)) {
-				//We add all the products in all the products letter lists
-				for(List<Product> list : productContainingLetter) {
-					matchingObjects.addAll( (Collection<? extends T>) list);
-				}
-			//Else if we search for providers
-			}else if(cls.equals(Provider.class)) {
-				//We add all the providers in all the products letter lists
-				for(List<Provider> list : providerContainingLetter) {
-					matchingObjects.addAll((Collection<? extends T>) list);
-				}
-			}else if(cls.equals(Customer.class)) {
-				//We add all the customers in all the products letter lists
-				for(List<Customer> list : customerContainingLetter) {
-					matchingObjects.addAll((Collection<? extends T>) list);
-				}
-			}
-			
+			//We add all the products in all the products letter lists
+			for(List<T> list : tObjectsContainingLetter) {
+				matchingObjects.addAll( (Collection<? extends T>) list);
+			}		
 			
 			//Finally, we get rid of duplicates
 			matchingObjects = new ArrayList<>(new LinkedHashSet<>(matchingObjects));
@@ -207,38 +148,19 @@ public abstract class RetrievingSubsetControllerImplementation implements Retrie
 		//Finally we return the index of the list
 		return numberOfTheListOfThisCharacter;
 	}
-
-	@Override
-	public <T> List<T> retrieveAllObjectsSubset(Class<T> cls) {
+	
+	private List<T> retrieveAllObjectsSubset() {
 		//This method takes a class as parameter and retrieve all its subsets
-		try {
-			//If the class is not a product, customer or a provider, we throw an Exception
-			if(!cls.equals(Product.class) && !cls.equals(Provider.class) && !cls.equals(Customer.class))
-				throw new Exception("Class not suported by the retrieveAllObjectsSubset method");
-		}catch(Exception e) {
-			System.out.println(e.getMessage());
-		}
 		
 		List<T> objectSubsetList = null;
 		//If the class id product
-		if(cls.equals(Product.class)) {
-			//We create a new ArrayList of Products
-			productContainingLetter = new ArrayList<List<Product>>();
-			//Else if the class id provider
-		}else if(cls.equals(Provider.class)) {
-			//We create a new ArrayList of Provider
-			providerContainingLetter = new ArrayList<List<Provider>>();
-		}else if(cls.equals(Customer.class)) {
-			//We create a new ArrayList of Customer
-			customerContainingLetter = new ArrayList<List<Customer>>();}
+		
+		//We create a new ArrayList of tObjects
+		tObjectsContainingLetter = new ArrayList<List<T>>();
+			
 		//Then we instanciate a new List for all 26 letter of the alphabete (special charactere should have already been handled)
 		for(int i=0;i<26;i++) {
-			if(cls.equals(Product.class)) {
-				productContainingLetter.add(new ArrayList<>());
-			}else if(cls.equals(Provider.class)) {
-				providerContainingLetter.add(new ArrayList<>());
-			}else if(cls.equals(Customer.class)) {
-				customerContainingLetter.add(new ArrayList<>());}
+			tObjectsContainingLetter.add(new ArrayList<>());
 		}
 		
 		
@@ -281,12 +203,9 @@ public abstract class RetrievingSubsetControllerImplementation implements Retrie
 					
 					List<T> letterList = null;
 					//Then we retrieve the list of the letter we are testing
-					if(cls.equals(Product.class))
-						letterList = (List<T>) productContainingLetter.get(characterListNumber);
-					else if(cls.equals(Provider.class)) 
-						letterList = (List<T>) providerContainingLetter.get(characterListNumber);
-					else if(cls.equals(Customer.class))
-						letterList = (List<T>) customerContainingLetter.get(characterListNumber);
+					
+					letterList = (List<T>) tObjectsContainingLetter.get(characterListNumber);
+					
 					//If it doesn't already contains this objects
 					if(!letterList.contains(object)) {
 						//We add it to the list
