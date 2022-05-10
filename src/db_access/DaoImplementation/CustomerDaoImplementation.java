@@ -162,14 +162,14 @@ public class CustomerDaoImplementation implements CustomerDao {
         return retrieveSaleOrder;
     }
 
-    @Override
-    public List<Customer> findAllCustomerSubset() throws Exception {
-        String query = "SELECT PK_idCustomer, FirstName, LastName  FROM Customer";
-        PreparedStatement preparedSelectStatement = dbCon.prepareStatement(query);
-        ResultSet rs = preparedSelectStatement.executeQuery();
-        List<Customer> retrievedCustomerList = buildObjectsSubset(rs);
+	@Override
+	public List<Customer> findAllSubset() throws Exception {
+		String query = "SELECT PK_idCustomer, FirstName, LastName  FROM Customer";
+      PreparedStatement preparedSelectStatement = dbCon.prepareStatement(query);
+      ResultSet rs = preparedSelectStatement.executeQuery();
+      List<Customer> retrievedCustomerList = buildObjectsSubset(rs);
 
-        return retrievedCustomerList;
-    }
+      return retrievedCustomerList;
+	}
 
 }

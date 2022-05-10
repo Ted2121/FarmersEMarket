@@ -2,6 +2,8 @@ package controller;
 
 import java.util.List;
 
+import db_access.DaoFactory;
+import db_access.DaoImplementation.ProductDaoImplementation;
 import model.Customer;
 import model.Product;
 import model.Provider;
@@ -16,21 +18,21 @@ public class FastSearchFactory {
 	
 	public static FastSearchHelperClass<Product> getProductFastSearch() {
 		if(productFastSearch == null) {
-			productFastSearch = new FastSearchHelperClass<>(Product.class);
+			productFastSearch = new FastSearchHelperClass<>(DaoFactory.getProductDao());
 		}
 		return productFastSearch;
 	}
 	
 	public static FastSearchHelperClass<Provider> getProviderFastSearch() {
 		if(providerFastSearch == null) {
-			providerFastSearch = new FastSearchHelperClass<>(Provider.class);
+			providerFastSearch = new FastSearchHelperClass<>(DaoFactory.getProviderDao());
 		}
 		return providerFastSearch;
 	}
 	
 	public static FastSearchHelperClass<Customer> getCustomerFastSearch() {
 		if(customerFastSearch == null) {
-			customerFastSearch = new FastSearchHelperClass<>(Customer.class);
+			customerFastSearch = new FastSearchHelperClass<>(DaoFactory.getCustomerDao());
 		}
 		return customerFastSearch;
 	}

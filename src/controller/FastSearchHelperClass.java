@@ -15,26 +15,26 @@ import model.*;
 public class FastSearchHelperClass<T extends SearchableByName> 
 //implements FastSearchHelperClass
 {
-	private final Class<T> cls;
 
 	private ProductDao productDao;
 	private ProviderDao providerDao;
 	private CustomerDao customerDao;
+	
+	private ContainSubsetDao<T> objectSubsetDaoPart;
 	
 	protected Connection connection;
 	
 	private List<List<T>> tObjectsContainingLetter;
 	
 	
-	public FastSearchHelperClass(Class<T> cls) {
-		this.cls = cls;
+	public FastSearchHelperClass(ContainSubsetDao<T> objectSubsetDaoPart) {
 		
 		connection = DBConnection.getInstance().getDBCon();
 		productDao = DaoFactory.getProductDao();
 		providerDao = DaoFactory.getProviderDao();
 		customerDao = DaoFactory.getCustomerDao();
 		
-		
+		this.objectSubsetDaoPart = objectSubsetDaoPart; 
 		
 		refreshData();
 		
@@ -166,22 +166,13 @@ public class FastSearchHelperClass<T extends SearchableByName>
 		
 		try {
 			//Then we use the Dao class to retrieve the subsets
-			if(cls.equals(Product.class))
-				objectSubsetList = (List<T>) productDao.findAllProductSubset();
-			else if(cls.equals(Provider.class))
-				objectSubsetList = (List<T>) providerDao.findAllProviderSubset();
-			else if(cls.equals(Customer.class))
-				objectSubsetList = (List<T>) customerDao.findAllCustomerSubset();
+			objectSubsetList = objectSubsetDaoPart.findAllSubset();
 			//For each objects of the subset list
 			for(T object : objectSubsetList) {
 				String lowerCaseObjectWithoutSpaceCharacter = null;
 				//We get their name version without capital and blank space
-				if(cls.equals(Product.class))
-					lowerCaseObjectWithoutSpaceCharacter = ((Product) object).getProductName().toLowerCase().replaceAll(" ", "");
-				else if(cls.equals(Provider.class))
-					lowerCaseObjectWithoutSpaceCharacter = ((Provider) object).getFullName().toLowerCase().replaceAll(" ", "");
-				else if(cls.equals(Customer.class))
-					lowerCaseObjectWithoutSpaceCharacter = ((Customer) object).getFullName().toLowerCase().replaceAll(" ", "");
+				lowerCaseObjectWithoutSpaceCharacter = object.getStringToSearch().toLowerCase().replace(" ", "");
+				
 				//If the String is blanck, we can stop the loop
 				if(lowerCaseObjectWithoutSpaceCharacter.isBlank()) {
 					break;
@@ -235,4 +226,10 @@ public class FastSearchHelperClass<T extends SearchableByName>
 		
 		return objectSubsetList.subList(0, 30);
 	}
+
+
+	public void setObjectSubsetDaoPart(ContainSubsetDao<T> objectSubsetDaoPart) {
+		this.objectSubsetDaoPart = objectSubsetDaoPart;
+	}
+	
 }

@@ -42,6 +42,7 @@ public class PurchasesPanel extends TablePanel{
 			if(table.getSelectedRowCount() == 1) {
 				int id = Integer.parseInt(table.getValueAt(table.getSelectedRow(), 0).toString());
 				
+				idRelatedToPurchaseOrder = controller.retrieveIdRelatedToPurchaseOrderHashMap();
 				PurchaseOrder purchaseOrder = idRelatedToPurchaseOrder.get(id);
 				PurchasesPopup popup = new PurchasesPopup(purchaseOrder);
 				popup.setParent(self);

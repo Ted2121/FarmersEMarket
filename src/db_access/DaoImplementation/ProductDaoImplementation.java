@@ -9,11 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import db_access.*;
+import db_access.DaoInterfaces.ContainSubsetDao;
 import db_access.DaoInterfaces.ProductDao;
 import model.*;
 import model.Product.*;
 
-public class ProductDaoImplementation implements ProductDao {
+public class ProductDaoImplementation implements ProductDao{
 
 	Connection connection = DBConnection.getInstance().getDBCon();
 	
@@ -73,14 +74,6 @@ public class ProductDaoImplementation implements ProductDao {
 			list.add(productSubset);
 		}
 		return list;
-	}
-	
-	@Override
-	public List<Product> findAllProductSubset() throws SQLException, Exception{
-		String query = "SELECT PK_idProduct, [Name], Unit, WeightCategory FROM Product";
-		PreparedStatement statement = connection.prepareStatement(query);
-		ResultSet rs = statement.executeQuery();
-		return buildObjectsSubset(rs);
 	}
 	
 	@Override
@@ -167,6 +160,14 @@ public class ProductDaoImplementation implements ProductDao {
 		PreparedStatement statement = connection.prepareStatement(query);
 		statement.setInt(1, objectToDelete.getId());
 		statement.executeUpdate();
+	}
+
+	@Override
+	public List<Product> findAllSubset() throws Exception {
+		String query = "SELECT PK_idProduct, [Name], Unit, WeightCategory FROM Product";
+		PreparedStatement statement = connection.prepareStatement(query);
+		ResultSet rs = statement.executeQuery();
+		return buildObjectsSubset(rs);
 	}
 
 	

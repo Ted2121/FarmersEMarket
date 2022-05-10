@@ -9,10 +9,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import db_access.*;
+import db_access.DaoInterfaces.ContainSubsetDao;
 import db_access.DaoInterfaces.ProviderDao;
 import model.*;
 
-public class ProviderDaoImplementation implements ProviderDao {
+public class ProviderDaoImplementation implements ProviderDao{
 
 	Connection connectionDB = DBConnection.getInstance().getDBCon();
 
@@ -102,16 +103,6 @@ public class ProviderDaoImplementation implements ProviderDao {
 	}
 	
 	@Override
-	public List<Provider> findAllProviderSubset() throws SQLException, Exception {
-		String query = "SELECT PK_idProvider, FirstName, LastName  FROM Provider";
-		PreparedStatement preparedSelectStatement = connectionDB.prepareStatement(query);
-		ResultSet rs = preparedSelectStatement.executeQuery();
-		List<Provider> retrievedProvidersList = buildObjectsSubset(rs);
-		
-		return retrievedProvidersList;
-	}
-	
-	@Override
 	public List<Provider> findAllProviders(boolean retrievePurchaseOrder) throws SQLException, Exception {
 		String query = "SELECT * FROM Provider";
 		PreparedStatement preparedSelectStatement = connectionDB.prepareStatement(query);
@@ -162,6 +153,16 @@ public class ProviderDaoImplementation implements ProviderDao {
 		preparedDeleteProviderStatement.setInt(1, objectToDelete.getId());
 		preparedDeleteProviderStatement.execute();
 		System.out.println(">> Provider deleted in the Database");
+	}
+
+	@Override
+	public List<Provider> findAllSubset() throws Exception {
+		String query = "SELECT PK_idProvider, FirstName, LastName  FROM Provider";
+		PreparedStatement preparedSelectStatement = connectionDB.prepareStatement(query);
+		ResultSet rs = preparedSelectStatement.executeQuery();
+		List<Provider> retrievedProvidersList = buildObjectsSubset(rs);
+		
+		return retrievedProvidersList;
 	}
 
 	

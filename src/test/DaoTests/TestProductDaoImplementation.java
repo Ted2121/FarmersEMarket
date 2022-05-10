@@ -18,6 +18,7 @@ import model.Product.*;
 
 public class TestProductDaoImplementation {
 	private static ProductDao productDao;
+	private static ContainSubsetDao<Product> productSubsetDaoPart;
 	private static Product productToUpdate;
 	private static Product productToDelete;
 	private static Product productToCreate;
@@ -31,6 +32,7 @@ public class TestProductDaoImplementation {
 	@BeforeClass
 	public static void setUp() throws SQLException {
 		productDao = DaoFactory.getProductDao();
+		productSubsetDaoPart = (ContainSubsetDao<Product>) productDao;
 		lineItemDao = DaoFactory.getLineItemDao();
 		productInformationDao = DaoFactory.getProductInformationDao();
 		productToCreate = ModelFactory.getProductModel("TestCreate", 15d, 20d, WeightCategory.FIVE, Unit.KG);
@@ -305,7 +307,7 @@ public class TestProductDaoImplementation {
 	
 	@Test
 	public void testFindAllProductSubset() throws SQLException, Exception{
-		List<Product> productSubsetList = productDao.findAllProductSubset();
+		List<Product> productSubsetList = productSubsetDaoPart.findAllSubset();
 		assertTrue("Should retrieve a none empty list", productSubsetList.size()>0);
 		assertTrue("Should retrieve products without selling price", productSubsetList.get(0).getSellingPrice()==0);
 	}

@@ -5,7 +5,7 @@ import model.Customer;
 import java.sql.SQLException;
 import java.util.List;
 
-public interface CustomerDao {
+public interface CustomerDao extends ContainSubsetDao<Customer> {
 
         Customer findCustomerById(int customerId, boolean retrieveSaleOrder) throws Exception;
         List<Customer> findAllCustomers(boolean b) throws Exception;
@@ -14,5 +14,6 @@ public interface CustomerDao {
         void deleteCustomer(Customer objectToDelete) throws SQLException;
         Customer findCustomerByFullName(String fullName) throws SQLException;
         List<Customer> findAllCustomersWithThisName(String fullName, boolean retrieveSaleOrders) throws Exception;
-        List<Customer> findAllCustomerSubset() throws Exception;
+        
+        
 }

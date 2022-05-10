@@ -1,6 +1,7 @@
 package test.DaoTests;
 
 import db_access.*;
+import db_access.DaoInterfaces.ContainSubsetDao;
 import db_access.DaoInterfaces.ProviderDao;
 import model.*;
 
@@ -13,6 +14,7 @@ import java.util.List;
 public class TestProviderDaoImplementation {
 	//TODO this class needs to be checked
 	static ProviderDao providerDao;
+	static ContainSubsetDao<Provider> providerSubsetDaoPart;
 	static int generatedId;
 	static Provider providerToUpdate;
 	static Provider providerToDelete;
@@ -20,6 +22,7 @@ public class TestProviderDaoImplementation {
 	@BeforeClass
 	public static void setUp() throws SQLException, Exception {
 		providerDao = DaoFactory.getProviderDao();
+		providerSubsetDaoPart = (ContainSubsetDao<Provider>) providerDao;
 		providerToUpdate = ModelFactory.getProviderModel("Michel", "Michel", "Michel", "Michel");
 		providerDao.createProvider(providerToUpdate);
 		
@@ -115,7 +118,7 @@ public class TestProviderDaoImplementation {
 	
 	@Test
 	public void testFindAllProviderSubset() throws SQLException, Exception{
-		List<Provider> providerSubsetList = providerDao.findAllProviderSubset();
+		List<Provider> providerSubsetList = providerSubsetDaoPart.findAllSubset();
 		assertTrue("Should retrieve a none empty list", providerSubsetList.size()>0);
 		assertNull("Should retrieve products without selling price", providerSubsetList.get(0).getCountry());
 	}

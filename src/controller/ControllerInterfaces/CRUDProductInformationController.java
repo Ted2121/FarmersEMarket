@@ -2,7 +2,6 @@ package controller.ControllerInterfaces;
 
 import java.util.List;
 
-import controller.FastSearchHelperClass;
 import model.Product;
 
 public interface CRUDProductInformationController{
