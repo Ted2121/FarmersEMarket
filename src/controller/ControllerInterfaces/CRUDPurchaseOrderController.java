@@ -21,7 +21,7 @@ public interface CRUDPurchaseOrderController{
 	String[][] retrieveTableData();
 	HashMap<Integer, PurchaseOrder> retrieveIdRelatedToPurchaseOrderHashMap();
 	
-	List<LineItem> finAllLineItemRelatedToThisPurchaseOrder(PurchaseOrder purchaseOrder);
+	List<LineItem> findAllLineItemRelatedToThisPurchaseOrder(PurchaseOrder purchaseOrder);
 	List<PurchaseOrder> findAllPurchaseOrder();
 	
 	

@@ -162,7 +162,7 @@ public class CRUDPurchaseOrderControllerImplementation implements CRUDPurchaseOr
 	}
 
 	@Override
-	public List<LineItem> finAllLineItemRelatedToThisPurchaseOrder(PurchaseOrder purchaseOrder) {
+	public List<LineItem> findAllLineItemRelatedToThisPurchaseOrder(PurchaseOrder purchaseOrder) {
 		List<LineItem> lineItemList = null;
 		try {
 			lineItemList = lineItemDao.findLineItemsByOrder(purchaseOrder, true);
@@ -216,4 +216,16 @@ public class CRUDPurchaseOrderControllerImplementation implements CRUDPurchaseOr
 		return productFastSearch.searchUsingThisName(productName);
 	}
 
+	public List<LineItem> getDeleteListForTestReasonOnly(){
+		return lineItemToDeleteList;
+	}
+	
+	public List<Product> getProductToAddListForTestReasonOnly(){
+		return productToAdd;
+	}
+	
+	public HashMap<Product, Integer> getProductAlreadyPresentMapForTestReasonOnly(){
+		return productsAlreadyPresent;
+	}
+	
 }
