@@ -35,15 +35,29 @@ public class CreateSaleOrderControllerImplementation implements CreateSaleOrderC
     }
 
     @Override
-    public void addProductToSaleOrder(Product product, int quantity) {
+    public void addProductToSaleOrder(Product product, int quantity) throws Exception {
 
-        //If we already have this product in the list, we remove it
-        if (productWithQuantity.containsKey(product))
-            productWithQuantity.remove(product);
+//        if(checkIfQuantityIsSufficient(product, quantity)) {
+            //If we already have this product in the list, we remove it
+            if (productWithQuantity.containsKey(product))
+                productWithQuantity.remove(product);
 
-        //We add the product in the hashmap with its specific quantity
-        productWithQuantity.put(product, quantity);
+            //We add the product in the hashmap with its specific quantity
+            productWithQuantity.put(product, quantity);
+//        }else{
+//
+//            productWithQuantity.remove(product);
+//        }
+    }
 
+    @Override
+    public boolean checkIfQuantityIsSufficient(Product selectedProduct, int quantity) throws Exception {
+        boolean isSufficient = false;
+
+        if(DaoFactory.getProductInformationDao().findProductInformationByProductId(selectedProduct.getId(), false).getQuantity() >= quantity) {
+            isSufficient = true;
+        }else{isSufficient = false;}
+        return isSufficient;
     }
 
     @Override
@@ -98,8 +112,8 @@ public class CreateSaleOrderControllerImplementation implements CreateSaleOrderC
             for (LineItem lineItem : generatedLineItems) {
                 //Creating LineItems in the database
                 DaoFactory.getLineItemDao().createLineItem(lineItem);
-                //Adding the quantity to productInformation in the database
-                DaoFactory.getProductInformationDao().addQuantityToProduct(lineItem.getProduct(), lineItem.getQuantity());
+                //Removing the quantity to productInformation in the database
+                DaoFactory.getProductInformationDao().removeQuantityToProduct(lineItem.getProduct(), lineItem.getQuantity());
             }
 
             //Once the order, saleOrder and LineItems have been added to the database, we commit all our changes

@@ -323,10 +323,18 @@ public class SalesPopup extends PopupWindow{
                             JPanel productWithQuantityPanel = new SalePopUpProductListedPanel(createController, productPanel, selectedProduct, quantity);
                             productWithQuantityPanel.setPreferredSize(new java.awt.Dimension(productPanel.getPreferredSize().width, 32));
                             productWithQuantityPanel.setMaximumSize(new java.awt.Dimension(getWidth(), 32));
+                            try {
+                                if(createController.checkIfQuantityIsSufficient(selectedProduct, quantity)){
 
-                            createController.addProductToSaleOrder(selectedProduct, quantity);
+                                        createController.addProductToSaleOrder(selectedProduct, quantity);
+
 
                             productPanel.add(productWithQuantityPanel);
+                            }else{ System.out.println("test insufficient quantity");
+                                    JOptionPane.showMessageDialog(null, "Quantity unavailable for this product");}
+                            } catch (Exception ex) {
+                                ex.printStackTrace();
+                            }
                             productPanel.revalidate();
                             productPanel.repaint();
                         } else {
