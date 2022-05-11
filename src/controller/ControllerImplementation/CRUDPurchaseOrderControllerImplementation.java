@@ -227,5 +227,15 @@ public class CRUDPurchaseOrderControllerImplementation implements CRUDPurchaseOr
 	public HashMap<Product, Integer> getProductAlreadyPresentMapForTestReasonOnly(){
 		return productsAlreadyPresent;
 	}
+
+	@Override
+	public void productSearchRefreshData() {
+		productFastSearch.refreshData();
+	}
+	
+	@Override
+	public void providerSearchRefreshData() {
+		providerFastSearch.refreshData();;
+	}
 	
 }

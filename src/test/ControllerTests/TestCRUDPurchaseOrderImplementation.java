@@ -24,6 +24,7 @@ import db_access.DaoFactory;
 import model.LineItem;
 import model.ModelFactory;
 import model.Product;
+import model.Product.Unit;
 import model.Product.WeightCategory;
 import model.Provider;
 import model.PurchaseOrder;
@@ -38,8 +39,11 @@ public class TestCRUDPurchaseOrderImplementation {
 	private static PurchaseOrder purchaseOrderToDelete;
 	private static Provider provider;
 	private static Provider provider2;
+	private static Provider newProvider;
 	private static LineItem lineItem;
 	private static Product product;
+	private static Product newProduct;
+	
 	
 	@BeforeClass
 	public static void setUp() throws SQLException {
@@ -65,6 +69,8 @@ public class TestCRUDPurchaseOrderImplementation {
 		
 		lineItem = ModelFactory.getLineItemModel(3, product, purchaseOrder);
 		DaoFactory.getLineItemDao().createLineItem(lineItem);
+		
+		
 	}
 	
 	@Test
@@ -177,8 +183,100 @@ public class TestCRUDPurchaseOrderImplementation {
 		assertTrue("Should contain the lineItem", controllerImplementation.getProductToAddListForTestReasonOnly().contains(product));
 	}
 	
+	@Test
+	public void testDeleteProductInProductToAdd() {
+		//Arrange
+		CRUDPurchaseOrderControllerImplementation controllerImplementation = (CRUDPurchaseOrderControllerImplementation) controller;
+		controllerImplementation.getProductToAddListForTestReasonOnly().add(product);
+		controllerImplementation.getProductAlreadyPresentMapForTestReasonOnly().put(product, 0);
+		
+		//Act
+		controller.deleteProductInProductToAdd(product);
+		
+		//Assert
+		assertFalse("Shouldn't contain the product", controllerImplementation.getProductToAddListForTestReasonOnly().contains(product));
+		assertFalse("Shouldn't contain the product", controllerImplementation.getProductAlreadyPresentMapForTestReasonOnly().containsKey(product));
+	}
+	
+	@Test
+	public void testIsProductAlreadyInThePurchaseOrder() {
+		//Arrange
+		CRUDPurchaseOrderControllerImplementation controllerImplementation = (CRUDPurchaseOrderControllerImplementation) controller;
+		controllerImplementation.getProductAlreadyPresentMapForTestReasonOnly().put(product, 0);
+		
+		//Act
+		boolean verification1 = controller.isProductAlreadyInThePurchaseOrder(product);
+		boolean verification2 = controller.isProductAlreadyInThePurchaseOrder(ModelFactory.getProductEmptyModel());
+		
+		//Assert
+		assertTrue("Should return true", verification1);
+		assertFalse("Should return false", verification2);
+	}
+	
+	@Test
+	public void searchProviderUsingThisName() {
+		//Arrange
+		String name = "test";
+		
+		
+		//Act
+		providerSearchControllerPart.providerSearchRefreshData();
+		List<Provider> providerList = providerSearchControllerPart.searchProviderUsingThisName(name);
+		
+		//Assert
+		assertFalse("Should return a non-empty list", providerList.isEmpty());
+		
+	}
+	
+	@Test
+	public void searchProductUsingThisName() {
+		//Arrange
+		String name = "test";
+		
+		
+		//Act
+		productSearchControllerPart.productSearchRefreshData();
+		List<Product> productList = productSearchControllerPart.searchProductUsingThisName(name);
+		
+		//Assert
+		assertFalse("Should return a non-empty list", productList.isEmpty());
+		
+	}
+	
+	@Test
+	public void refreshProviderData() throws SQLException {
+		//Arrange
+		newProvider= ModelFactory.getProviderModel("curiousName", "last name", "test", "test");
+		DaoFactory.getProviderDao().createProvider(newProvider);
+		
+		//Act
+		List<Provider> providerListBeforeRefresh = providerSearchControllerPart.searchProviderUsingThisName("curiousName");
+		providerSearchControllerPart.providerSearchRefreshData();
+		List<Provider> providerListAfterRefresh = providerSearchControllerPart.searchProviderUsingThisName("curiousName");
+		
+		//Assert
+		assertTrue("Should be an empty list",providerListBeforeRefresh.isEmpty());
+		assertFalse("Shouldn't be an empty list",providerListAfterRefresh.isEmpty());
+	}
+	
+	@Test
+	public void refreshProductData() throws SQLException {
+		//Arrange
+		newProduct = ModelFactory.getProductModel("curiousName", 0, 0, WeightCategory.ONE, Unit.KG);
+		DaoFactory.getProductDao().createProduct(newProduct);
+		
+		//Act
+		List<Product> productListBeforeRefresh = productSearchControllerPart.searchProductUsingThisName("curiousName");
+		productSearchControllerPart.productSearchRefreshData();
+		List<Product> productListAfterRefresh = productSearchControllerPart.searchProductUsingThisName("curiousName");
+		
+		//Assert
+		assertTrue("Should be an empty list",productListBeforeRefresh.isEmpty());
+		assertFalse("Shouldn't be an empty list",productListAfterRefresh.isEmpty());
+	}
+	
 	@After
-	public  void reset() {
+	public void reset() {
 		CRUDPurchaseOrderControllerImplementation controllerImplementation = (CRUDPurchaseOrderControllerImplementation) controller;
 		controllerImplementation.getDeleteListForTestReasonOnly().clear();
 		controllerImplementation.getProductAlreadyPresentMapForTestReasonOnly().clear();
@@ -190,6 +288,7 @@ public class TestCRUDPurchaseOrderImplementation {
 		DaoFactory.getLineItemDao().deleteLineItem(lineItem);
 		
 		DaoFactory.getProductDao().deleteProduct(product);
+		DaoFactory.getProductDao().deleteProduct(newProduct);
 		
 		DaoFactory.getPurchaseOrderDao().deletePurchaseOrder(purchaseOrder);
 		DaoFactory.getOrderDao().deleteOrder(purchaseOrder);
@@ -199,9 +298,7 @@ public class TestCRUDPurchaseOrderImplementation {
 		
 		DaoFactory.getProviderDao().deleteProvider(provider);
 		DaoFactory.getProviderDao().deleteProvider(provider2);
-		
-		
-		
+		DaoFactory.getProviderDao().deleteProvider(newProvider);
 		
 		
 	}

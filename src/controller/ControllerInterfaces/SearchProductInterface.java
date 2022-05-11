@@ -7,4 +7,5 @@ import model.Product;
 
 public interface SearchProductInterface {
 	List<Product> searchProductUsingThisName(String productName);
+	void productSearchRefreshData();
 }

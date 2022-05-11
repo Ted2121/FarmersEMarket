@@ -37,9 +37,6 @@ public class FastSearchHelperClass<T extends SearchableByName>
 		this.objectSubsetDaoPart = objectSubsetDaoPart; 
 		
 		refreshData();
-		
-		
-		
 	}
 
 	public void refreshData() {
@@ -226,7 +223,6 @@ public class FastSearchHelperClass<T extends SearchableByName>
 		
 		return objectSubsetList.subList(0, 30);
 	}
-
 
 	public void setObjectSubsetDaoPart(ContainSubsetDao<T> objectSubsetDaoPart) {
 		this.objectSubsetDaoPart = objectSubsetDaoPart;

@@ -7,4 +7,5 @@ import model.Provider;
 
 public interface SearchProviderInterface {
 	List<Provider> searchProviderUsingThisName(String providerName);
+	void providerSearchRefreshData();
 }

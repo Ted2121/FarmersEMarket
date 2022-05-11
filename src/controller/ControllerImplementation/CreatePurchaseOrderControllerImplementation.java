@@ -179,6 +179,16 @@ public class CreatePurchaseOrderControllerImplementation implements CreatePurcha
 		return productFastSearch.searchUsingThisName(productName);
 	}
 
+	@Override
+	public void providerSearchRefreshData() {
+		providerFastSearch.refreshData();
+	}
+
+	@Override
+	public void productSearchRefreshData() {
+		productFastSearch.refreshData();
+	}
+
 		
 	
 }

@@ -85,7 +85,7 @@ public class PurchasesPopup extends PopupWindow{
 	}
 
 	private void initComponentWithInformations() {
-		List<LineItem> relatedLineItem = crudController.finAllLineItemRelatedToThisPurchaseOrder(purchaseOrder);
+		List<LineItem> relatedLineItem = crudController.findAllLineItemRelatedToThisPurchaseOrder(purchaseOrder);
 		for(LineItem lineItem : relatedLineItem) {
 			JPanel productWithQuantityPanel = new PurchasePopUpProductListedPanel(crudController, productPanel, lineItem);
 			productWithQuantityPanel.setPreferredSize(new java.awt.Dimension(productPanel.getPreferredSize().width, 32));

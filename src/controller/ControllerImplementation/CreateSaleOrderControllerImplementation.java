@@ -192,4 +192,14 @@ public class CreateSaleOrderControllerImplementation implements CreateSaleOrderC
     public List<Product> searchProductUsingThisName(String productName) {
         return productFastSearch.searchUsingThisName(productName);
     }
+
+    @Override
+	public void customerSearchRefreshData() {
+		customerFastSearch.refreshData();
+	}
+
+	@Override
+	public void productSearchRefreshData() {
+		productFastSearch.refreshData();
+	}
 }

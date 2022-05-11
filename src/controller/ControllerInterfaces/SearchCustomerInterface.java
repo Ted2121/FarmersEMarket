@@ -6,4 +6,5 @@ import model.Customer;
 
 public interface SearchCustomerInterface {
 	List<Customer> searchCustomerUsingThisName(String customerName);
+	void customerSearchRefreshData();
 }
