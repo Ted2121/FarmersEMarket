@@ -55,6 +55,7 @@ public class ProductInfoPopup extends PopupWindow{
 	public void initComponent() {
 		JPanel panel = new JPanel();
 		getPanel().add(panel, BorderLayout.CENTER);
+		panel.setBackground(ProgramFrame.getBgcolor());
 		GridBagLayout gbl_panel = new GridBagLayout();
 		gbl_panel.columnWidths = new int[]{0, 0, 71, 0, 0, 0};
 		gbl_panel.rowHeights = new int[]{28, 0, 29, 0, 0, 0, 14, 0, 0, 0, 30, 18, 0, 0};

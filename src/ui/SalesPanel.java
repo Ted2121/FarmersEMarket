@@ -1,5 +1,6 @@
 package ui;
 
+import model.PurchaseOrder;
 import model.SaleOrder;
 
 import javax.swing.*;
@@ -21,53 +22,55 @@ public class SalesPanel extends TablePanel{
 		ProgramFrame.getFrame().setTitle("Sales");
 		getNewButton().setText("New Sales");
 		getNewButton().addActionListener(e -> {
-//			SalesPopup popup = new SalesPopup();
-//			popup.setParent(self);
+			SalesPopup popup = new SalesPopup();
+			popup.setParent(self);
 		});
 
 		refreshTable();
 
 		getEditButton().setEnabled(true);
+		// CRUD NOT Implemented Yet
 		getEditButton().addActionListener(e -> {
 
 			//controller = ControllerFactory.getCRUDSaleOrderController();
 
-			if(table.getSelectedRowCount() == 1) {
-				int id = Integer.parseInt(table.getValueAt(table.getSelectedRow(), 0).toString());
-
-				SaleOrder saleOrder = idRelatedToSaleOrder.get(id);
-//				SalesPopup popup = new SalesPopup(saleOrder);
-//				popup.setParent(this);
-			}else if(table.getSelectedRowCount()>1){
-				JOptionPane.showMessageDialog(null, "More than 1 line has been selected");
-			}else {
-				JOptionPane.showMessageDialog(null, "No line has been selected");
-			}
+//			if(table.getSelectedRowCount() == 1) {
+//				int id = Integer.parseInt(table.getValueAt(table.getSelectedRow(), 0).toString());
+//
+//				idRelatedToSaleOrder = controller.retrieveIdRelatedToPurchaseOrderHashMap();
+//				PurchaseOrder purchaseOrder = idRelatedToPurchaseOrder.get(id);
+//				PurchasesPopup popup = new PurchasesPopup(purchaseOrder);
+//				popup.setParent(self);
+//			}else if(table.getSelectedRowCount()>1){
+//				JOptionPane.showMessageDialog(null, "More than 1 line has been selected");
+//			}else {
+//				JOptionPane.showMessageDialog(null, "No line has been selected");
+//			}
 
 		});
 
-
+// CRUD NOT Implemented Yet
 		getDeleteButton().addActionListener(e -> {
 
 			//controller = ControllerFactory.getCRUDSaleOrderController();
-
-			if(table.getSelectedRowCount() == 1) {
-				int id = Integer.parseInt(table.getValueAt(table.getSelectedRow(), 0).toString());
-				SaleOrder purchaseOrder = idRelatedToSaleOrder.get(id);
-
-				int choice = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this order?","Delete confirmation", JOptionPane.YES_NO_OPTION);
-				// Not Implemented
-				switch(choice) {
-					case 0 -> {//controller.deleteSaleOrder(saleOrder);
-						//refreshTable();
-					}
-				}
-
-			}else if(table.getSelectedRowCount()>1){
-				JOptionPane.showMessageDialog(null, "More than 1 line has been selected");
-			}else {
-				JOptionPane.showMessageDialog(null, "No line has been selected");
-			}
+//
+//			if(table.getSelectedRowCount() == 1) {
+//				int id = Integer.parseInt(table.getValueAt(table.getSelectedRow(), 0).toString());
+//				SaleOrder purchaseOrder = idRelatedToSaleOrder.get(id);
+//
+//				int choice = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this order?","Delete confirmation", JOptionPane.YES_NO_OPTION);
+//				// Not Implemented
+//				switch(choice) {
+//					case 0 -> {//controller.deleteSaleOrder(saleOrder);
+//						//refreshTable();
+//					}
+//				}
+//
+//			}else if(table.getSelectedRowCount()>1){
+//				JOptionPane.showMessageDialog(null, "More than 1 line has been selected");
+//			}else {
+//				JOptionPane.showMessageDialog(null, "No line has been selected");
+//			}
 
 		});
 
