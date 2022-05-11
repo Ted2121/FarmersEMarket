@@ -49,6 +49,7 @@ public class TestCreatePurchaseOrderControllerImplementation {
 	@Test
 	public void testSearchProviderUsingThisName() {
 		String name = "Ca";
+		providerSearchControllerPart.providerSearchRefreshData();
 		List<Provider> providersUsingTheName = providerSearchControllerPart.searchProviderUsingThisName(name);
 		assertTrue("Should return a list with more than 0 results", providersUsingTheName.size()>0);
 	}

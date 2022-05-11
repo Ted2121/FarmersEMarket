@@ -235,7 +235,7 @@ public class CRUDPurchaseOrderControllerImplementation implements CRUDPurchaseOr
 	
 	@Override
 	public void providerSearchRefreshData() {
-		providerFastSearch.refreshData();;
+		providerFastSearch.refreshData();
 	}
 	
 }
