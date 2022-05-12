@@ -45,48 +45,81 @@ public class TestCRUDProductInformationControllerImplementation {
 	
 	@Test
 	public void testSearchAllProductAndProductInformation() {
-		assertTrue(!crudProductInformationController.searchAllProductAndProductInformation().isEmpty());
+		//Arrange
+		
+		//Act
+		
+		//Assert
+		assertTrue("The method retrieve a list with objects", !crudProductInformationController.searchAllProductAndProductInformation().isEmpty());
 	}
 	
 	@Test
 	public void testCreateProductInformationAndProduct() {
+		//Arrange
+		List<Product> list = null;
+		
+		//Act
 		crudProductInformationController.createProductInformationAndProduct("ProductToCreate", 15d, 20d, "KG", 5, 455, 10);
 		try {
-			List<Product> list = productDao.findProductByProductName("ProductToCreate", false, true);
+			list = productDao.findProductByProductName("ProductToCreate", false, true);
 			productToCreate = list.get(0);
 			productInformationToCreate = productInformationDao.findProductInformationByProductId(productToCreate.getId(), false);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		assertNotNull(productToCreate);
-		assertNotNull(productToCreate.getRelatedProductInformation());
+		
+		//Assert
+		assertNotNull("The product is in the database", productToCreate);
+		assertNotNull("The productInformation is in the database", productToCreate.getRelatedProductInformation());
 	}
 	
 	@Test
 	public void testUpdateProductInformationAndProduct() throws SQLException, Exception {
+		//Arrange
+		
+		//Act
 		crudProductInformationController.updateProductInformationAndProduct(productToUpdate, 455, 20);
 		productInformationToUpdate.setQuantity(20);
-		assertEquals(productInformationDao.findProductInformationByProduct(productToUpdate, false).getQuantity(), 20);
+		
+		//Assert
+		assertEquals("The product and productInformation are updated", productInformationDao.findProductInformationByProduct(productToUpdate, false).getQuantity(), 20);
 	}
 	
 	@Test
 	public void testDeleteProductInformationAndProduct() throws SQLException, Exception {
+		//Arrange
+		
+		//Act
 		crudProductInformationController.deleteProductInformationAndProduct(productToDelete);
-		assertTrue(productInformationDao.findProductInformationByProductName("ProductToDelete", false).isEmpty());
-		assertTrue(productDao.findProductByProductName("ProductToDelete", false, false).isEmpty());
+		
+		//Assert
+		assertTrue("The productInformation is deleted", productInformationDao.findProductInformationByProductName("ProductToDelete", false).isEmpty());
+		assertTrue("The product is deleted", productDao.findProductByProductName("ProductToDelete", false, false).isEmpty());
 	}
 	
 	@Test
 	public void testRetrieveTableData() {
-		String [][] datas = crudProductInformationController.retrieveTableData();
-		assertTrue(datas != null);
+		//Arrange
+		String [][] datas = null;
+		
+		//Act
+		datas = crudProductInformationController.retrieveTableData();
+		
+		//Assert
+		assertNotNull("The method retrieve datas well", datas);
 	}
 	
 	@Test
 	public void testSearchById() {
-		Product product = crudProductInformationController.searchAProductById(productToUpdate.getId());
-		assertTrue(product.getProductName().equals(productToUpdate.getProductName()));
+		//Arrange
+		Product product = null;
+		
+		//Act
+		product = crudProductInformationController.searchAProductById(productToUpdate.getId());
+		
+		//Assert
+		assertTrue("The product name is the same", product.getProductName().equals(productToUpdate.getProductName()));
 	}
 	
 	@AfterClass
