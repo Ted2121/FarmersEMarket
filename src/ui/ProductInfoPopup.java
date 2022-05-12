@@ -314,9 +314,11 @@ public class ProductInfoPopup extends PopupWindow{
 					case 5 -> weightCategory = "FIVE";
 					case 10 -> weightCategory = "TEN";
 				}
-				product = ModelFactory.getProductModel(textFieldProductName.getText(), 
-						Double.parseDouble(textFieldPurchasingPrice.getText()), Double.parseDouble(textFieldSellingPrice.getText()), 
-						WeightCategory.valueOf(weightCategory), Unit.valueOf(textFieldUnit.getText()));
+				product.setProductName(textFieldProductName.getText());
+				product.setPurchasingPrice(Double.parseDouble(textFieldPurchasingPrice.getText()));
+				product.setSellingPrice(Double.parseDouble(textFieldSellingPrice.getText()));
+				product.setWeightCategory(WeightCategory.valueOf(weightCategory));
+				product.setUnit(Unit.valueOf(textFieldUnit.getText()));
 				controller.updateProductInformationAndProduct(product, Integer.parseInt(textFieldLocationCode.getText()), Integer.parseInt(textFieldQuantity.getText()));
 			}
 			panel.refreshTable();
