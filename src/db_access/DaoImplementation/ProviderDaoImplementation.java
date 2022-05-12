@@ -15,7 +15,7 @@ import model.*;
 
 public class ProviderDaoImplementation implements ProviderDao{
 
-	Connection connectionDB = DBConnection.getInstance().getDBCon();
+	Connection connection = DBConnection.getInstance().getDBCon();
 
 	private Provider buildObject(ResultSet rs) throws SQLException{
 		Provider builtObject = ModelFactory.getProviderModel(rs.getInt("PK_idProvider"),rs.getString("FirstName"),rs.getString("LastName"),rs.getString("City"),
@@ -56,7 +56,7 @@ public class ProviderDaoImplementation implements ProviderDao{
 	@Override
 	public Provider findProviderById(int providerId, boolean retrievePurchaseOrder) throws SQLException, Exception {
 		String query = "SELECT * FROM Provider WHERE PK_idProvider = ?";
-		PreparedStatement preparedSelectStatement = connectionDB.prepareStatement(query);
+		PreparedStatement preparedSelectStatement = connection.prepareStatement(query);
 		preparedSelectStatement.setInt(1, providerId);
 		ResultSet rs = preparedSelectStatement.executeQuery();
 		Provider retrievedProvider = null;
@@ -72,7 +72,7 @@ public class ProviderDaoImplementation implements ProviderDao{
 	@Override
 	public Provider findProviderByFullName(String fullName, boolean retrievePurchaseOrder) throws SQLException, Exception {
 		String sqlFindProviderStatement = "SELECT * FROM Provider WHERE (FirstName = ? AND LastName = ?) OR (LastName = ? AND FirstName = ?)";
-		PreparedStatement preparedFindProviderStatement = connectionDB.prepareStatement(sqlFindProviderStatement);
+		PreparedStatement preparedFindProviderStatement = connection.prepareStatement(sqlFindProviderStatement);
 		String[] fullNameArray = fullName.split(" ");
 		preparedFindProviderStatement.setString(1, fullNameArray[0]);
 		preparedFindProviderStatement.setString(2, fullNameArray[1]);
@@ -92,7 +92,7 @@ public class ProviderDaoImplementation implements ProviderDao{
 	public List<Provider> findProvidersByName(String name, boolean retrievePurchaseOrder) throws SQLException, Exception {
 		String sqlFindProviderStatement = "SELECT * FROM Provider WHERE FirstName LIKE ? OR LastName LIKE ? "
 				+ "OR CONCAT(FirstName, ' ', LastName) LIKE ? OR CONCAT(LastName, ' ', FirstName) LIKE ?";
-		PreparedStatement preparedFindProviderStatement = connectionDB.prepareStatement(sqlFindProviderStatement);
+		PreparedStatement preparedFindProviderStatement = connection.prepareStatement(sqlFindProviderStatement);
 		preparedFindProviderStatement.setString(1, "%" + name + "%");
 		preparedFindProviderStatement.setString(2, "%" + name + "%");
 		preparedFindProviderStatement.setString(3, "%" + name + "%");
@@ -105,7 +105,7 @@ public class ProviderDaoImplementation implements ProviderDao{
 	@Override
 	public List<Provider> findAllProviders(boolean retrievePurchaseOrder) throws SQLException, Exception {
 		String query = "SELECT * FROM Provider";
-		PreparedStatement preparedSelectStatement = connectionDB.prepareStatement(query);
+		PreparedStatement preparedSelectStatement = connection.prepareStatement(query);
 		ResultSet rs = preparedSelectStatement.executeQuery();
 		List<Provider> retrievedProvidersList = buildObjects(rs, retrievePurchaseOrder);
 		
@@ -115,7 +115,7 @@ public class ProviderDaoImplementation implements ProviderDao{
 	@Override
 	public void createProvider(Provider objectToInsert) throws SQLException {
 		String sqlInsertProviderStatement = "INSERT INTO Provider (FirstName, LastName, Country, City) VALUES(?,?,?,?)";
-		PreparedStatement preparedInsertProviderStatementWithGeneratedKey = connectionDB.prepareStatement(sqlInsertProviderStatement, Statement.RETURN_GENERATED_KEYS);
+		PreparedStatement preparedInsertProviderStatementWithGeneratedKey = connection.prepareStatement(sqlInsertProviderStatement, Statement.RETURN_GENERATED_KEYS);
 		preparedInsertProviderStatementWithGeneratedKey.setString(1, objectToInsert.getFirstName());
 		preparedInsertProviderStatementWithGeneratedKey.setString(2, objectToInsert.getLastName());
 		preparedInsertProviderStatementWithGeneratedKey.setString(3, objectToInsert.getCountry());
@@ -135,7 +135,7 @@ public class ProviderDaoImplementation implements ProviderDao{
 	@Override
 	public void updateProvider(Provider objectToUpdate) throws SQLException {
 		String sqlUpdatePersonStatement = "UPDATE Provider SET FirstName = ?, LastName = ?, Country = ?, City = ? WHERE PK_idProvider = ?";
-		PreparedStatement preparedUpdateProviderStatement = connectionDB.prepareStatement(sqlUpdatePersonStatement);
+		PreparedStatement preparedUpdateProviderStatement = connection.prepareStatement(sqlUpdatePersonStatement);
 		preparedUpdateProviderStatement.setString(1, objectToUpdate.getFirstName());
 		preparedUpdateProviderStatement.setString(2, objectToUpdate.getLastName());
 		preparedUpdateProviderStatement.setString(3, objectToUpdate.getCountry());
@@ -149,7 +149,7 @@ public class ProviderDaoImplementation implements ProviderDao{
 	@Override
 	public void deleteProvider(Provider objectToDelete) throws SQLException {
 		String sqlDeleteProviderStatement = "DELETE FROM Provider WHERE PK_idProvider = ?";
-		PreparedStatement preparedDeleteProviderStatement = connectionDB.prepareStatement(sqlDeleteProviderStatement);
+		PreparedStatement preparedDeleteProviderStatement = connection.prepareStatement(sqlDeleteProviderStatement);
 		preparedDeleteProviderStatement.setInt(1, objectToDelete.getId());
 		preparedDeleteProviderStatement.execute();
 		System.out.println(">> Provider deleted in the Database");
@@ -158,7 +158,7 @@ public class ProviderDaoImplementation implements ProviderDao{
 	@Override
 	public List<Provider> findAllSubset() throws Exception {
 		String query = "SELECT PK_idProvider, FirstName, LastName  FROM Provider";
-		PreparedStatement preparedSelectStatement = connectionDB.prepareStatement(query);
+		PreparedStatement preparedSelectStatement = connection.prepareStatement(query);
 		ResultSet rs = preparedSelectStatement.executeQuery();
 		List<Provider> retrievedProvidersList = buildObjectsSubset(rs);
 		

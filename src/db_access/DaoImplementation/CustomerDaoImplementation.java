@@ -12,7 +12,7 @@ import java.util.List;
 
 public class CustomerDaoImplementation implements CustomerDao {
 
-    Connection dbCon = DBConnection.getInstance().getDBCon();
+    Connection connection = DBConnection.getInstance().getDBCon();
 
     private List<Customer> buildObjects(ResultSet rs, boolean retrieveSaleOrder) throws Exception {
 
@@ -60,7 +60,7 @@ public class CustomerDaoImplementation implements CustomerDao {
     @Override
     public Customer findCustomerById(int customerId, boolean retrieveSaleOrder) throws Exception {
         String query = "SELECT * FROM Customer WHERE PK_idCustomer = ?";
-        PreparedStatement preparedSelectStatement = dbCon.prepareStatement(query);
+        PreparedStatement preparedSelectStatement = connection.prepareStatement(query);
         preparedSelectStatement.setInt(1, customerId);
         ResultSet rs = preparedSelectStatement.executeQuery();
         Customer retrievedCustomer = null;
@@ -76,7 +76,7 @@ public class CustomerDaoImplementation implements CustomerDao {
     @Override
     public List<Customer> findAllCustomers(boolean retrieveSaleOrder) throws Exception {
         String query = "SELECT * FROM Customer";
-        PreparedStatement preparedSelectStatement = dbCon.prepareStatement(query);
+        PreparedStatement preparedSelectStatement = connection.prepareStatement(query);
         ResultSet rs = preparedSelectStatement.executeQuery();
         List<Customer> retrievedCustomerList = buildObjects(rs, retrieveSaleOrder);
 
@@ -87,7 +87,7 @@ public class CustomerDaoImplementation implements CustomerDao {
     public void createCustomer(Customer objectToInsert) throws SQLException {
         String sqlInsertCustomerStatement = "INSERT INTO Customer(FirstName, LastName, Address, PostalCode, City, Country)"
                 + "VALUES(?, ?, ?, ?, ?, ?);";
-        PreparedStatement preparedInsertCustomerStatementWithGeneratedKey = dbCon.prepareStatement(sqlInsertCustomerStatement, Statement.RETURN_GENERATED_KEYS);
+        PreparedStatement preparedInsertCustomerStatementWithGeneratedKey = connection.prepareStatement(sqlInsertCustomerStatement, Statement.RETURN_GENERATED_KEYS);
         preparedInsertCustomerStatementWithGeneratedKey.setString(1, objectToInsert.getFirstName());
         preparedInsertCustomerStatementWithGeneratedKey.setString(2, objectToInsert.getLastName());
         preparedInsertCustomerStatementWithGeneratedKey.setString(3, objectToInsert.getAddress());
@@ -108,7 +108,7 @@ public class CustomerDaoImplementation implements CustomerDao {
     @Override
     public void updateCustomer(Customer objectToUpdate) throws SQLException {
         String sqlUpdateCustomerStatement = "UPDATE Customer SET FirstName= ?, LastName= ?, Address= ?, PostalCode= ?, City= ?, Country= ? WHERE PK_idCustomer = ?";
-        PreparedStatement preparedUpdateCustomerStatement = dbCon.prepareStatement(sqlUpdateCustomerStatement);
+        PreparedStatement preparedUpdateCustomerStatement = connection.prepareStatement(sqlUpdateCustomerStatement);
         preparedUpdateCustomerStatement.setString(1, objectToUpdate.getFirstName());
         preparedUpdateCustomerStatement.setString(2, objectToUpdate.getLastName());
         preparedUpdateCustomerStatement.setString(3, objectToUpdate.getAddress());
@@ -124,7 +124,7 @@ public class CustomerDaoImplementation implements CustomerDao {
     @Override
     public void deleteCustomer(Customer objectToDelete) throws SQLException {
         String sqlDeleteProductStatement = "DELETE FROM Customer WHERE PK_idCustomer = ?";
-        PreparedStatement preparedDeleteCustomerStatement = dbCon.prepareStatement(sqlDeleteProductStatement);
+        PreparedStatement preparedDeleteCustomerStatement = connection.prepareStatement(sqlDeleteProductStatement);
         preparedDeleteCustomerStatement.setInt(1, objectToDelete.getId());
         preparedDeleteCustomerStatement.execute();
     }
@@ -132,7 +132,7 @@ public class CustomerDaoImplementation implements CustomerDao {
     @Override
     public Customer findCustomerByFullName(String fullName) throws SQLException {
         String query = "SELECT * FROM Customer WHERE FirstName = ? AND LastName = ?";
-        PreparedStatement preparedSelectStatement = dbCon.prepareStatement(query);
+        PreparedStatement preparedSelectStatement = connection.prepareStatement(query);
         String[] fullNameAsArray = fullName.split(" ");
         String firstName = fullNameAsArray[0];
         String lastName = fullNameAsArray[1];
@@ -151,7 +151,7 @@ public class CustomerDaoImplementation implements CustomerDao {
     public List<Customer> findAllCustomersWithThisName(String fullName, boolean retrieveSaleOrders) throws Exception {
         String query = "SELECT * FROM Customer WHERE FirstName LIKE ? OR LastName LIKE ? "
                 + "OR CONCAT(FirstName, ' ', LastName) LIKE ? OR CONCAT(LastName, ' ', FirstName) LIKE ?";;
-        PreparedStatement preparedSelectStatement = dbCon.prepareStatement(query);
+        PreparedStatement preparedSelectStatement = connection.prepareStatement(query);
         preparedSelectStatement.setString(1, "%" + fullName + "%");
         preparedSelectStatement.setString(2, "%" + fullName + "%");
         preparedSelectStatement.setString(3, "%" + fullName + "%");
@@ -164,7 +164,7 @@ public class CustomerDaoImplementation implements CustomerDao {
 	@Override
 	public List<Customer> findAllSubset() throws Exception {
 		String query = "SELECT PK_idCustomer, FirstName, LastName  FROM Customer";
-      PreparedStatement preparedSelectStatement = dbCon.prepareStatement(query);
+      PreparedStatement preparedSelectStatement = connection.prepareStatement(query);
       ResultSet rs = preparedSelectStatement.executeQuery();
       List<Customer> retrievedCustomerList = buildObjectsSubset(rs);
 
