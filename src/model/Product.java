@@ -3,8 +3,6 @@ package model;
 
 import java.util.List;
 
-import controller.SearchableByName;
-
 public class Product implements SearchableByName{
     private int id;
     private String productName;

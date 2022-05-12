@@ -1,4 +1,4 @@
-package controller;
+package model;
 
 @FunctionalInterface
 public interface SearchableByName {

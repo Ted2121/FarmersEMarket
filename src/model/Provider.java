@@ -1,10 +1,11 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Provider extends Person{
     // this array list contains the history of purchase orders of one provider
-    private ArrayList<PurchaseOrder> purchaseOrders;
+    private List<PurchaseOrder> purchaseOrders;
 
     public Provider(int id, String firstName, String lastName, String city, String country) {
         super(id, firstName, lastName, city, country);
@@ -18,11 +19,11 @@ public class Provider extends Person{
     	super(id, firstName, lastName);
 	}
 
-	public ArrayList<PurchaseOrder> getPurchaseOrders() {
+	public List<PurchaseOrder> getPurchaseOrders() {
         return purchaseOrders;
     }
 
-    public void setPurchaseOrders(ArrayList<PurchaseOrder> purchaseOrders) {
+    public void setPurchaseOrders(List<PurchaseOrder> purchaseOrders) {
         this.purchaseOrders = purchaseOrders;
     }
 

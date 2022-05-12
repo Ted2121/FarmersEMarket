@@ -6,14 +6,11 @@ import java.sql.SQLException;
 import java.util.List;
 
 public interface CustomerDao extends ContainSubsetDao<Customer> {
-
-        Customer findCustomerById(int customerId, boolean retrieveSaleOrder) throws Exception;
-        List<Customer> findAllCustomers(boolean b) throws Exception;
-        int createCustomer(Customer objectToInsert) throws SQLException;
-        void updateCustomer(Customer objectToUpdate) throws SQLException;
-        void deleteCustomer(Customer objectToDelete) throws SQLException;
-        Customer findCustomerByFullName(String fullName) throws SQLException;
-        List<Customer> findAllCustomersWithThisName(String fullName, boolean retrieveSaleOrders) throws Exception;
-        
-        
+    Customer findCustomerById(int customerId, boolean retrieveSaleOrder) throws Exception;
+    Customer findCustomerByFullName(String fullName) throws SQLException;
+    List<Customer> findAllCustomersWithThisName(String fullName, boolean retrieveSaleOrders) throws Exception;
+    List<Customer> findAllCustomers(boolean retrieveSaleOrder) throws Exception;
+    void createCustomer(Customer objectToInsert) throws SQLException;
+    void updateCustomer(Customer objectToUpdate) throws SQLException;
+    void deleteCustomer(Customer objectToDelete) throws SQLException;
 }

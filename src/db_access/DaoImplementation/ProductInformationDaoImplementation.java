@@ -15,12 +15,12 @@ public class ProductInformationDaoImplementation implements ProductInformationDa
 	
 	Connection connection = DBConnection.getInstance().getDBCon();
 	
-	public ProductInformation buildObject(ResultSet rs) throws SQLException {
+	private ProductInformation buildObject(ResultSet rs) throws SQLException {
 		ProductInformation builtObject = ModelFactory.getProductInformationModel(rs.getInt("LocationCode"), rs.getInt("Quantity"), rs.getInt("PK_FK_Product"));
 		return builtObject;
 	}
 	
-	public List<ProductInformation> buildObjects(ResultSet rs, boolean retrieveProduct) throws SQLException, Exception {
+	private List<ProductInformation> buildObjects(ResultSet rs, boolean retrieveProduct) throws SQLException, Exception {
 		List<ProductInformation> list = new ArrayList<ProductInformation>();
 		while(rs.next()) {
 			ProductInformation productInformation = buildObject(rs);

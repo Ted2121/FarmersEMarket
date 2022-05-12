@@ -1,7 +1,5 @@
 package model;
 
-import controller.SearchableByName;
-
 public abstract class Person implements SearchableByName{
     private int id;
     private String firstName;

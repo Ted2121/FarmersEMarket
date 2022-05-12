@@ -34,7 +34,7 @@ public class ProviderDaoImplementation implements ProviderDao{
 		while(rs.next()) {
 			Provider retrievedProvider = buildObject(rs);
 			if(retrievePurchaseOrder) {
-				ArrayList<PurchaseOrder> linkedPurchaseOrder = DaoFactory.getPurchaseOrderDao().findPurchaseOrderByProviderId(rs.getInt("PK_IdProvider"), false, false);
+				List<PurchaseOrder> linkedPurchaseOrder = DaoFactory.getPurchaseOrderDao().findPurchaseOrderByProviderId(rs.getInt("PK_IdProvider"), false, false);
 				retrievedProvider.setPurchaseOrders(linkedPurchaseOrder);
 			}
 			

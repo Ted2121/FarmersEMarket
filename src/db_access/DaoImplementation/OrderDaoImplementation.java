@@ -15,12 +15,12 @@ import model.PurchaseOrder;
 import model.SaleOrder;
 
 public class OrderDaoImplementation implements OrderDao{
-	Connection connectionDB = DBConnection.getInstance().getDBCon();
+	Connection connection = DBConnection.getInstance().getDBCon();
 
 	@Override
 	public int createEmptyOrder() throws SQLException {
 		String sqlInsertOrderStatement = "INSERT INTO [Order](Price, DateTime) VALUES (null, null)";
-		PreparedStatement preparedSqlInsertOrderStatementWithGeneratedKey = connectionDB.prepareStatement(sqlInsertOrderStatement, Statement.RETURN_GENERATED_KEYS) ;
+		PreparedStatement preparedSqlInsertOrderStatementWithGeneratedKey = connection.prepareStatement(sqlInsertOrderStatement, Statement.RETURN_GENERATED_KEYS) ;
 		
 		preparedSqlInsertOrderStatementWithGeneratedKey.executeUpdate();
 		ResultSet tableContainingGeneratedIds = preparedSqlInsertOrderStatementWithGeneratedKey.getGeneratedKeys();
@@ -35,7 +35,7 @@ public class OrderDaoImplementation implements OrderDao{
 	@Override
 	public void createOrder(Order order) throws SQLException {
 		String sqlInsertOrderStatement = "INSERT INTO [Order](Price, DateTime) VALUES (? , ?)";
-		PreparedStatement preparedSqlInsertOrderStatementWithGeneratedKey = connectionDB.prepareStatement(sqlInsertOrderStatement, Statement.RETURN_GENERATED_KEYS) ;
+		PreparedStatement preparedSqlInsertOrderStatementWithGeneratedKey = connection.prepareStatement(sqlInsertOrderStatement, Statement.RETURN_GENERATED_KEYS) ;
 		preparedSqlInsertOrderStatementWithGeneratedKey.setDouble(1, order.getOrderPrice());
 		preparedSqlInsertOrderStatementWithGeneratedKey.setString(2, order.getOrderDateTime());
 		
@@ -53,7 +53,7 @@ public class OrderDaoImplementation implements OrderDao{
 	@Override
 	public void updateOrder(Order objectToUpdate) throws SQLException {
 		String sqlUpdateOrderStatement = "UPDATE [Order] SET [DateTime] = ?, Price = ? WHERE PK_idOrder = ?";
-		PreparedStatement preparedUpdateProductStatement = connectionDB.prepareStatement(sqlUpdateOrderStatement);
+		PreparedStatement preparedUpdateProductStatement = connection.prepareStatement(sqlUpdateOrderStatement);
 		preparedUpdateProductStatement.setString(1, objectToUpdate.getOrderDateTime());
 		preparedUpdateProductStatement.setDouble(2, objectToUpdate.getOrderPrice());
 		preparedUpdateProductStatement.setInt(3, objectToUpdate.getId());
@@ -70,7 +70,7 @@ public class OrderDaoImplementation implements OrderDao{
 			DaoFactory.getSaleOrderDao().deleteSaleOrder((SaleOrder) objectToDelete);
 		}
 		String sqlDeleteOrderStatement = "DELETE FROM [Order] WHERE PK_idOrder = ?";
-		PreparedStatement preparedDeleteOrderStatement = connectionDB.prepareStatement(sqlDeleteOrderStatement);
+		PreparedStatement preparedDeleteOrderStatement = connection.prepareStatement(sqlDeleteOrderStatement);
 		preparedDeleteOrderStatement.setInt(1, objectToDelete.getId());
 		preparedDeleteOrderStatement.execute();
 		System.out.println(">> Order deleted from the Database");

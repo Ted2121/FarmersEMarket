@@ -13,6 +13,8 @@ import model.Product;
 
 public class HelperClass {
 
+	private HelperClass() {};
+	
 	public static double calculateTotalPrice(HashMap<Product, Integer> productWithQuantity) {
 		//We set the total price to 0
 		double totalPrice = 0;

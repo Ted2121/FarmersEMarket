@@ -13,9 +13,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LineItemDaoImplementation implements LineItemDao {
-	private Connection connectionDB = DBConnection.getInstance().getDBCon();
+	private Connection connection = DBConnection.getInstance().getDBCon();
 	
-	private ArrayList<LineItem> buildObjects(ResultSet rs, boolean retrieveProducts, boolean retrieveOrder) throws Exception{
+	private List<LineItem> buildObjects(ResultSet rs, boolean retrieveProducts, boolean retrieveOrder) throws Exception{
 		ArrayList<LineItem> lineItemList = new ArrayList<LineItem>();
 		while(rs.next()) {
 			LineItem retrievedLineItem = buildObject(rs);
@@ -52,7 +52,7 @@ public class LineItemDaoImplementation implements LineItemDao {
 	public LineItem findLineItemByOrderAndProductId(int orderId, int productId, boolean retrieveOrder, boolean retrieveProduct) throws SQLException, Exception {
 		//Retrieving the PurchaseOrder from the database
 		String query = "SELECT * FROM LineItem WHERE PK_FK_OrderId = ? AND PK_FK_ProductId = ? ";
-		PreparedStatement preparedSelectStatement = connectionDB.prepareStatement(query);
+		PreparedStatement preparedSelectStatement = connection.prepareStatement(query);
 		preparedSelectStatement.setInt(1, orderId);
 		preparedSelectStatement.setInt(2, productId);
 		ResultSet rs = preparedSelectStatement.executeQuery();
@@ -69,12 +69,12 @@ public class LineItemDaoImplementation implements LineItemDao {
 	}
 
 	@Override
-	public ArrayList<LineItem> findLineItemsByOrder(Order order, boolean retrieveProduct) throws SQLException, Exception {
+	public List<LineItem> findLineItemsByOrder(Order order, boolean retrieveProduct) throws SQLException, Exception {
 		String query = "SELECT * FROM LineItem WHERE PK_FK_OrderId = ?";
-		PreparedStatement preparedSelectStatement = connectionDB.prepareStatement(query);
+		PreparedStatement preparedSelectStatement = connection.prepareStatement(query);
 		preparedSelectStatement.setInt(1, order.getId());
 		ResultSet rs = preparedSelectStatement.executeQuery();
-		ArrayList<LineItem> retrievedLineItem = null;
+		List<LineItem> retrievedLineItem = null;
 		retrievedLineItem = buildObjects(rs, retrieveProduct, false);
 		
 		for(LineItem lineItem : retrievedLineItem) {
@@ -85,12 +85,12 @@ public class LineItemDaoImplementation implements LineItemDao {
 	}
 
 	@Override
-	public ArrayList<LineItem> findLineItemsByProduct(Product product, boolean retrieveOrder) throws SQLException, Exception {
+	public List<LineItem> findLineItemsByProduct(Product product, boolean retrieveOrder) throws SQLException, Exception {
 		String query = "SELECT * FROM LineItem WHERE PK_FK_ProductId = ?";
-		PreparedStatement preparedSelectStatement = connectionDB.prepareStatement(query);
+		PreparedStatement preparedSelectStatement = connection.prepareStatement(query);
 		preparedSelectStatement.setInt(1, product.getId());
 		ResultSet rs = preparedSelectStatement.executeQuery();
-		ArrayList<LineItem> retrievedLineItem = null;
+		List<LineItem> retrievedLineItem = null;
 		retrievedLineItem = buildObjects(rs, false, retrieveOrder);
 		
 		for(LineItem lineItem : retrievedLineItem) {
@@ -101,11 +101,11 @@ public class LineItemDaoImplementation implements LineItemDao {
 	}
 
 	@Override
-	public ArrayList<LineItem> findAllLineItems(boolean retrieveOrder, boolean retrieveProduct) throws SQLException, Exception {
+	public List<LineItem> findAllLineItems(boolean retrieveOrder, boolean retrieveProduct) throws SQLException, Exception {
 		String query = "SELECT * FROM LineItem";
-		PreparedStatement preparedSelectStatement = connectionDB.prepareStatement(query);
+		PreparedStatement preparedSelectStatement = connection.prepareStatement(query);
 		ResultSet rs = preparedSelectStatement.executeQuery();
-		ArrayList<LineItem> retrievedLineItem = null;
+		List<LineItem> retrievedLineItem = null;
 		retrievedLineItem = buildObjects(rs, retrieveProduct, retrieveOrder);
 		
 		return retrievedLineItem;
@@ -115,7 +115,7 @@ public class LineItemDaoImplementation implements LineItemDao {
 	public void createLineItem(LineItem objectToInsert) throws SQLException {
 		String sqlInsertLineItemStatement = "INSERT INTO LineItem(PK_FK_ProductId, PK_FK_OrderId, quantity) "
 				+ "VALUES (?,?,?)";
-		PreparedStatement preparedInsertLineItemStatement = connectionDB.prepareStatement(sqlInsertLineItemStatement);
+		PreparedStatement preparedInsertLineItemStatement = connection.prepareStatement(sqlInsertLineItemStatement);
 		preparedInsertLineItemStatement.setInt(1, objectToInsert.getProduct().getId());
 		preparedInsertLineItemStatement.setInt(2, objectToInsert.getOrder().getId());
 		preparedInsertLineItemStatement.setInt(3, objectToInsert.getQuantity());
@@ -127,7 +127,7 @@ public class LineItemDaoImplementation implements LineItemDao {
 	public void updateLineItem(LineItem objectToUpdate) throws SQLException {
 		String sqlUpdateLineItemStatement = "UPDATE LineItem SET quantity = ?"
 				+ " WHERE PK_FK_ProductId = ? AND PK_FK_OrderId = ?";
-		PreparedStatement preparedUpdateLineItemStatement = connectionDB.prepareStatement(sqlUpdateLineItemStatement);
+		PreparedStatement preparedUpdateLineItemStatement = connection.prepareStatement(sqlUpdateLineItemStatement);
 		preparedUpdateLineItemStatement.setInt(1, objectToUpdate.getQuantity());
 		preparedUpdateLineItemStatement.setInt(2, objectToUpdate.getProduct().getId());
 		preparedUpdateLineItemStatement.setInt(3, objectToUpdate.getOrder().getId());
@@ -139,7 +139,7 @@ public class LineItemDaoImplementation implements LineItemDao {
 	@Override
 	public void deleteLineItem(LineItem objectToDelete) throws SQLException {
 		String sqlDeleteOrderStatement = "DELETE FROM LineItem WHERE PK_FK_OrderId = ? AND PK_FK_ProductId = ?";
-		PreparedStatement preparedDeleteOrderStatement = connectionDB.prepareStatement(sqlDeleteOrderStatement);
+		PreparedStatement preparedDeleteOrderStatement = connection.prepareStatement(sqlDeleteOrderStatement);
 		preparedDeleteOrderStatement.setInt(1, objectToDelete.getOrder().getId());
 		preparedDeleteOrderStatement.setInt(2, objectToDelete.getProduct().getId());
 		preparedDeleteOrderStatement.execute();

@@ -20,7 +20,7 @@ public class CustomerDaoImplementation implements CustomerDao {
 		while(rs.next()) {
 	        Customer retrievedCustomer = buildObject(rs);
 	        if(retrieveSaleOrder) {
-	            ArrayList<SaleOrder> linkedSaleOrder = DaoFactory.getSaleOrderDao().findSaleOrderByCustomerId(rs.getInt("PK_IdCustomer"), false, false);
+	            List<SaleOrder> linkedSaleOrder = DaoFactory.getSaleOrderDao().findSaleOrderByCustomerId(rs.getInt("PK_IdCustomer"), false, false);
 	            retrievedCustomer.setSaleOrders(linkedSaleOrder);
 	        }
             customerList.add(retrievedCustomer);
@@ -84,7 +84,7 @@ public class CustomerDaoImplementation implements CustomerDao {
     }
 
     @Override
-    public int createCustomer(Customer objectToInsert) throws SQLException {
+    public void createCustomer(Customer objectToInsert) throws SQLException {
         String sqlInsertCustomerStatement = "INSERT INTO Customer(FirstName, LastName, Address, PostalCode, City, Country)"
                 + "VALUES(?, ?, ?, ?, ?, ?);";
         PreparedStatement preparedInsertCustomerStatementWithGeneratedKey = dbCon.prepareStatement(sqlInsertCustomerStatement, Statement.RETURN_GENERATED_KEYS);
@@ -103,7 +103,6 @@ public class CustomerDaoImplementation implements CustomerDao {
         }
         objectToInsert.setId(generatedId);
 
-        return generatedId;
     }
 
     @Override

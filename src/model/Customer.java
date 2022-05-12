@@ -1,14 +1,13 @@
 package model;
 
 import java.util.ArrayList;
-
-import controller.SearchableByName;
+import java.util.List;
 
 public class Customer extends Person{
 
     private String address;
     private int postalCode;
-    private ArrayList<SaleOrder> saleOrders;
+    private List<SaleOrder> saleOrders;
 
 
     public Customer(String firstName, String lastName, String city, String country, String address, int postalCode) {
@@ -42,11 +41,11 @@ public class Customer extends Person{
         this.postalCode = postalCode;
     }
 
-    public ArrayList<SaleOrder> getSaleOrders() {
+    public List<SaleOrder> getSaleOrders() {
         return saleOrders;
     }
 
-    public void setSaleOrders(ArrayList<SaleOrder> saleOrders) {
+    public void setSaleOrders(List<SaleOrder> saleOrders) {
         this.saleOrders = saleOrders;
     }
 

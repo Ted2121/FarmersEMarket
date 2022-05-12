@@ -12,9 +12,9 @@ import db_access.DaoInterfaces.PurchaseOrderDao;
 import model.*;
 
 public class PurchaseOrderDaoImplementation implements PurchaseOrderDao {
-	private Connection connectionDB = DBConnection.getInstance().getDBCon();
+	private Connection connection = DBConnection.getInstance().getDBCon();
 
-	private ArrayList<PurchaseOrder> buildObjects(ResultSet rs, boolean retrieveProvider, boolean retrieveLineItem) throws SQLException, Exception{
+	private List<PurchaseOrder> buildObjects(ResultSet rs, boolean retrieveProvider, boolean retrieveLineItem) throws SQLException, Exception{
 		ArrayList<PurchaseOrder> purchaseOrderList = new ArrayList<PurchaseOrder>();
 		while(rs.next()) {
 			PurchaseOrder retrievedPurchaseOrder = buildObject(rs);
@@ -48,7 +48,7 @@ public class PurchaseOrderDaoImplementation implements PurchaseOrderDao {
 	public PurchaseOrder findPurchaseOrderById(int id, boolean retrieveProvider, boolean retrieveLineItem)  throws Exception{
 		//Retrieving the PurchaseOrder from the database
 		String query = "SELECT * FROM PurchaseOrder INNER JOIN [Order] ON PurchaseOrder.PK_idPurchaseOrder = [Order].PK_idOrder WHERE PK_idPurchaseOrder = ? ";
-		PreparedStatement preparedSelectStatement = connectionDB.prepareStatement(query);
+		PreparedStatement preparedSelectStatement = connection.prepareStatement(query);
 		preparedSelectStatement.setInt(1, id);
 		ResultSet rs = preparedSelectStatement.executeQuery();
 		PurchaseOrder retrievedPurchaseOrder = null;
@@ -64,13 +64,13 @@ public class PurchaseOrderDaoImplementation implements PurchaseOrderDao {
 	}
 	
 	@Override
-	public ArrayList<PurchaseOrder> findPurchaseOrderByProviderId(int idProvider, boolean retrieveProvider, boolean retrieveLineItem)  throws SQLException, Exception{
+	public List<PurchaseOrder> findPurchaseOrderByProviderId(int idProvider, boolean retrieveProvider, boolean retrieveLineItem)  throws SQLException, Exception{
 		//Retrieving the PurchaseOrder from the database
 		String query = "SELECT * FROM PurchaseOrder INNER JOIN [Order] ON PurchaseOrder.PK_idPurchaseOrder = [Order].PK_idOrder WHERE FK_Provider = ? ";
-		PreparedStatement preparedSelectStatement = connectionDB.prepareStatement(query);
+		PreparedStatement preparedSelectStatement = connection.prepareStatement(query);
 		preparedSelectStatement.setInt(1, idProvider);
 		ResultSet rs = preparedSelectStatement.executeQuery();
-		ArrayList<PurchaseOrder> retrievedPurchaseOrders = buildObjects(rs, retrieveProvider, retrieveLineItem);
+		List<PurchaseOrder> retrievedPurchaseOrders = buildObjects(rs, retrieveProvider, retrieveLineItem);
 		
 		return retrievedPurchaseOrders;
 	}
@@ -78,10 +78,10 @@ public class PurchaseOrderDaoImplementation implements PurchaseOrderDao {
 	@Override
 	public List<PurchaseOrder> findAllPurchaseOrders(boolean retrieveProvider, boolean retrieveLineItem) throws Exception {
 		String query = "SELECT * FROM PurchaseOrder INNER JOIN [Order] ON PurchaseOrder.PK_idPurchaseOrder = [Order].PK_idOrder";
-		PreparedStatement preparedSelectStatement = connectionDB.prepareStatement(query);
+		PreparedStatement preparedSelectStatement = connection.prepareStatement(query);
 		
 		ResultSet rs = preparedSelectStatement.executeQuery();
-		ArrayList<PurchaseOrder> retrievedPurchaseOrderList = buildObjects(rs, retrieveProvider, retrieveLineItem);
+		List<PurchaseOrder> retrievedPurchaseOrderList = buildObjects(rs, retrieveProvider, retrieveLineItem);
 
 		return retrievedPurchaseOrderList;
 	}
@@ -89,7 +89,7 @@ public class PurchaseOrderDaoImplementation implements PurchaseOrderDao {
 	@Override
 	public void createPurchaseOrder(PurchaseOrder objectToInsert) throws SQLException {
 		String sqlInsertOrderStatement = "INSERT INTO PurchaseOrder(PK_idPurchaseOrder, FK_Provider) VALUES (? , ?)";
-		PreparedStatement preparedSqlInsertOrderStatement = connectionDB.prepareStatement(sqlInsertOrderStatement) ;
+		PreparedStatement preparedSqlInsertOrderStatement = connection.prepareStatement(sqlInsertOrderStatement) ;
 		preparedSqlInsertOrderStatement.setInt(1, objectToInsert.getId());
 		preparedSqlInsertOrderStatement.setInt(2, objectToInsert.getProvider().getId());
 		
@@ -100,7 +100,7 @@ public class PurchaseOrderDaoImplementation implements PurchaseOrderDao {
 	@Override
 	public void updatePurchaseOrder(PurchaseOrder objectToUpdate) throws SQLException {
 		String sqlUpdateOrderStatement = "UPDATE PurchaseOrder SET FK_Provider = ? WHERE PK_idPurchaseOrder = ?";
-		PreparedStatement preparedUpdateProductStatement = connectionDB.prepareStatement(sqlUpdateOrderStatement);
+		PreparedStatement preparedUpdateProductStatement = connection.prepareStatement(sqlUpdateOrderStatement);
 		preparedUpdateProductStatement.setInt(1, objectToUpdate.getProvider().getId());
 		preparedUpdateProductStatement.setInt(2, objectToUpdate.getId());
 		
@@ -111,7 +111,7 @@ public class PurchaseOrderDaoImplementation implements PurchaseOrderDao {
 	@Override
 	public void deletePurchaseOrder(PurchaseOrder objectToDelete) throws SQLException {
 		String sqlDeleteOrderStatement = "DELETE FROM PurchaseOrder WHERE PK_idPurchaseOrder = ?";
-		PreparedStatement preparedDeleteOrderStatement = connectionDB.prepareStatement(sqlDeleteOrderStatement);
+		PreparedStatement preparedDeleteOrderStatement = connection.prepareStatement(sqlDeleteOrderStatement);
 		preparedDeleteOrderStatement.setInt(1, objectToDelete.getId());
 		preparedDeleteOrderStatement.execute();
 		System.out.println(">> Purchase order deleted from the Database");

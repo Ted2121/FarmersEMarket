@@ -15,8 +15,6 @@ public class CRUDProductInformationControllerImplementation implements CRUDProdu
 	private ProductDao productDao;
 	private ProductInformationDao productInformationDao;
 	
-	List<List<Product>> productContainingLetter;
-	
 	public CRUDProductInformationControllerImplementation() {
 		productDao = DaoFactory.getProductDao();
 		productInformationDao = DaoFactory.getProductInformationDao();

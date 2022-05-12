@@ -15,27 +15,12 @@ import model.*;
 public class FastSearchHelperClass<T extends SearchableByName> 
 //implements FastSearchHelperClass
 {
-
-	private ProductDao productDao;
-	private ProviderDao providerDao;
-	private CustomerDao customerDao;
-	
 	private ContainSubsetDao<T> objectSubsetDaoPart;
-	
-	protected Connection connection;
-	
 	private List<List<T>> tObjectsContainingLetter;
 	
 	
 	public FastSearchHelperClass(ContainSubsetDao<T> objectSubsetDaoPart) {
-		
-		connection = DBConnection.getInstance().getDBCon();
-		productDao = DaoFactory.getProductDao();
-		providerDao = DaoFactory.getProviderDao();
-		customerDao = DaoFactory.getCustomerDao();
-		
 		this.objectSubsetDaoPart = objectSubsetDaoPart; 
-		
 		refreshData();
 	}
 
@@ -224,8 +209,4 @@ public class FastSearchHelperClass<T extends SearchableByName>
 		return objectSubsetList.subList(0, 30);
 	}
 
-	public void setObjectSubsetDaoPart(ContainSubsetDao<T> objectSubsetDaoPart) {
-		this.objectSubsetDaoPart = objectSubsetDaoPart;
-	}
-	
 }
