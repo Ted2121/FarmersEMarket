@@ -54,7 +54,8 @@ public class TestCustomerDaoImplementation {
 	@Test
 	public void testCreateCustomer() throws Exception {
 
-		generatedIdCreateTest = customerDao.createCustomer(testCustomer);
+		customerDao.createCustomer(testCustomer);
+		generatedIdCreateTest = testCustomer.getId();
 		assertNotNull("The retrieved object shouldn't be null", customerDao.findCustomerById(generatedIdCreateTest, false));
 	}
 	

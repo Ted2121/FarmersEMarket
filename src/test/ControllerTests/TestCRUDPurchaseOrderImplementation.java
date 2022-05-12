@@ -1,6 +1,8 @@
 package test.ControllerTests;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -84,8 +86,8 @@ public class TestCRUDPurchaseOrderImplementation {
 		PurchaseOrder updatedPurchaseOrder = DaoFactory.getPurchaseOrderDao().findPurchaseOrderById(purchaseOrder.getId(), true, false);
 		
 		//Assert
-		assertFalse("Should not have 'provider' has linked provider", updatedPurchaseOrder.getProvider().getId() == provider.getId());
-		assertTrue("Should have 'provider2' has linked provider", updatedPurchaseOrder.getProvider().getId() == provider2.getId());
+		assertNotEquals("Should not have 'provider' has linked provider", updatedPurchaseOrder.getProvider().getId(), provider.getId());
+		assertEquals("Should have 'provider2' has linked provider", updatedPurchaseOrder.getProvider().getId(), provider2.getId());
 	}
 	
 	@Test
@@ -98,7 +100,7 @@ public class TestCRUDPurchaseOrderImplementation {
 		PurchaseOrder deletedPurchaseOrder = DaoFactory.getPurchaseOrderDao().findPurchaseOrderById(purchaseOrderToDelete.getId(), false, false);
 		
 		//Assert
-		assertNull("Should not have provider has linked provider", deletedPurchaseOrder);
+		assertNull("Retrieved purchaseOrder should be null", deletedPurchaseOrder);
 	}
 	
 	@Test
@@ -180,7 +182,7 @@ public class TestCRUDPurchaseOrderImplementation {
 		
 		//Assert
 		assertTrue("Should contain the product", controllerImplementation.getProductAlreadyPresentMapForTestReasonOnly().containsKey(product));
-		assertTrue("Should contain the lineItem", controllerImplementation.getProductToAddListForTestReasonOnly().contains(product));
+		assertTrue("Should contain the product", controllerImplementation.getProductToAddListForTestReasonOnly().contains(product));
 	}
 	
 	@Test
@@ -214,7 +216,7 @@ public class TestCRUDPurchaseOrderImplementation {
 	}
 	
 	@Test
-	public void searchProviderUsingThisName() {
+	public void testSearchProviderUsingThisName() {
 		//Arrange
 		String name = "test";
 		
@@ -229,7 +231,7 @@ public class TestCRUDPurchaseOrderImplementation {
 	}
 	
 	@Test
-	public void searchProductUsingThisName() {
+	public void testSearchProductUsingThisName() {
 		//Arrange
 		String name = "test";
 		
@@ -244,7 +246,7 @@ public class TestCRUDPurchaseOrderImplementation {
 	}
 	
 	@Test
-	public void refreshProviderData() throws SQLException {
+	public void testRefreshProviderData() throws SQLException {
 		//Arrange
 		newProvider= ModelFactory.getProviderModel("curiousName", "last name", "test", "test");
 		DaoFactory.getProviderDao().createProvider(newProvider);
@@ -260,7 +262,7 @@ public class TestCRUDPurchaseOrderImplementation {
 	}
 	
 	@Test
-	public void refreshProductData() throws SQLException {
+	public void testRefreshProductData() throws SQLException {
 		//Arrange
 		newProduct = ModelFactory.getProductModel("curiousName", 0, 0, WeightCategory.ONE, Unit.KG);
 		DaoFactory.getProductDao().createProduct(newProduct);

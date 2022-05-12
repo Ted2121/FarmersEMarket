@@ -2,6 +2,7 @@ package test.ControllerTests;
 
 import static org.junit.Assert.*;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import org.junit.*;
@@ -14,11 +15,16 @@ import controller.ControllerInterfaces.SearchProductInterface;
 import controller.ControllerInterfaces.SearchProviderInterface;
 import db_access.DaoFactory;
 import model.*;
+import model.Product.Unit;
+import model.Product.WeightCategory;
 
 public class TestCreatePurchaseOrderControllerImplementation {
 	private static CreatePurchaseOrderController controller;
 	private static SearchProductInterface productSearchControllerPart;
 	private static SearchProviderInterface providerSearchControllerPart;
+	
+	private static Provider newProvider;
+	private static Product newProduct;
 	
 	private static int quantityOfEachLineItem;
 	
@@ -57,16 +63,10 @@ public class TestCreatePurchaseOrderControllerImplementation {
 	@Test
 	public void testSearchProductUsingThisName() {
 		String name = "Ca";
+		productSearchControllerPart.productSearchRefreshData();
 		List<Product> productsUsingTheName = productSearchControllerPart.searchProductUsingThisName(name);
 		assertTrue("Should return a list with more than 0 results", productsUsingTheName.size()>0);
 	}
-
-//	@Test
-//	public void testRetrieveAllObjectsSubset() {
-//		assertTrue("Should retrieve a list of product subsets with more than 0 items",productSearchControllerPart.retrieveAllObjectsSubset(Product.class).size()>0);
-//		assertTrue("Should retrieve a list of provider subsets with more than 0 items",providerSearchControllerPart.retrieveAllObjectsSubset(Provider.class).size()>0);
-//		assertNull("Shouldn't return anything because an exception occured and have been handled in the controller",controller.retrieveAllObjectsSubset(LineItem.class));
-//	}
 	
 	@Test
 	public void testAddDeleteProductFromPurchaseOrder() {
@@ -76,6 +76,37 @@ public class TestCreatePurchaseOrderControllerImplementation {
 		controller.deleteProductFromPurchaseOrder(product);
 		assertFalse("The product should have been removed from the PurchaseOrder", controller.isProductAlreadyInThePurchaseOrder(product));
 
+	}
+	
+	public void testProviderSearchRefreshData() throws SQLException {
+		//Arrange
+		newProvider= ModelFactory.getProviderModel("curiousName", "last name", "test", "test");
+		DaoFactory.getProviderDao().createProvider(newProvider);
+		
+		//Act
+		List<Provider> providerListBeforeRefresh = providerSearchControllerPart.searchProviderUsingThisName("curiousName");
+		providerSearchControllerPart.providerSearchRefreshData();
+		List<Provider> providerListAfterRefresh = providerSearchControllerPart.searchProviderUsingThisName("curiousName");
+		
+		//Assert
+		assertTrue("Should be an empty list",providerListBeforeRefresh.isEmpty());
+		assertFalse("Shouldn't be an empty list",providerListAfterRefresh.isEmpty());
+		
+	}
+	
+	public void testProductSearchRefreshData() throws SQLException{
+		//Arrange
+		newProduct = ModelFactory.getProductModel("curiousName", 0, 0, WeightCategory.ONE, Unit.KG);
+		DaoFactory.getProductDao().createProduct(newProduct);
+		
+		//Act
+		List<Product> productListBeforeRefresh = productSearchControllerPart.searchProductUsingThisName("curiousName");
+		productSearchControllerPart.productSearchRefreshData();
+		List<Product> productListAfterRefresh = productSearchControllerPart.searchProductUsingThisName("curiousName");
+		
+		//Assert
+		assertTrue("Should be an empty list",productListBeforeRefresh.isEmpty());
+		assertFalse("Shouldn't be an empty list",productListAfterRefresh.isEmpty());
 	}
 	
 	@AfterClass
@@ -90,6 +121,12 @@ public class TestCreatePurchaseOrderControllerImplementation {
 		
 		DaoFactory.getPurchaseOrderDao().deletePurchaseOrder(purchaseOrder);
 		DaoFactory.getOrderDao().deleteOrder(purchaseOrder);
+		
+		if(newProvider != null)
+			DaoFactory.getProviderDao().deleteProvider(newProvider);
+		if(newProduct != null)
+			DaoFactory.getProductDao().deleteProduct(newProduct);
+		
 		
 	}
 }
