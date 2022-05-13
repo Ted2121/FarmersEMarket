@@ -2,6 +2,7 @@ package model;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 public abstract class Order {
     private int id;
@@ -9,7 +10,7 @@ public abstract class Order {
     // price is the total amount
     // price = the sum of all lineItems(productPrice * quantity) in the order
     private double orderPrice;
-    private ArrayList<LineItem> lineItems;
+    private List<LineItem> lineItems;
 
     public Order(int id) {
         this.id = id;
@@ -44,11 +45,11 @@ public abstract class Order {
         this.orderPrice = orderPrice;
     }
 
-    public ArrayList<LineItem> getLineItems() {
+    public List<LineItem> getLineItems() {
         return lineItems;
     }
 
-    public void setLineItems(ArrayList<LineItem> lineItems) {
+    public void setLineItems(List<LineItem> lineItems) {
         this.lineItems = lineItems;
     }
 }

@@ -36,11 +36,11 @@ public class ModelFactory {
     	return new Product(id, name, purchasingPrice, sellingPrice, weightCategory, unit);
     }
     
-    public static Product getProductModelWithoutIdWithoutWeightedCategory(String name, double purchasingPrice, double sellingPrice, Unit unit) {
+    public static Product getProductModel(String name, double purchasingPrice, double sellingPrice, Unit unit) {
     	return new Product(name, purchasingPrice, sellingPrice, unit);
     }
     
-    public static Product getProductModelWithoutWeightedCategory(int id, String name, double purchasingPrice, double sellingPrice, Unit unit) {
+    public static Product getProductModel(int id, String name, double purchasingPrice, double sellingPrice, Unit unit) {
     	return new Product(id, name, purchasingPrice, sellingPrice, unit);
     }
 
@@ -52,9 +52,9 @@ public class ModelFactory {
         return new Provider(firstName, lastName, city, country);
     }
     
-    public static Provider getProviderSubsetModel(int id, String FirstName, String LastName) {
+    public static Provider getProviderSubsetModel(int id, String firstName, String lastName) {
 		
-		return new Provider(id, FirstName, LastName);
+		return new Provider(id, firstName, lastName);
 	}
 
     public static Customer getCustomerModel(int id, String firstName, String lastName, String city, String country, String address, int postalCode){
@@ -99,9 +99,8 @@ public class ModelFactory {
 		return new LineItem(quantity, product, order);
     }
 
+    public static Customer getCustomerSubsetModel(int id, String firstName, String lastName) {
 
-    public static Customer getCustomerSubsetModel(int id, String FirstName, String LastName) {
-
-        return new Customer(id, FirstName, LastName);
+        return new Customer(id, firstName, lastName);
     }
 }

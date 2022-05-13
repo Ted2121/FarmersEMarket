@@ -4,6 +4,7 @@ public class PurchaseOrder extends Order{
 
 
     private Provider provider;
+    
 
     public PurchaseOrder(int id, Provider provider) {
         super(id);

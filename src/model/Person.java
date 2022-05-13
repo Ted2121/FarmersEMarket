@@ -7,6 +7,7 @@ public abstract class Person implements SearchableByName{
     private final String fullName;
     private String city;
     private String country;
+    
 
     public Person(String firstName, String lastName, String city, String country) {
         this.firstName = firstName;

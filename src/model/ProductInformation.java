@@ -6,6 +6,7 @@ public class ProductInformation {
 	private int id;
 	private Product relatedProduct;
 	
+	
 	public ProductInformation(int locationCode, int quantity, int id) {
 		super();
 		this.locationCode = locationCode;

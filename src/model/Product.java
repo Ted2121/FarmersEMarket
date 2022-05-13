@@ -12,8 +12,8 @@ public class Product implements SearchableByName{
     private Unit unit;
     public enum WeightCategory{ONE, FIVE, TEN}
     private int weightCategory;
-    private ProductInformation relatedProductInformation = null;
-    private List<LineItem> relatedLineItems = null;
+    private ProductInformation relatedProductInformation;
+    private List<LineItem> relatedLineItems;
 
     public Product(int id, String productName, double purchasingPrice, double sellingPrice, WeightCategory weightCategoryOption, Unit unit) {
     	this(productName, purchasingPrice, sellingPrice, weightCategoryOption, unit);

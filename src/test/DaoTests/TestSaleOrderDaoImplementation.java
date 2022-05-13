@@ -64,7 +64,7 @@ private static int generatedOrderId;
         assertTrue("list should have at least 1 object", retrievedSaleOrders.size()>0);
 
         for(SaleOrder saleOrder : retrievedSaleOrders ) {
-            ArrayList<LineItem> lineItems = saleOrder.getLineItems();
+            List<LineItem> lineItems = saleOrder.getLineItems();
             assertNotNull("The lineItems array list should not be null", lineItems);
             for(LineItem lineItem : lineItems) {
                 assertNotNull("Shouldn't be null", lineItem);
@@ -79,7 +79,7 @@ private static int generatedOrderId;
         assertTrue("list should have at least 1 object", retrievedSaleOrders.size()>0);
 
         for(SaleOrder saleOrder : retrievedSaleOrders ) {
-            ArrayList<LineItem> lineItems = saleOrder.getLineItems();
+            List<LineItem> lineItems = saleOrder.getLineItems();
             assertNotNull("The lineItems array list should not be null", lineItems);
             for(LineItem lineItem : lineItems) {
                 assertNotNull("LineItem shouldn't be null", lineItem);

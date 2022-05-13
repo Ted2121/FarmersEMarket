@@ -5,14 +5,14 @@ public class SaleOrder extends Order{
 
     private Customer customer;
 
-    public SaleOrder(int id, Customer Customer) {
+    public SaleOrder(int id, Customer customer) {
         super(id);
-        this.customer = Customer;
+        this.customer = customer;
     }
 
-    public SaleOrder(Customer Customer) {
+    public SaleOrder(Customer customer) {
         super();
-        this.customer = Customer;
+        this.customer = customer;
     }
 
     public SaleOrder(int id){

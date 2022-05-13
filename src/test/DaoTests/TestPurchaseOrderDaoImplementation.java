@@ -62,7 +62,7 @@ public class TestPurchaseOrderDaoImplementation {
 		assertTrue("Should return a list with more than 0 objects inside", retrievedPurchaseOrders.size()>0);
 		
 		for(PurchaseOrder purchaseOrder : retrievedPurchaseOrders ) {
-			ArrayList<LineItem> lineItemList = purchaseOrder.getLineItems();
+			List<LineItem> lineItemList = purchaseOrder.getLineItems();
 			for(LineItem lineItem : lineItemList) {
 				assertNotNull("Shouldn't be null", lineItem);
 			}
@@ -76,7 +76,7 @@ public class TestPurchaseOrderDaoImplementation {
 		assertTrue("Should return a list with more than 0 objects inside", retrievedPurchaseOrders.size()>0);
 		
 		for(PurchaseOrder purchaseOrder : retrievedPurchaseOrders ) {
-			ArrayList<LineItem> lineItemList = purchaseOrder.getLineItems();
+			List<LineItem> lineItemList = purchaseOrder.getLineItems();
 			for(LineItem lineItem : lineItemList) {
 				assertNotNull("LineItem shouldn't be null", lineItem);
 			}

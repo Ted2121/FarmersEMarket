@@ -6,6 +6,7 @@ import java.util.List;
 public class Customer extends Person{
 
     private String address;
+    
     private int postalCode;
     private List<SaleOrder> saleOrders;
 

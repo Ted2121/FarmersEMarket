@@ -6,6 +6,7 @@ import java.util.List;
 public class Provider extends Person{
     // this array list contains the history of purchase orders of one provider
     private List<PurchaseOrder> purchaseOrders;
+    
 
     public Provider(int id, String firstName, String lastName, String city, String country) {
         super(id, firstName, lastName, city, country);
