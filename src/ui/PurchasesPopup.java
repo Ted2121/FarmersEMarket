@@ -172,8 +172,8 @@ public class PurchasesPopup extends PopupWindow{
 				        		List<Product> productList = productSearchControllerPart.searchProductUsingThisName(textComponentOfTheComboBox.getText());
 								if(productList.size()>0) {
 									Product[] productArray = productList.toArray(new Product[0]);
-								productSelectionComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(productArray));
-								addProductButton.setEnabled(true);
+									productSelectionComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(productArray));
+									addProductButton.setEnabled(true);
 								
 								}else {
 									productSelectionComboBox.removeAllItems();
@@ -320,6 +320,10 @@ public class PurchasesPopup extends PopupWindow{
 				createController.addProductToPurchaseOrder(selectedProduct, quantity);
 				
 				productPanel.add(productWithQuantityPanel);
+				quantityTextField.setValue(null);
+				productSelectionComboBox.removeAllItems();
+				addProductButton.setEnabled(false);
+				
 				productPanel.revalidate();
 				productPanel.repaint();
 			}else {

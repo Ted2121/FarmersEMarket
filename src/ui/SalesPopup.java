@@ -322,6 +322,10 @@ public class SalesPopup extends PopupWindow{
                             } catch (Exception ex) {
                                 ex.printStackTrace();
                             }
+                            quantityTextField.setValue(null);
+            				productSelectionComboBox.removeAllItems();
+            				addProductButton.setEnabled(false);
+            				
                             productPanel.revalidate();
                             productPanel.repaint();
                         } else {
