@@ -335,48 +335,48 @@ public class SalesPopup extends PopupWindow{
             );
         }
 
-        private void initSpecificCRUDSaleOrderComponent () {
-            createSaleOrderButton = new JButton("Save modification");
-            createSaleOrderButton.setEnabled(true);
-
-            createSaleOrderButton.addActionListener(e -> {
-                if (productPanel.getComponentCount() != 0) {
-                    Customer selectedCustomer = (Customer) customerSelectionComboBox.getSelectedItem();
-                    saleOrder.setCustomer(selectedCustomer);
-                    //crudController.updateSaleOrder(saleOrder);
-                    if (parent != null)
-                        parent.refreshTable();
-                    dispose();
-                } else {
-                    JOptionPane.showMessageDialog(null, "No products have been registered in the order");
-                }
-            });
-
-            addProductButton = new JButton("Add product to the list");
-            addProductButton.setEnabled(false);
-
-            addProductButton.addActionListener(e -> {
-                        Product selectedProduct = (Product) productSelectionComboBox.getSelectedItem();
-                        int quantity = 1;
-//                        if (!crudController.isProductAlreadyInTheSaleOrder(selectedProduct)) {
+//        private void initSpecificCRUDSaleOrderComponent () {
+//            createSaleOrderButton = new JButton("Save modification");
+//            createSaleOrderButton.setEnabled(true);
 //
-//                            if (!quantityTextField.getText().isEmpty())
-//                                quantity = (int) Integer.parseInt(quantityTextField.getText());
-//                            JPanel productWithQuantityPanel = new SalePopUpProductListedPanel(crudController, productPanel, selectedProduct, quantity);
-//                            productWithQuantityPanel.setPreferredSize(new java.awt.Dimension(productPanel.getPreferredSize().width, 32));
-//                            productWithQuantityPanel.setMaximumSize(new java.awt.Dimension(getWidth(), 32));
+//            createSaleOrderButton.addActionListener(e -> {
+//                if (productPanel.getComponentCount() != 0) {
+//                    Customer selectedCustomer = (Customer) customerSelectionComboBox.getSelectedItem();
+//                    saleOrder.setCustomer(selectedCustomer);
+//                    //crudController.updateSaleOrder(saleOrder);
+//                    if (parent != null)
+//                        parent.refreshTable();
+//                    dispose();
+//                } else {
+//                    JOptionPane.showMessageDialog(null, "No products have been registered in the order");
+//                }
+//            });
 //
-//                            crudController.addProductToSaleOrder(selectedProduct, quantity);
+//            addProductButton = new JButton("Add product to the list");
+//            addProductButton.setEnabled(false);
 //
-//                            productPanel.add(productWithQuantityPanel);
-//                            productPanel.revalidate();
-//                            productPanel.repaint();
-//                        } else {
-//                            JOptionPane.showMessageDialog(null, selectedProduct + " already present in the order");
-//                        }
-                    }
-            );
-        }
+//            addProductButton.addActionListener(e -> {
+//                        Product selectedProduct = (Product) productSelectionComboBox.getSelectedItem();
+//                        int quantity = 1;
+////                        if (!crudController.isProductAlreadyInTheSaleOrder(selectedProduct)) {
+////
+////                            if (!quantityTextField.getText().isEmpty())
+////                                quantity = (int) Integer.parseInt(quantityTextField.getText());
+////                            JPanel productWithQuantityPanel = new SalePopUpProductListedPanel(crudController, productPanel, selectedProduct, quantity);
+////                            productWithQuantityPanel.setPreferredSize(new java.awt.Dimension(productPanel.getPreferredSize().width, 32));
+////                            productWithQuantityPanel.setMaximumSize(new java.awt.Dimension(getWidth(), 32));
+////
+////                            crudController.addProductToSaleOrder(selectedProduct, quantity);
+////
+////                            productPanel.add(productWithQuantityPanel);
+////                            productPanel.revalidate();
+////                            productPanel.repaint();
+////                        } else {
+////                            JOptionPane.showMessageDialog(null, selectedProduct + " already present in the order");
+////                        }
+//                    }
+//            );
+//        }
 
         public void setParent (SalesPanel parent){
             this.parent = parent;
