@@ -28,7 +28,7 @@ public class ProductInfoPopup extends PopupWindow{
 	private JTextField textFieldWeightCategory;
 	private JTextField textFieldQuantity;
 	private JTextField textFieldLocationCode;
-	private Product product = null;
+	private Product product;
 	private CRUDProductInformationController controller;
 	private ProductInfoPanel panel;
 	

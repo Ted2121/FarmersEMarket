@@ -11,19 +11,16 @@ public class SalesPanel extends TablePanel{
 
 	//private CRUDSaleOrderController controller;
 	private HashMap<Integer, SaleOrder> idRelatedToSaleOrder;
-	private SalesPanel self;
-
 	private JTable table;
 
 	public SalesPanel() {
-		self=this;
 		table = getTable();
 		//controller = ControllerFactory.getCRUDSaleOrderController();
 		ProgramFrame.getFrame().setTitle("Sales");
 		getNewButton().setText("New Sales");
 		getNewButton().addActionListener(e -> {
 			SalesPopup popup = new SalesPopup();
-			popup.setParent(self);
+			popup.setParent(this);
 		});
 
 		refreshTable();

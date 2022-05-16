@@ -13,6 +13,7 @@ import javax.swing.SwingConstants;
 public class CustomersPopup extends PopupWindow{
 	private JPanel panel;
 
+	
 	public CustomersPopup() {
 		setTitle("New Customer");
 		panel = new JPanel();

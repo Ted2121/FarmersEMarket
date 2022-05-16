@@ -17,6 +17,7 @@ public abstract class TablePanel extends JPanel{
 	private JButton editButton;
 	private PopupWindow relatedPopupWindow;
 	
+	
 	public TablePanel() {
 		setBackground(ProgramFrame.getBgcolor());
 		setLayout(new BorderLayout());

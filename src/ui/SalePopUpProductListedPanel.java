@@ -13,27 +13,23 @@ import javax.swing.JLabel;
 
 public class SalePopUpProductListedPanel extends JPanel {
 
-    SalePopUpProductListedPanel self;
-    Product product;
-    int quantity;
-    CreateSaleOrderController createController;
+	private Product product;
+	private int quantity;
+	private CreateSaleOrderController createController;
     // NOT Implemented Yet
     //CRUDSaleOrderController crudController;
-    JPanel listOfAllProductPanels;
-
-    JButton deleteButton;
-    JLabel productNameLabel;
-    JLabel timesSymbolLabel;
-    JLabel quantityLabel;
-
-    LineItem lineItem;
+	private JPanel listOfAllProductPanels;
+	private JButton deleteButton;
+	private JLabel productNameLabel;
+	private JLabel timesSymbolLabel;
+	private JLabel quantityLabel;
+	private LineItem lineItem;
 
     public SalePopUpProductListedPanel(CreateSaleOrderController controller, JPanel listOfAllProductPanels, Product product, int quantity) {
         this.listOfAllProductPanels = listOfAllProductPanels;
         this.createController = controller;
         this.product = product;
         this.quantity = quantity;
-        this.self = this;
 
         productNameLabel = new JLabel("productName");
         add(productNameLabel);
@@ -52,16 +48,12 @@ public class SalePopUpProductListedPanel extends JPanel {
             quantityLabel.setText(quantity+"");
         }
 
-        deleteButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
+        deleteButton.addActionListener(e -> {
                 createController.deleteProductFromSaleOrder(product);
-                listOfAllProductPanels.remove(self);
+                listOfAllProductPanels.remove(this);
                 listOfAllProductPanels.revalidate();
                 listOfAllProductPanels.repaint();
-            }
         });
-
 
     }
 
@@ -69,7 +61,6 @@ public class SalePopUpProductListedPanel extends JPanel {
         this.listOfAllProductPanels = listOfAllProductPanels;
         //this.crudController = controller;
         this.lineItem = lineItem;
-        this.self = this;
 
         productNameLabel = new JLabel("productName");
         add(productNameLabel);
@@ -92,14 +83,11 @@ public class SalePopUpProductListedPanel extends JPanel {
         }
 
         // NOT Implemented Yet
-        deleteButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-//                //crudController.deleteLineItemFromSaleOrder(lineItem);
+        deleteButton.addActionListener(e -> {
+//                crudController.deleteLineItemFromSaleOrder(lineItem);
 //                listOfAllProductPanels.remove(self);
 //                listOfAllProductPanels.revalidate();
 //                listOfAllProductPanels.repaint();
-            }
         });
 
 
@@ -111,7 +99,6 @@ public class SalePopUpProductListedPanel extends JPanel {
         //this.crudController = controller;
         this.product = product;
         this.quantity = quantity;
-        this.self = this;
 
         productNameLabel = new JLabel("productName");
         add(productNameLabel);
@@ -133,16 +120,13 @@ public class SalePopUpProductListedPanel extends JPanel {
             quantityLabel.setText(quantityToAdd+"");
         }
 
-        deleteButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
+        deleteButton.addActionListener(e -> {
                 // NOT Implemented Yet
 
 //                crudController.deleteProductInProductToAdd(product);
 //                listOfAllProductPanels.remove(self);
 //                listOfAllProductPanels.revalidate();
 //                listOfAllProductPanels.repaint();
-            }
         });
 
 

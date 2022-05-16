@@ -16,6 +16,7 @@ public class DatabaseConnectionIndicator extends JLabel{
 	private Image green;
 	private ConnectionCheckerThread connectionCheckerThread;
 	
+	
 	public DatabaseConnectionIndicator() {
 		try {
 		    Image img = ImageIO.read(getClass().getResource("/ui/assets/red.png"));

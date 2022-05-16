@@ -29,7 +29,6 @@ import controller.ControllerInterfaces.*;
 import model.*;
 
 public class PurchasesPopup extends PopupWindow{
-	private PurchasesPopup self;
 	private PurchasesPanel parent;
 	private JPanel mainPanel;
 	
@@ -45,16 +44,14 @@ public class PurchasesPopup extends PopupWindow{
 	
 	private PurchaseOrder purchaseOrder;
 	
-	CreatePurchaseOrderController createController;
-	CRUDPurchaseOrderController crudController;
-	SearchProductInterface productSearchControllerPart;
-	SearchProviderInterface providerSearchControllerPart;
+	private CreatePurchaseOrderController createController;
+	private CRUDPurchaseOrderController crudController;
+	private SearchProductInterface productSearchControllerPart;
+	private SearchProviderInterface providerSearchControllerPart;
 	
 	
 	public PurchasesPopup() {
 		setTitle("New Purchase");
-		this.self = this;
-//		initSubsetsList();
 		
 		createController = new CreatePurchaseOrderControllerImplementation();
 		productSearchControllerPart = (SearchProductInterface) createController;
@@ -68,8 +65,6 @@ public class PurchasesPopup extends PopupWindow{
 
 	public PurchasesPopup(PurchaseOrder purchaseOrder) {
 		setTitle("Edit Purchase");
-		this.self = this;
-//		initSubsetsList();
 		
 		crudController = new CRUDPurchaseOrderControllerImplementation();
 		productSearchControllerPart = (SearchProductInterface) crudController;
@@ -273,13 +268,8 @@ public class PurchasesPopup extends PopupWindow{
 		mainPanel.add(createPurchaseOrderButton, gbc_createPurchaseOrderButton);
 		
 		JButton cancelButton = new JButton("Cancel");
-		cancelButton.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				self.dispose();
-				self = null;
-			}
+		cancelButton.addActionListener(e -> {
+				dispose();
 		});
 		
 		GridBagConstraints gbc_cancelButton = new GridBagConstraints();
@@ -303,9 +293,8 @@ public class PurchasesPopup extends PopupWindow{
 			if(productPanel.getComponentCount()!=0) {
 				Provider selectedProvider = (Provider) providerSelectionComboBox.getSelectedItem();
 				createController.createPurchaseOrder(selectedProvider);
-				self.dispose();
+				dispose();
 				parent.refreshTable();
-				self = null;
 			}else {
 				JOptionPane.showMessageDialog(null, "No products have been registered in the order");
 			}
@@ -323,7 +312,7 @@ public class PurchasesPopup extends PopupWindow{
 			if(!createController.isProductAlreadyInThePurchaseOrder(selectedProduct)) {
 				
 				if(!quantityTextField.getText().isEmpty())
-					quantity = (int) Integer.parseInt(quantityTextField.getText());
+					quantity = (int) Integer.parseInt(quantityTextField.getText().replace(",", ""));
 				JPanel productWithQuantityPanel = new PurchasePopUpProductListedPanel(createController, productPanel, selectedProduct, quantity);
 				productWithQuantityPanel.setPreferredSize(new java.awt.Dimension(productPanel.getPreferredSize().width, 32));
 				productWithQuantityPanel.setMaximumSize(new java.awt.Dimension(getWidth(), 32));
@@ -351,7 +340,7 @@ public class PurchasesPopup extends PopupWindow{
 				crudController.updatePurchaseOrder(purchaseOrder);
 				if(parent != null)
 					parent.refreshTable();
-				self.dispose();
+				dispose();
 			}else {
 				JOptionPane.showMessageDialog(null, "No products have been registered in the order");
 			}
@@ -366,7 +355,7 @@ public class PurchasesPopup extends PopupWindow{
 			if(!crudController.isProductAlreadyInThePurchaseOrder(selectedProduct)) {
 				
 				if(!quantityTextField.getText().isEmpty())
-					quantity = (int) Integer.parseInt(quantityTextField.getText());
+					quantity = (int) Integer.parseInt(quantityTextField.getText().replace(",", ""));
 				JPanel productWithQuantityPanel = new PurchasePopUpProductListedPanel(crudController, productPanel, selectedProduct, quantity);
 				productWithQuantityPanel.setPreferredSize(new java.awt.Dimension(productPanel.getPreferredSize().width, 32));
 				productWithQuantityPanel.setMaximumSize(new java.awt.Dimension(getWidth(), 32));

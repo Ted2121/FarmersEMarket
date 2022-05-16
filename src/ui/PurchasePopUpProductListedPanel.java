@@ -14,26 +14,24 @@ import javax.swing.JLabel;
 
 public class PurchasePopUpProductListedPanel extends JPanel {
 
-	PurchasePopUpProductListedPanel self;
-	Product product;
-	int quantity;
-	CreatePurchaseOrderController createController;
-	CRUDPurchaseOrderController crudController;
-	JPanel listOfAllProductPanels;
+	private Product product;
+	private int quantity;
+	private CreatePurchaseOrderController createController;
+	private CRUDPurchaseOrderController crudController;
+	private JPanel listOfAllProductPanels;
 	
-	JButton deleteButton;
-	JLabel productNameLabel;
-	JLabel timesSymboleLabel;
-	JLabel quantityLabel;
+	private JButton deleteButton;
+	private JLabel productNameLabel;
+	private JLabel timesSymboleLabel;
+	private JLabel quantityLabel;
 	
-	LineItem lineItem;
+	private LineItem lineItem;
 
 	public PurchasePopUpProductListedPanel(CreatePurchaseOrderController controller, JPanel listOfAllProductPanels, Product product, int quantity) {
 		this.listOfAllProductPanels = listOfAllProductPanels;
 		this.createController = controller;
 		this.product = product;
 		this.quantity = quantity;
-		this.self = this;
 		
 		productNameLabel = new JLabel("productName");
 		add(productNameLabel);
@@ -52,14 +50,12 @@ public class PurchasePopUpProductListedPanel extends JPanel {
 			quantityLabel.setText(quantity+"");
 		}
 		
-		deleteButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
+		deleteButton.addActionListener(e -> {
+			
 				createController.deleteProductFromPurchaseOrder(product);
-				listOfAllProductPanels.remove(self);
+				listOfAllProductPanels.remove(this);
 				listOfAllProductPanels.revalidate();
 				listOfAllProductPanels.repaint();
-			}
 		});
 		
 		
@@ -69,7 +65,6 @@ public class PurchasePopUpProductListedPanel extends JPanel {
 		this.listOfAllProductPanels = listOfAllProductPanels;
 		this.crudController = controller;
 		this.lineItem = lineItem;
-		this.self = this;
 		
 		productNameLabel = new JLabel("productName");
 		add(productNameLabel);
@@ -91,14 +86,11 @@ public class PurchasePopUpProductListedPanel extends JPanel {
 			quantityLabel.setText(quantity+"");
 		}
 		
-		deleteButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
+		deleteButton.addActionListener(e-> {
 				crudController.deleteLineItemFromPurchaseOrder(lineItem);
-				listOfAllProductPanels.remove(self);
+				listOfAllProductPanels.remove(this);
 				listOfAllProductPanels.revalidate();
 				listOfAllProductPanels.repaint();
-			}
 		});
 		
 		
@@ -109,7 +101,6 @@ public class PurchasePopUpProductListedPanel extends JPanel {
 		this.crudController = controller;
 		this.product = product;
 		this.quantity = quantity;
-		this.self = this;
 		
 		productNameLabel = new JLabel("productName");
 		add(productNameLabel);
@@ -131,14 +122,11 @@ public class PurchasePopUpProductListedPanel extends JPanel {
 			quantityLabel.setText(quantityToAdd+"");
 		}
 		
-		deleteButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
+		deleteButton.addActionListener(e -> {
 				crudController.deleteProductInProductToAdd(product);
-				listOfAllProductPanels.remove(self);
+				listOfAllProductPanels.remove(this);
 				listOfAllProductPanels.revalidate();
 				listOfAllProductPanels.repaint();
-			}
 		});
 		
 		

@@ -10,6 +10,7 @@ import javax.swing.JTextField;
 
 public class LoginPanel extends JPanel{
 	
+	
 	public LoginPanel() {
 		ProgramFrame.getFrame().setSize(new Dimension(400,200));
 		ProgramFrame.getFrame().setResizable(false);

@@ -14,6 +14,7 @@ public class ProductInfoPanel extends TablePanel{
 	private JTable table;
 	private CRUDProductInformationController controller;
 	
+	
 	public ProductInfoPanel() {
 		controller = ControllerFactory.getCRUDProductInformationController();
 		table = getTable();

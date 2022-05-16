@@ -13,6 +13,7 @@ import javax.swing.JPanel;
 public class MenuSelectorPanel extends JPanel{
 	private boolean opened;
 	
+	
 	public MenuSelectorPanel() {
 		setLayout(new FlowLayout(FlowLayout.RIGHT));
 		setPreferredSize(new Dimension(800,50));

@@ -11,6 +11,7 @@ import javax.swing.border.EmptyBorder;
 
 public abstract class PopupWindow extends JFrame{
 	
+	
 	private JPanel panel;
 	private JButton saveButton;
 	

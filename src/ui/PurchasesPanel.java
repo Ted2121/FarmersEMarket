@@ -17,19 +17,16 @@ import model.PurchaseOrder;
 public class PurchasesPanel extends TablePanel{
 	private CRUDPurchaseOrderController controller;
 	private HashMap<Integer, PurchaseOrder> idRelatedToPurchaseOrder;
-	private PurchasesPanel self;
-	
 	private JTable table;
 
 	public PurchasesPanel() {
-		self=this;
 		table = getTable();
 		controller = ControllerFactory.getCRUDPurchaseOrderController();
 		ProgramFrame.getFrame().setTitle("Purchases");
 		getNewButton().setText("New Purchase");
 		getNewButton().addActionListener(e -> {
 			PurchasesPopup popup = new PurchasesPopup();
-			popup.setParent(self);
+			popup.setParent(this);
 		});
 		
 		refreshTable();
@@ -45,7 +42,7 @@ public class PurchasesPanel extends TablePanel{
 				idRelatedToPurchaseOrder = controller.retrieveIdRelatedToPurchaseOrderHashMap();
 				PurchaseOrder purchaseOrder = idRelatedToPurchaseOrder.get(id);
 				PurchasesPopup popup = new PurchasesPopup(purchaseOrder);
-				popup.setParent(self);
+				popup.setParent(this);
 			}else if(table.getSelectedRowCount()>1){
 				JOptionPane.showMessageDialog(null, "More than 1 line have been selected");
 			}else {

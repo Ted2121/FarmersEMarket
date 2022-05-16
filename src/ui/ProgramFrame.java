@@ -14,6 +14,7 @@ public class ProgramFrame{
 	private static JPanel panel;
 	private static Color bgcolor = new Color(0xdddddd);
 	
+	
 	private ProgramFrame() {
 
 		frame = new JFrame();

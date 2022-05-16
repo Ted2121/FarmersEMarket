@@ -28,30 +28,24 @@ import controller.ControllerInterfaces.*;
 import model.*;
 
 public class SalesPopup extends PopupWindow{
-    private SalesPopup self;
     private SalesPanel parent;
     private JPanel mainPanel;
-
     private JFormattedTextField quantityTextField;
     private JPanel productPanel;
     private JButton addProductButton;
     private JButton createSaleOrderButton;
     private JComboBox<Customer> customerSelectionComboBox;
     private JComboBox<Product> productSelectionComboBox;
-
     private List<Product> productSubsetList;
     private List<Customer> customerSubsetList;
-
     private SaleOrder saleOrder;
-
-    CreateSaleOrderController createController;
-    SearchProductInterface productSearchControllerPart;
-    SearchCustomerInterface customerSearchControllerPart;
+    private CreateSaleOrderController createController;
+    private SearchProductInterface productSearchControllerPart;
+    private SearchCustomerInterface customerSearchControllerPart;
 
 
     public SalesPopup() {
         setTitle("New Sale");
-        this.self = this;
 //		initSubsetsList();
 
         createController = new CreateSaleOrderControllerImplementation();
@@ -66,7 +60,6 @@ public class SalesPopup extends PopupWindow{
 
     public SalesPopup(SaleOrder saleOrder) {
         setTitle("Edit Sale");
-        this.self = this;
 //		initSubsetsList();
 
 //        crudController = new CRUDSaleOrderControllerImplementation();
@@ -270,13 +263,8 @@ public class SalesPopup extends PopupWindow{
             mainPanel.add(createSaleOrderButton, gbc_createSaleOrderButton);
 
             JButton cancelButton = new JButton("Cancel");
-            cancelButton.addActionListener(new ActionListener() {
-
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    self.dispose();
-                    self = null;
-                }
+            cancelButton.addActionListener(e -> {
+                    dispose();
             });
 
             GridBagConstraints gbc_cancelButton = new GridBagConstraints();
@@ -299,9 +287,8 @@ public class SalesPopup extends PopupWindow{
                         if (productPanel.getComponentCount() != 0) {
                             Customer selectedCustomer = (Customer) customerSelectionComboBox.getSelectedItem();
                             createController.createSaleOrder(selectedCustomer);
-                            self.dispose();
+                            dispose();
                             parent.refreshTable();
-                            self = null;
                         } else {
                             JOptionPane.showMessageDialog(null, "No products have been registered in the order");
                         }
@@ -319,7 +306,7 @@ public class SalesPopup extends PopupWindow{
                         if (!createController.isProductAlreadyInTheSaleOrder(selectedProduct)) {
 
                             if (!quantityTextField.getText().isEmpty())
-                                quantity = (int) Integer.parseInt(quantityTextField.getText());
+                                quantity = (int) Integer.parseInt(quantityTextField.getText().replace(",", ""));
                             JPanel productWithQuantityPanel = new SalePopUpProductListedPanel(createController, productPanel, selectedProduct, quantity);
                             productWithQuantityPanel.setPreferredSize(new java.awt.Dimension(productPanel.getPreferredSize().width, 32));
                             productWithQuantityPanel.setMaximumSize(new java.awt.Dimension(getWidth(), 32));
@@ -355,7 +342,7 @@ public class SalesPopup extends PopupWindow{
                     //crudController.updateSaleOrder(saleOrder);
                     if (parent != null)
                         parent.refreshTable();
-                    self.dispose();
+                    dispose();
                 } else {
                     JOptionPane.showMessageDialog(null, "No products have been registered in the order");
                 }

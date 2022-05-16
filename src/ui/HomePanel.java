@@ -37,6 +37,7 @@ public class HomePanel extends JPanel{
 		add(tablesPanel, BorderLayout.CENTER);
 	}
 	
+	
 	private class SmallTablePanel extends JPanel{
 		public static final int LEFT = 0;
 		public static final int RIGHT = 1;
