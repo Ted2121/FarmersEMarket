@@ -24,7 +24,7 @@ public class TestCustomerDaoImplementation {
 	static Customer objectToDelete;
 	static Customer objectToUpdate;
 	static Customer testCustomer;
-	
+
 	@BeforeClass
 	public static void creatingTheTupleToDelete () throws SQLException {
 		objectToDelete = ModelFactory.getCustomerModel("John", "Doe", "Aalborg", "Denmark", "testaddress", 9000);
@@ -33,47 +33,63 @@ public class TestCustomerDaoImplementation {
 		customerDao.createCustomer(objectToDelete);
 		customerDao.createCustomer(objectToUpdate);
 	}
-	
+
 	@Test
 	public void testFindCustomerById() throws Exception {
-		Customer result = customerDao.findCustomerById(1, false);
+		// Arrange
+		Customer result;
+
+		// Act
+		result = customerDao.findCustomerById(1, false);
+
+		// Assert
 		assertNotNull("The retrieved object shouldn't be null", result);
 	}
-	
+
 	@Test
 	public void testFindAllCustomers() throws Exception {
-		List<Customer> result = customerDao.findAllCustomers(false);
+		List<Customer> result;
+
+		result = customerDao.findAllCustomers(false);
+
 		assertFalse("The retrievedArrayList shouldn't be empty", result.isEmpty());
 	}
-	
+
 	@Test
 	public void testFindCustomerByFullName() throws SQLException {
-		assertNotNull("The retrieved object shouldn't be null", customerDao.findCustomerByFullName("John Doe"));
+		Customer customer;
+
+		customer = customerDao.findCustomerByFullName("John Doe");
+
+		assertNotNull("The retrieved object shouldn't be null", customer);
 	}
-	
+
 	@Test
 	public void testCreateCustomer() throws Exception {
 
 		customerDao.createCustomer(testCustomer);
 		generatedIdCreateTest = testCustomer.getId();
-		assertNotNull("The retrieved object shouldn't be null", customerDao.findCustomerById(generatedIdCreateTest, false));
+
+		Customer foundCustomer = customerDao.findCustomerById(generatedIdCreateTest, false);
+
+		assertNotNull("The retrieved object shouldn't be null", foundCustomer);
 	}
-	
+
 	@Test
 	public void testDeleteCustomer() throws Exception {
 		customerDao.deleteCustomer(objectToDelete);
 		assertNull("Should have deleted the object", customerDao.findCustomerById(objectToDelete.getId(), false));
 	}
-	
+
 	@Test
 	public void testUpdateCustomer() throws Exception {
 		objectToUpdate.setFirstName("updatedFirstName");
 
 		customerDao.updateCustomer(objectToUpdate);
-		
+
 		assertEquals("Should display updatedFirstName", "updatedFirstName", customerDao.findCustomerById(objectToUpdate.getId(), false).getFirstName());
 	}
-	
+
 	@AfterClass
 	public static void cleanUp() throws Exception {
 		Customer objectToBeCleanedUp = customerDao.findCustomerById(generatedIdCreateTest, false);
