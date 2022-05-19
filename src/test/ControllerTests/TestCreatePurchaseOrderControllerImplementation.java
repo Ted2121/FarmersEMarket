@@ -78,6 +78,7 @@ public class TestCreatePurchaseOrderControllerImplementation {
 
 	}
 	
+	@Test
 	public void testProviderSearchRefreshData() throws SQLException {
 		//Arrange
 		newProvider= ModelFactory.getProviderModel("curiousName", "last name", "test", "test");
@@ -94,6 +95,7 @@ public class TestCreatePurchaseOrderControllerImplementation {
 		
 	}
 	
+	@Test
 	public void testProductSearchRefreshData() throws SQLException{
 		//Arrange
 		newProduct = ModelFactory.getProductModel("curiousName", 0, 0, WeightCategory.ONE, Unit.KG);
@@ -126,6 +128,9 @@ public class TestCreatePurchaseOrderControllerImplementation {
 			DaoFactory.getProviderDao().deleteProvider(newProvider);
 		if(newProduct != null)
 			DaoFactory.getProductDao().deleteProduct(newProduct);
+		
+		productSearchControllerPart.productSearchRefreshData();
+		providerSearchControllerPart.providerSearchRefreshData();
 		
 		
 	}

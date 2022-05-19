@@ -302,7 +302,8 @@ public class TestCRUDPurchaseOrderImplementation {
 		DaoFactory.getProviderDao().deleteProvider(provider2);
 		DaoFactory.getProviderDao().deleteProvider(newProvider);
 		
-		
+		productSearchControllerPart.productSearchRefreshData();
+		providerSearchControllerPart.providerSearchRefreshData();
 	}
 	
 }
