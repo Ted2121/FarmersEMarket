@@ -26,6 +26,10 @@ public class Customer extends Person{
         super(id, firstName, lastName);
     }
 
+    public Customer(String firstName, String lastName, String city, String country, String address) {
+        super(firstName, lastName, city, country);
+    }
+
     public String getAddress() {
         return address;
     }

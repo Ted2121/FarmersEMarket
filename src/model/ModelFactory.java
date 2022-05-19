@@ -103,4 +103,8 @@ public class ModelFactory {
 
         return new Customer(id, firstName, lastName);
     }
+
+    public static Customer getCustomerModel(String testName, String lastName, String city, String country, String address) {
+        return new Customer(testName, lastName, city, country, address);
+    }
 }

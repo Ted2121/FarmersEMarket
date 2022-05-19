@@ -29,7 +29,8 @@ public abstract class Person implements SearchableByName{
 		this.fullName = firstName + " " + lastName;
 	}
 
-	public int getId() {
+
+    public int getId() {
         return id;
     }
 
