@@ -77,17 +77,23 @@ public class TestCustomerDaoImplementation {
 
 	@Test
 	public void testDeleteCustomer() throws Exception {
+		Customer testCustomer;
+
 		customerDao.deleteCustomer(objectToDelete);
-		assertNull("Should have deleted the object", customerDao.findCustomerById(objectToDelete.getId(), false));
+		testCustomer = customerDao.findCustomerById(objectToDelete.getId(), false);
+
+		assertNull("Should have deleted the object", testCustomer);
 	}
 
 	@Test
 	public void testUpdateCustomer() throws Exception {
+		String testCustomerName;
+
 		objectToUpdate.setFirstName("updatedFirstName");
-
 		customerDao.updateCustomer(objectToUpdate);
+		testCustomerName = customerDao.findCustomerById(objectToUpdate.getId(), false).getFirstName();
 
-		assertEquals("Should display updatedFirstName", "updatedFirstName", customerDao.findCustomerById(objectToUpdate.getId(), false).getFirstName());
+		assertEquals("Should display updatedFirstName", "updatedFirstName", testCustomerName);
 	}
 
 	@AfterClass

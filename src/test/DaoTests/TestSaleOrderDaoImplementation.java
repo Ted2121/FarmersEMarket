@@ -236,30 +236,30 @@ private static int generatedOrderId;
     @Test
     public void testUpdateOrder() throws Exception {
         // Arrange
-        SaleOrder retrievedBeforeUpdateSaleOrder = DaoFactory.getSaleOrderDao().findSaleOrderById(saleOrderToUpdate.getId(), false, false);
+        SaleOrder retrievedUpdatedSaleOrder;
 
         // Act
         saleOrderToUpdate.setOrderPrice(200);
         DaoFactory.getSaleOrderDao().updateSaleOrder(saleOrderToUpdate);
         DaoFactory.getOrderDao().updateOrder(saleOrderToUpdate);
-        SaleOrder retrievedAfterUpdateSaleOrder = DaoFactory.getSaleOrderDao().findSaleOrderById(saleOrderToUpdate.getId(), false, false);
+        retrievedUpdatedSaleOrder = DaoFactory.getSaleOrderDao().findSaleOrderById(saleOrderToUpdate.getId(), false, false);
 
         // Assert
-        assertTrue("Should return the same price" ,saleOrderToUpdate.getOrderPrice() == retrievedAfterUpdateSaleOrder.getOrderPrice());
+        assertTrue("Should return the same price" ,saleOrderToUpdate.getOrderPrice() == retrievedUpdatedSaleOrder.getOrderPrice());
     }
 
     @Test
     public void testDeleteOrder() throws Exception {
 
         // Arrange
-        SaleOrder retrievedBeforeDeleteSaleOrder = DaoFactory.getSaleOrderDao().findSaleOrderById(saleOrderToDelete.getId(), false, false);
+        SaleOrder retrievedDeletedSaleOrder;
 
         // Act
         saleOrderDao.deleteSaleOrder(saleOrderToDelete);
         DaoFactory.getOrderDao().deleteOrder(saleOrderToDelete);
-        SaleOrder retrievedAfterDeleteSaleOrder = DaoFactory.getSaleOrderDao().findSaleOrderById(saleOrderToDelete.getId(), false, false);
+        retrievedDeletedSaleOrder = DaoFactory.getSaleOrderDao().findSaleOrderById(saleOrderToDelete.getId(), false, false);
         // Assert
-        assertNull("Should return a null object", retrievedAfterDeleteSaleOrder );
+        assertNull("Should return a null object", retrievedDeletedSaleOrder );
     }
 
     @AfterClass
