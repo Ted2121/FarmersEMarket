@@ -15,7 +15,6 @@ public abstract class TablePanel extends JPanel{
 	private JButton newButton;
 	private JButton deleteButton;
 	private JButton editButton;
-	private PopupWindow relatedPopupWindow;
 	
 	
 	public TablePanel() {

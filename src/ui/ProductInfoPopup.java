@@ -9,6 +9,7 @@ import javax.swing.JLabel;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
 import controller.ControllerFactory;
 import controller.ControllerInterfaces.CRUDProductInformationController;
@@ -63,7 +64,7 @@ public class ProductInfoPopup extends PopupWindow{
 		gbl_panel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		panel.setLayout(gbl_panel);
 		
-		JLabel labelProductName = new JLabel("ProductName");
+		JLabel labelProductName = new JLabel("Product Name", SwingConstants.RIGHT);
 		GridBagConstraints gbc_labelProductName = new GridBagConstraints();
 		gbc_labelProductName.insets = new Insets(0, 0, 5, 5);
 		gbc_labelProductName.gridx = 2;
@@ -84,7 +85,7 @@ public class ProductInfoPopup extends PopupWindow{
 		panel.add(textFieldProductName, gbc_textFieldProductName);
 		textFieldProductName.setColumns(10);
 		
-		JLabel labelPurchasingPrice = new JLabel("Purchasing price");
+		JLabel labelPurchasingPrice = new JLabel("Purchasing Price", SwingConstants.RIGHT);
 		GridBagConstraints gbc_labelPurchasingPrice = new GridBagConstraints();
 		gbc_labelPurchasingPrice.insets = new Insets(0, 0, 5, 5);
 		gbc_labelPurchasingPrice.gridx = 2;
@@ -105,7 +106,7 @@ public class ProductInfoPopup extends PopupWindow{
 		panel.add(textFieldPurchasingPrice, gbc_textFieldPurchasingPrice);
 		textFieldPurchasingPrice.setColumns(10);
 		
-		JLabel labelSellingPrice = new JLabel("Selling price");
+		JLabel labelSellingPrice = new JLabel("Selling Price", SwingConstants.RIGHT);
 		GridBagConstraints gbc_labelSellingPrice = new GridBagConstraints();
 		gbc_labelSellingPrice.insets = new Insets(0, 0, 5, 5);
 		gbc_labelSellingPrice.gridx = 2;
@@ -126,7 +127,7 @@ public class ProductInfoPopup extends PopupWindow{
 		panel.add(textFieldSellingPrice, gbc_textFieldSellingPrice);
 		textFieldSellingPrice.setColumns(10);
 		
-		JLabel labelUnit = new JLabel("Unit");
+		JLabel labelUnit = new JLabel("Unit", SwingConstants.RIGHT);
 		GridBagConstraints gbc_labelUnit = new GridBagConstraints();
 		gbc_labelUnit.insets = new Insets(0, 0, 5, 5);
 		gbc_labelUnit.gridx = 2;
@@ -147,7 +148,7 @@ public class ProductInfoPopup extends PopupWindow{
 		panel.add(textFieldUnit, gbc_textFieldUnit);
 		textFieldUnit.setColumns(10);
 		
-		JLabel labelWeightCategory = new JLabel("Weight Category");
+		JLabel labelWeightCategory = new JLabel("Weight Category", SwingConstants.RIGHT);
 		GridBagConstraints gbc_labelWeightCategory = new GridBagConstraints();
 		gbc_labelWeightCategory.insets = new Insets(0, 0, 5, 5);
 		gbc_labelWeightCategory.gridx = 2;
@@ -168,7 +169,7 @@ public class ProductInfoPopup extends PopupWindow{
 		panel.add(textFieldWeightCategory, gbc_textFieldWeightCategory);
 		textFieldWeightCategory.setColumns(10);
 		
-		JLabel labelQuantity = new JLabel("Quantity");
+		JLabel labelQuantity = new JLabel("Quantity", SwingConstants.RIGHT);
 		GridBagConstraints gbc_labelQuantity = new GridBagConstraints();
 		gbc_labelQuantity.insets = new Insets(0, 0, 5, 5);
 		gbc_labelQuantity.gridx = 2;
@@ -189,7 +190,7 @@ public class ProductInfoPopup extends PopupWindow{
 		panel.add(textFieldQuantity, gbc_textFieldQuantity);
 		textFieldQuantity.setColumns(10);
 		
-		JLabel labelLocationCode = new JLabel("Location Code");
+		JLabel labelLocationCode = new JLabel("Location Code", SwingConstants.RIGHT);
 		GridBagConstraints gbc_labelLocationCode = new GridBagConstraints();
 		gbc_labelLocationCode.insets = new Insets(0, 0, 0, 5);
 		gbc_labelLocationCode.gridx = 2;

@@ -22,7 +22,7 @@ public class HomePanel extends JPanel{
 		setLayout(new BorderLayout());
 		add(new MenuSelectorPanel(), BorderLayout.NORTH);
 		JPanel tablesPanel = new JPanel();
-		tablesPanel.setBackground(new Color(0xdddddd));
+		tablesPanel.setBackground(ProgramFrame.getBgcolor());
 		tablesPanel.setLayout(new GridLayout(1,2));
 		SmallTablePanel leftTable = new SmallTablePanel(SmallTablePanel.LEFT, "Inbound Orders");
 		leftTable.getNewButton().setText("New Purchase");
@@ -36,7 +36,6 @@ public class HomePanel extends JPanel{
 		rightTable.getNewButton().addActionListener(h -> new SalesPopup());
 		add(tablesPanel, BorderLayout.CENTER);
 	}
-	
 	
 	private class SmallTablePanel extends JPanel{
 		public static final int LEFT = 0;
