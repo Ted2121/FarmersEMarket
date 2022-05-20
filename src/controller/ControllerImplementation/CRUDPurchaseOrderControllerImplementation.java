@@ -129,15 +129,13 @@ public class CRUDPurchaseOrderControllerImplementation implements CRUDPurchaseOr
 
 	@Override
 	public List<PurchaseOrder> findAllPurchaseOrder() {
-		List<PurchaseOrder> purchaseOrderlist = null;
+		List<PurchaseOrder> purchaseOrderlist = new ArrayList<>();
 		try {
 			purchaseOrderlist = DaoFactory.getPurchaseOrderDao().findAllPurchaseOrders(true, false);
 		} catch (SQLException e) {
 			System.out.println("Cannot retrieve purchase orders from database");
-			purchaseOrderlist = new ArrayList<>();
 		} catch (Exception e) {
 			System.out.println("Cannot retrieve purchase orders due to software problems");
-			purchaseOrderlist = new ArrayList<>();
 		}
 		
 		return purchaseOrderlist;
