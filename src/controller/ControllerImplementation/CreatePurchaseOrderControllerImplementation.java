@@ -82,7 +82,7 @@ public class CreatePurchaseOrderControllerImplementation implements CreatePurcha
 		purchaseOrder.setOrderPrice(HelperClass.calculateTotalPrice(productWithQuantity));
 		
 		//We set a list of LineItems wich contains every generated LineItems from the hashmap
-		List<LineItem> generatedLineItems = (ArrayList<LineItem>) generateLineItems(); 
+		List<LineItem> generatedLineItems = HelperClass.generateLineItems(productWithQuantity, purchaseOrder); 
 		
 		//We may start the transaction
 		try {
@@ -142,20 +142,6 @@ public class CreatePurchaseOrderControllerImplementation implements CreatePurcha
 		
 	}
 
-	private List<LineItem> generateLineItems() {
-		//First we instanciate a list of LineItems
-		ArrayList<LineItem> generatedLineItems = new ArrayList<LineItem>();
-		
-		//For each product as a key in the hashmap
-		for(Product key : productWithQuantity.keySet()) {
-			//We create a LineItem using the ModelFactory
-			LineItem lineItem = ModelFactory.getLineItemModel(productWithQuantity.get(key), key, purchaseOrder);
-			//And add it to the list
-			generatedLineItems.add(lineItem);
-		}
-		//Once every LineItems have been created, we return the list
-		return generatedLineItems;
-	}
 
 	//Created for test reasons
 	public PurchaseOrder getPurchaseOrder() {
@@ -168,7 +154,6 @@ public class CreatePurchaseOrderControllerImplementation implements CreatePurcha
 		return productWithQuantity.containsKey(product);
 	}
 
-	
 	@Override
 	public List<Provider> searchProviderUsingThisName(String providerName) {
 		return providerFastSearch.searchUsingThisName(providerName);
