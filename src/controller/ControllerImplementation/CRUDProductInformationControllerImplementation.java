@@ -25,13 +25,11 @@ public class CRUDProductInformationControllerImplementation implements CRUDProdu
 
 	@Override
 	public List<Product> searchAllProductAndProductInformation() {
-		// TODO Auto-generated method stub
 		List<Product> list = new ArrayList<Product>();
 		try {
 			list = productDao.findAllProducts(false, true);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("Cannot find products or product inforamtions");
 		}
 		return list;
 	}
