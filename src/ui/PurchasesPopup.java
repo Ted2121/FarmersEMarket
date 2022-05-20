@@ -294,7 +294,8 @@ public class PurchasesPopup extends PopupWindow{
 				Provider selectedProvider = (Provider) providerSelectionComboBox.getSelectedItem();
 				createController.createPurchaseOrder(selectedProvider);
 				dispose();
-				parent.refreshTable();
+				if (parent != null)
+					parent.refreshTable();
 			}else {
 				JOptionPane.showMessageDialog(null, "No products have been registered in the order");
 			}
@@ -342,7 +343,7 @@ public class PurchasesPopup extends PopupWindow{
 				Provider selectedProvider = (Provider) providerSelectionComboBox.getSelectedItem();
 				purchaseOrder.setProvider(selectedProvider);
 				crudController.updatePurchaseOrder(purchaseOrder);
-				if(parent != null)
+				if (parent != null)
 					parent.refreshTable();
 				dispose();
 			}else {
