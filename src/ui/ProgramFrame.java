@@ -1,9 +1,6 @@
 package ui;
 
 import java.awt.Dimension;
-import java.awt.Frame;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
 import java.awt.Color;
 
 import javax.swing.JFrame;
@@ -13,6 +10,7 @@ public class ProgramFrame{
 	private static JFrame frame;
 	private static JPanel panel;
 	private static Color bgcolor = new Color(0xdddddd);
+	private static Dimension defaultSize = new Dimension(800,600);
 	
 	
 	private ProgramFrame() {
@@ -27,7 +25,6 @@ public class ProgramFrame{
 	}
 	
 	public static JFrame getFrame() {
-		if(frame==null) frame = new JFrame();
 		return frame;
 	}
 	
@@ -44,5 +41,9 @@ public class ProgramFrame{
 	
 	public static Color getBgcolor() {
 		return bgcolor;
+	}
+	
+	public static Dimension getDefaultSize() {
+		return defaultSize;
 	}
 }

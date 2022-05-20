@@ -35,7 +35,8 @@ public class LoginPanel extends JPanel{
 		add(loginButton);
 		loginButton.addActionListener(e -> {
 			ProgramFrame.changePanel(new HomePanel());
-			ProgramFrame.getFrame().setSize(new Dimension(800,600));
+			ProgramFrame.getFrame().setSize(ProgramFrame.getDefaultSize());
+			ProgramFrame.getFrame().setMinimumSize(ProgramFrame.getDefaultSize());
 			ProgramFrame.getFrame().setLocationRelativeTo(null);
 		});
 	}
