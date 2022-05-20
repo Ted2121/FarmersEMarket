@@ -52,17 +52,13 @@ public class ProductDaoImplementation implements ProductDao{
 				retrievedLineItemsLinkedToThisProduct.addAll(DaoFactory.getLineItemDao().findLineItemsByProduct(product, false));
 				product.setRelatedLineItems(retrievedLineItemsLinkedToThisProduct);
 			}
-			
 			if(retrieveProductInformation) {
-				ProductInformation retrievedProductInforamtionLinkedToThisProduct = DaoFactory.getProductInformationDao().findProductInformationByProduct(product, false);
-				if(retrievedProductInforamtionLinkedToThisProduct == null) {
-					retrievedProductInforamtionLinkedToThisProduct = new ProductInformation(0, 0, 0);
-				}
-				
-				product.setRelatedProductInformation(retrievedProductInforamtionLinkedToThisProduct);
+				ProductInformation retrievedProductInformationLinkedToThisProduct = DaoFactory.getProductInformationDao().findProductInformationByProduct(product, false);
+				if(retrievedProductInformationLinkedToThisProduct == null)
+					retrievedProductInformationLinkedToThisProduct = new ProductInformation(0, 0, 0);
+				product.setRelatedProductInformation(retrievedProductInformationLinkedToThisProduct);
 			}
 			list.add(product);
-			
 		}
 		return list;
 	}
@@ -86,7 +82,6 @@ public class ProductDaoImplementation implements ProductDao{
 
 	@Override
 	public List<Product> findProductByProductName(String productName, boolean retrieveLineItems, boolean retrieveProductInformation) throws Exception {
-		//TODO changing the methods to retrieve more than 1 results.
 		//If you retrieve potatoes, you can retrive 3 products, potatoes of 1kg, 5kg and 10kg
 		String query = "SELECT * FROM Product WHERE [Name]=?";
 		PreparedStatement statement = connection.prepareStatement(query);
@@ -112,7 +107,8 @@ public class ProductDaoImplementation implements ProductDao{
 	}
 
 	@Override
-	public List<Product> findProductsByPartialName(String partialName, boolean retrieveLineItems, boolean retrieveProductInformation) throws SQLException, Exception {
+	public List<Product> findProductsByPartialName(String partialName, boolean retrieveLineItems, boolean retrieveProductInformation) 
+			throws SQLException, Exception {
 		String sqlFindProviderStatement = "SELECT * FROM Product WHERE [Name] LIKE ?";
 		PreparedStatement preparedFindProviderStatement = connection.prepareStatement(sqlFindProviderStatement);
 		preparedFindProviderStatement.setString(1, "%" + partialName + "%");
