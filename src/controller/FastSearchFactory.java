@@ -18,21 +18,21 @@ public class FastSearchFactory {
 	
 	public static FastSearchHelperClass<Product> getProductFastSearch() {
 		if(productFastSearch == null) {
-			productFastSearch = new FastSearchHelperClass<>(DaoFactory.getProductDao());
+			productFastSearch = new FastSearchHelperClass<>("Product",DaoFactory.getProductDao());
 		}
 		return productFastSearch;
 	}
 	
 	public static FastSearchHelperClass<Provider> getProviderFastSearch() {
 		if(providerFastSearch == null) {
-			providerFastSearch = new FastSearchHelperClass<>(DaoFactory.getProviderDao());
+			providerFastSearch = new FastSearchHelperClass<>("Provider",DaoFactory.getProviderDao());
 		}
 		return providerFastSearch;
 	}
 	
 	public static FastSearchHelperClass<Customer> getCustomerFastSearch() {
 		if(customerFastSearch == null) {
-			customerFastSearch = new FastSearchHelperClass<>(DaoFactory.getCustomerDao());
+			customerFastSearch = new FastSearchHelperClass<>("Customer",DaoFactory.getCustomerDao());
 		}
 		return customerFastSearch;
 	}

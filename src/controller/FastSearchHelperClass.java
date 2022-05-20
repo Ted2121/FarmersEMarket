@@ -17,9 +17,11 @@ public class FastSearchHelperClass<T extends SearchableByName>
 {
 	private ContainSubsetDao<T> objectSubsetDaoPart;
 	private List<List<T>> tObjectsContainingLetter;
+	private String objectTypeName;
 	
 	
-	public FastSearchHelperClass(ContainSubsetDao<T> objectSubsetDaoPart) {
+	public FastSearchHelperClass(String objectTypeName, ContainSubsetDao<T> objectSubsetDaoPart) {
+		this.objectTypeName = objectTypeName;
 		this.objectSubsetDaoPart = objectSubsetDaoPart; 
 		refreshData();
 	}
@@ -192,10 +194,10 @@ public class FastSearchHelperClass<T extends SearchableByName>
 		
 		} catch (SQLException e) {
 			//If a database excecption occure, we print this line
-			System.out.println("Cannot retrieve products subset from database");
+			System.out.println("Cannot retrieve " + objectTypeName + " subset from database");
 		} catch (Exception e) {
 			//If an other excecption occure, we print this line
-			System.out.println("Cannot retrieve products subset");
+			System.out.println("Cannot retrieve " + objectTypeName + " subset");
 		}
 		
 		if(objectSubsetList == null) {
