@@ -25,8 +25,6 @@ private static int generatedOrderId;
     public static void setUp() throws Exception {
         saleOrderDao = DaoFactory.getSaleOrderDao();
         Customer testCustomer = DaoFactory.getCustomerDao().findAllCustomers(false).get(0);
-        //for debugging
-        // System.out.println(testCustomer.getFirstName());
 
         id = DaoFactory.getOrderDao().createEmptyOrder();
 
@@ -40,44 +38,58 @@ private static int generatedOrderId;
 
     @Test
     public void testFindAllSaleOrdersWithoutAssociations() throws Exception {
-        ArrayList<SaleOrder> retrievedSaleOrders = (ArrayList<SaleOrder>) DaoFactory.getSaleOrderDao().findAllSaleOrders(false, false);
+        // Arrange
+        ArrayList<SaleOrder> retrievedSaleOrders;
+
+        // Act
+        retrievedSaleOrders = (ArrayList<SaleOrder>) DaoFactory.getSaleOrderDao().findAllSaleOrders(false, false);
+
+        // Assert
         assertTrue("list should have at least 1 object", retrievedSaleOrders.size()>0);
 
-        for(SaleOrder saleOrder : retrievedSaleOrders ) {
-            assertNull("Customer of the order should be null", saleOrder.getCustomer());
-        }
+
     }
 
     @Test
     public void testFindAllSaleOrdersWithCustomerAssociations() throws Exception {
-        ArrayList<SaleOrder> retrievedSaleOrders = (ArrayList<SaleOrder>) DaoFactory.getSaleOrderDao().findAllSaleOrders(true, false);
+        // Arrange
+        ArrayList<SaleOrder> retrievedSaleOrders;
+
+        // Act
+        retrievedSaleOrders = (ArrayList<SaleOrder>) DaoFactory.getSaleOrderDao().findAllSaleOrders(true, false);
+
+        // Assert
         assertTrue("list should have at least 1 object", retrievedSaleOrders.size()>0);
 
-        for(SaleOrder saleOrder : retrievedSaleOrders) {
-            assertNotNull("Customer should not be null", saleOrder.getCustomer());
-        }
     }
 
     @Test
     public void testFindAllSaleOrdersWithLineItemAssociations() throws Exception {
-        ArrayList<SaleOrder> retrievedSaleOrders = (ArrayList<SaleOrder>) DaoFactory.getSaleOrderDao().findAllSaleOrders(false, true);
-        assertTrue("list should have at least 1 object", retrievedSaleOrders.size()>0);
+        // Arrange
+        ArrayList<SaleOrder> retrievedSaleOrders;
 
+        // Act
+        retrievedSaleOrders = (ArrayList<SaleOrder>) DaoFactory.getSaleOrderDao().findAllSaleOrders(false, true);
+
+        // Assert
         for(SaleOrder saleOrder : retrievedSaleOrders ) {
             List<LineItem> lineItems = saleOrder.getLineItems();
             assertNotNull("The lineItems array list should not be null", lineItems);
-            for(LineItem lineItem : lineItems) {
-                assertNotNull("Shouldn't be null", lineItem);
-            }
+
         }
 
     }
 
     @Test
     public void testFindAllSaleOrdersWithAllAssociations() throws Exception {
-        ArrayList<SaleOrder> retrievedSaleOrders = (ArrayList<SaleOrder>) DaoFactory.getSaleOrderDao().findAllSaleOrders(true, true);
-        assertTrue("list should have at least 1 object", retrievedSaleOrders.size()>0);
+        // Arrange
+        ArrayList<SaleOrder> retrievedSaleOrders;
 
+        // Act
+        retrievedSaleOrders = (ArrayList<SaleOrder>) DaoFactory.getSaleOrderDao().findAllSaleOrders(true, true);
+
+
+        // Assert
         for(SaleOrder saleOrder : retrievedSaleOrders ) {
             List<LineItem> lineItems = saleOrder.getLineItems();
             assertNotNull("The lineItems array list should not be null", lineItems);
@@ -94,21 +106,37 @@ private static int generatedOrderId;
 
     @Test
     public void testFindSaleOrderByIdWithoutAssociations() throws Exception {
-        SaleOrder retrievedSaleOrder = DaoFactory.getSaleOrderDao().findSaleOrderById(saleOrderToUpdate.getId(), false, false);
+        // Arrange
+        SaleOrder retrievedSaleOrder;
+
+        // Act
+        retrievedSaleOrder = DaoFactory.getSaleOrderDao().findSaleOrderById(saleOrderToUpdate.getId(), false, false);
+
+        // Assert
         assertNotNull("SaleOrder should not be null", retrievedSaleOrder);
     }
 
     @Test
     public void testFindSaleOrderByIdWithCustomerAssociations() throws Exception {
-        SaleOrder retrievedSaleOrder = DaoFactory.getSaleOrderDao().findSaleOrderById(saleOrderToUpdate.getId(), true, false);
-        assertNotNull("Sale order should not be null", retrievedSaleOrder);
+        // Arrange
+        SaleOrder retrievedSaleOrder;
+
+        // Act
+        retrievedSaleOrder = DaoFactory.getSaleOrderDao().findSaleOrderById(saleOrderToUpdate.getId(), true, false);
+
+        // Assert
         assertNotNull("Customer of the order should not be null", retrievedSaleOrder.getCustomer());
     }
 
     @Test
     public void testFindSaleOrderByIdWithLineItemAssociations() throws Exception {
-        SaleOrder retrievedSaleOrder = DaoFactory.getSaleOrderDao().findSaleOrderById(saleOrderToUpdate.getId(), false, true);
-        assertNotNull("Sale order should not be null", retrievedSaleOrder);
+        // Arrange
+        SaleOrder retrievedSaleOrder;
+
+        // Act
+        retrievedSaleOrder = DaoFactory.getSaleOrderDao().findSaleOrderById(saleOrderToUpdate.getId(), false, true);
+
+        // Assert
         for(LineItem lineItem : retrievedSaleOrder.getLineItems() ) {
             assertNotNull("LineItem shouldn't be null", lineItem);
         }
@@ -116,8 +144,13 @@ private static int generatedOrderId;
 
     @Test
     public void testFindSaleOrderByIdWithAllAssociations() throws Exception {
-        SaleOrder retrievedSaleOrder = DaoFactory.getSaleOrderDao().findSaleOrderById(saleOrderToUpdate.getId(), true, true);
-        assertNotNull("Sale order should not be null", retrievedSaleOrder);
+        // Arrange
+        SaleOrder retrievedSaleOrder;
+
+        // Act
+        retrievedSaleOrder = DaoFactory.getSaleOrderDao().findSaleOrderById(saleOrderToUpdate.getId(), true, true);
+
+        // Assert
         for(LineItem lineItem : retrievedSaleOrder.getLineItems() ) {
             assertNotNull("LineItem shouldn't be null", lineItem);
         }
@@ -126,8 +159,13 @@ private static int generatedOrderId;
 
     @Test
     public void testFindSaleOrderByCustomerWithoutAssociations() throws Exception {
-        List<SaleOrder> retrievedSaleOrders = DaoFactory.getSaleOrderDao().findSaleOrderByCustomerId(1, false, false);
+        // Arrange
+        List<SaleOrder> retrievedSaleOrders;
 
+        // Act
+        retrievedSaleOrders = DaoFactory.getSaleOrderDao().findSaleOrderByCustomerId(1, false, false);
+
+        // Assert
         for(SaleOrder saleOrder : retrievedSaleOrders ) {
             assertNull("Shouldn't have a customer set", saleOrder.getCustomer());
             assertNull("Shouldn't have lineItems set", saleOrder.getLineItems());
@@ -136,18 +174,27 @@ private static int generatedOrderId;
 
     @Test
     public void testFindSaleOrderByProviderWithCustomerAssociations() throws Exception {
-        List<SaleOrder> retrievedSaleOrders = DaoFactory.getSaleOrderDao().findSaleOrderByCustomerId(1, true, false);
+        // Arrange
+        List<SaleOrder> retrievedSaleOrders;
 
+        // Act
+        retrievedSaleOrders = DaoFactory.getSaleOrderDao().findSaleOrderByCustomerId(1, true, false);
+
+        // Assert
         for(SaleOrder saleOrder : retrievedSaleOrders ) {
             assertNotNull("Should have a customer set", saleOrder.getCustomer());
-            assertNull("Shouldn't have lineItems set", saleOrder.getLineItems());
         }
     }
 
     @Test
     public void testFindSaleOrderByCustomerWithLineItemAssociations() throws Exception {
-        List<SaleOrder> retrievedSaleOrders = DaoFactory.getSaleOrderDao().findSaleOrderByCustomerId(1, false, true);
+        // Arrange
+        List<SaleOrder> retrievedSaleOrders;
 
+        // Act
+        retrievedSaleOrders = DaoFactory.getSaleOrderDao().findSaleOrderByCustomerId(1, false, true);
+
+        // Assert
         for(SaleOrder saleOrder : retrievedSaleOrders ) {
             assertNull("Shouldn't have a customer set", saleOrder.getCustomer());
             assertNotNull("Should have lineItems set", saleOrder.getLineItems());
@@ -156,8 +203,13 @@ private static int generatedOrderId;
 
     @Test
     public void testFindSaleOrderByCustomerWithAllAssociations() throws Exception {
-        List<SaleOrder> retrievedSaleOrders = DaoFactory.getSaleOrderDao().findSaleOrderByCustomerId(1, true, true);
+        // Arrange
+        List<SaleOrder> retrievedSaleOrders;
 
+        // Act
+        retrievedSaleOrders = DaoFactory.getSaleOrderDao().findSaleOrderByCustomerId(1, true, true);
+
+        // Assert
         for(SaleOrder saleOrder : retrievedSaleOrders ) {
             assertNotNull("Should have a customer set", saleOrder.getCustomer());
             assertNotNull("Should have lineItems set", saleOrder.getLineItems());
@@ -166,33 +218,47 @@ private static int generatedOrderId;
 
     @Test
     public void testCreateSaleOrder() throws Exception {
+        // Arrange
         generatedSaleOrderId = DaoFactory.getOrderDao().createEmptyOrder();
+        Customer testCustomer;
+        SaleOrder testSaleOrder;
+        testCustomer = DaoFactory.getCustomerDao().findAllCustomers(false).get(0);
+        testSaleOrder = ModelFactory.getSaleOrderModel(generatedSaleOrderId, testCustomer);
 
-        Customer testCustomer = DaoFactory.getCustomerDao().findAllCustomers(false).get(0);
-        SaleOrder testSaleOrder = ModelFactory.getSaleOrderModel(generatedSaleOrderId, testCustomer);
-
+        // Act
         DaoFactory.getSaleOrderDao().createSaleOrder(testSaleOrder);
         SaleOrder retrievedSaleOrder = DaoFactory.getSaleOrderDao().findSaleOrderById(generatedSaleOrderId, false, false);
 
+        // Assert
         assertNotNull("Should not return a null object", generatedSaleOrderId);
     }
 
     @Test
     public void testUpdateOrder() throws Exception {
+        // Arrange
+        SaleOrder retrievedUpdatedSaleOrder;
+
+        // Act
         saleOrderToUpdate.setOrderPrice(200);
         DaoFactory.getSaleOrderDao().updateSaleOrder(saleOrderToUpdate);
         DaoFactory.getOrderDao().updateOrder(saleOrderToUpdate);
-        SaleOrder retrievedUpdatedSaleOrder = DaoFactory.getSaleOrderDao().findSaleOrderById(saleOrderToUpdate.getId(), false, false);
+        retrievedUpdatedSaleOrder = DaoFactory.getSaleOrderDao().findSaleOrderById(saleOrderToUpdate.getId(), false, false);
 
+        // Assert
         assertTrue("Should return the same price" ,saleOrderToUpdate.getOrderPrice() == retrievedUpdatedSaleOrder.getOrderPrice());
     }
 
     @Test
     public void testDeleteOrder() throws Exception {
 
+        // Arrange
+        SaleOrder retrievedDeletedSaleOrder;
+
+        // Act
         saleOrderDao.deleteSaleOrder(saleOrderToDelete);
         DaoFactory.getOrderDao().deleteOrder(saleOrderToDelete);
-        SaleOrder retrievedDeletedSaleOrder = DaoFactory.getSaleOrderDao().findSaleOrderById(saleOrderToDelete.getId(), false, false);
+        retrievedDeletedSaleOrder = DaoFactory.getSaleOrderDao().findSaleOrderById(saleOrderToDelete.getId(), false, false);
+        // Assert
         assertNull("Should return a null object", retrievedDeletedSaleOrder );
     }
 
@@ -208,9 +274,5 @@ private static int generatedOrderId;
         DaoFactory.getOrderDao().deleteOrder(saleOrderToDelete);
         DaoFactory.getOrderDao().deleteOrder(saleOrderToUpdate);
 
-        createdOrder = null;
-        saleOrderDao = null;
-        saleOrderToUpdate = null;
-        saleOrderToDelete = null;
     }
 }
