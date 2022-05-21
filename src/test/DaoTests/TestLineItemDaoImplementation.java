@@ -37,8 +37,13 @@ public class TestLineItemDaoImplementation {
 	
 	@Test
 	public void testFindLineItemsByOrderWithoutProductAssociation() throws SQLException, Exception {
+		//Arrange
 		TestingSaleOrder testSaleOrder = new TestingSaleOrder(1);
+		
+		//Act
 		List<LineItem> retrievedLineItems = lineItemDao.findLineItemsByOrder(testSaleOrder, false);
+		
+		//Assert
 		assertNotNull("Should retrieve LineItems", retrievedLineItems);
 		for(LineItem lineItem : retrievedLineItems) {
 			assertNull("Should not have related product", lineItem.getProduct());
@@ -47,8 +52,13 @@ public class TestLineItemDaoImplementation {
 	
 	@Test
 	public void testFindLineItemsByOrderWithProductAssociation() throws SQLException, Exception {
+		//Arrange
 		TestingSaleOrder testSaleOrder = new TestingSaleOrder(1);
+		
+		//Act
 		List<LineItem> retrievedLineItems = lineItemDao.findLineItemsByOrder(testSaleOrder, true);
+		
+		//Assert
 		assertNotNull("Should retrieve LineItems", retrievedLineItems);
 		for(LineItem lineItem : retrievedLineItems) {
 			assertNotNull("Should have related product set", lineItem.getProduct());
@@ -58,7 +68,9 @@ public class TestLineItemDaoImplementation {
 	@Test
 	public void testFindLineItemsByProductWithoutOrderAssociation() throws SQLException, Exception {
 		Product testProduct = ModelFactory.getProductModel(1,"TestCreate", 15d, 20d, WeightCategory.FIVE, Unit.KG);
+		
 		List<LineItem> retrievedLineItems = lineItemDao.findLineItemsByProduct(testProduct, false);
+		
 		assertNotNull("Should retrieve LineItems", retrievedLineItems);
 		for(LineItem lineItem : retrievedLineItems) {
 			assertNull("Should not have related order", lineItem.getOrder());
@@ -68,7 +80,9 @@ public class TestLineItemDaoImplementation {
 	@Test
 	public void testFindLineItemsByProductWithOrderAssociation() throws SQLException, Exception {
 		Product testProduct = ModelFactory.getProductModel(1,"TestCreate", 15d, 20d, WeightCategory.FIVE, Unit.KG);
+		
 		List<LineItem> retrievedLineItem = lineItemDao.findLineItemsByProduct(testProduct, true);
+		
 		assertNotNull("Should retrieve LineItems", retrievedLineItem);
 		for(LineItem lineItem : retrievedLineItem) {
 			assertNotNull("Should have related order set", lineItem.getOrder());
@@ -77,7 +91,9 @@ public class TestLineItemDaoImplementation {
 	
 	@Test
 	public void testFindLineItemByOrderAndProductIdWithoutAssociations() throws SQLException, Exception {
+		
 		LineItem retrievedLineItem = lineItemDao.findLineItemByOrderAndProductId(1, 1, false, false);
+		
 		assertNotNull("Should retrieve LineItems", retrievedLineItem);
 		assertTrue("Should retrieve a quantity of 4", retrievedLineItem.getQuantity()==4);
 		assertNull("Should not have related product", retrievedLineItem.getProduct());
@@ -86,7 +102,9 @@ public class TestLineItemDaoImplementation {
 	
 	@Test
 	public void testFindLineItemByOrderAndProductIdWithOrderAssociations() throws SQLException, Exception {
+		
 		LineItem retrievedLineItem = lineItemDao.findLineItemByOrderAndProductId(1, 1, true, false);
+		
 		assertNotNull("Should retrieve LineItems", retrievedLineItem);
 		assertTrue("Should retrieve a quantity of 4", retrievedLineItem.getQuantity()==4);
 		assertNull("Should not have related product", retrievedLineItem.getProduct());
@@ -95,7 +113,9 @@ public class TestLineItemDaoImplementation {
 	
 	@Test
 	public void testFindLineItemByOrderAndProductIdWithProductAssociations() throws SQLException, Exception {
+		
 		LineItem retrievedLineItem = lineItemDao.findLineItemByOrderAndProductId(1, 1, false, true);
+		
 		assertNotNull("Should retrieve LineItems", retrievedLineItem);
 		assertTrue("Should retrieve a quantity of 4", retrievedLineItem.getQuantity()==4);
 		assertNotNull("Should  have related product", retrievedLineItem.getProduct());
@@ -104,7 +124,9 @@ public class TestLineItemDaoImplementation {
 	
 	@Test
 	public void testFindLineItemByOrderAndProductIdWithAllAssociations() throws SQLException, Exception {
+		
 		LineItem retrievedLineItem = lineItemDao.findLineItemByOrderAndProductId(1, 1, true, true);
+		
 		assertNotNull("Should retrieve LineItems", retrievedLineItem);
 		assertTrue("Should retrieve a quantity of 4", retrievedLineItem.getQuantity()==4);
 		assertNotNull("Should have related product set", retrievedLineItem.getProduct());
@@ -113,7 +135,9 @@ public class TestLineItemDaoImplementation {
 	
 	@Test
 	public void testFindAllLineItemsWithoutAssociations() throws SQLException, Exception {
+		
 		List<LineItem> retrievedLineItems = lineItemDao.findAllLineItems(false, false);
+		
 		assertNotNull("Should retrieve LineItems", retrievedLineItems);
 		for(LineItem lineItem : retrievedLineItems) {
 			assertNull("Should not have related product", lineItem.getProduct());
@@ -124,7 +148,9 @@ public class TestLineItemDaoImplementation {
 	
 	@Test
 	public void testFindAllLineItemsWithOrderAssociations() throws SQLException, Exception {
+		
 		List<LineItem> retrievedLineItems = lineItemDao.findAllLineItems(true, false);
+		
 		assertNotNull("Should retrieve LineItems", retrievedLineItems);
 		for(LineItem lineItem : retrievedLineItems) {
 			assertNull("Should not have related product", lineItem.getProduct());
@@ -135,7 +161,9 @@ public class TestLineItemDaoImplementation {
 	
 	@Test
 	public void testFindAllLineItemsWithProductAssociations() throws SQLException, Exception {
+		
 		List<LineItem> retrievedLineItems = lineItemDao.findAllLineItems(false, true);
+		
 		assertNotNull("Should retrieve LineItems", retrievedLineItems);
 		for(LineItem lineItem : retrievedLineItems) {
 			assertNotNull("Should have related product set", lineItem.getProduct());
@@ -146,7 +174,9 @@ public class TestLineItemDaoImplementation {
 	
 	@Test
 	public void testFindAllLineItemsWithAllAssociations() throws SQLException, Exception {
+		
 		List<LineItem> retrievedLineItems = lineItemDao.findAllLineItems(true, true);
+		
 		assertNotNull("Should retrieve LineItems", retrievedLineItems);
 		for(LineItem lineItem : retrievedLineItems) {
 			assertNotNull("Should have related product set", lineItem.getProduct());
@@ -159,10 +189,11 @@ public class TestLineItemDaoImplementation {
 	public void testCreateLinetem() throws SQLException, Exception{
 		Product product = DaoFactory.getProductDao().findProductById(2, false, false);
 		Order order = DaoFactory.getSaleOrderDao().findSaleOrderById(2, false, false);
-		
 		generatedLineItem = new LineItem(2, product, order);
+		
 		lineItemDao.createLineItem(generatedLineItem);
 		LineItem retrievedLineItem = lineItemDao.findLineItemByOrderAndProductId(order.getId(), product.getId(), false, false);
+		
 		assertNotNull("Should retrieve the inserted item", retrievedLineItem);
 	}
 	
@@ -170,13 +201,16 @@ public class TestLineItemDaoImplementation {
 	public void testUpdateLinetem() throws SQLException, Exception{
 		int oldQuantity = objectToUpdate.getQuantity();
 		objectToUpdate.setQuantity(12);
+		
 		lineItemDao.updateLineItem(objectToUpdate);
 		objectToUpdate = lineItemDao.findLineItemByOrderAndProductId(objectToUpdate.getOrder().getId(), objectToUpdate.getProduct().getId(), true, true);
+		
 		assertTrue("Shouldn't be the same quantity", oldQuantity != objectToUpdate.getQuantity());
 	}
 	
 	@Test
 	public void testDeleteLinetem() throws SQLException, Exception{
+		
 		lineItemDao.deleteLineItem(objectToDelete);
 		objectToDelete = lineItemDao.findLineItemByOrderAndProductId(objectToDelete.getOrder().getId(), objectToDelete.getProduct().getId(), false, false);
 		

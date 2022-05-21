@@ -92,7 +92,6 @@ public class PurchaseOrderDaoImplementation implements PurchaseOrderDao {
 		PreparedStatement preparedSqlInsertOrderStatement = connection.prepareStatement(sqlInsertOrderStatement) ;
 		preparedSqlInsertOrderStatement.setInt(1, objectToInsert.getId());
 		preparedSqlInsertOrderStatement.setInt(2, objectToInsert.getProvider().getId());
-		
 		preparedSqlInsertOrderStatement.execute();
 		System.out.println(">> Purchase order added to the Database");
 	}

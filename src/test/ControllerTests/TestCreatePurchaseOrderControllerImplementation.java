@@ -40,7 +40,6 @@ public class TestCreatePurchaseOrderControllerImplementation {
 	@Test
 	public void testCreatePurchaseOrderTransaction() throws Exception {
 		int numberOfPurchaseOrderBeforeTest = DaoFactory.getPurchaseOrderDao().findAllPurchaseOrders(false, false).size();
-		
 		for(Product product : DaoFactory.getProductDao().findAllProducts(false, false)) {
 			controller.addProductToPurchaseOrder(product, quantityOfEachLineItem);
 		}
@@ -55,25 +54,37 @@ public class TestCreatePurchaseOrderControllerImplementation {
 	@Test
 	public void testSearchProviderUsingThisName() {
 		String name = "Ca";
+		
 		providerSearchControllerPart.providerSearchRefreshData();
 		List<Provider> providersUsingTheName = providerSearchControllerPart.searchProviderUsingThisName(name);
+		
 		assertTrue("Should return a list with more than 0 results", providersUsingTheName.size()>0);
 	}
 	
 	@Test
 	public void testSearchProductUsingThisName() {
 		String name = "Ca";
+		
 		productSearchControllerPart.productSearchRefreshData();
 		List<Product> productsUsingTheName = productSearchControllerPart.searchProductUsingThisName(name);
+		
 		assertTrue("Should return a list with more than 0 results", productsUsingTheName.size()>0);
 	}
 	
 	@Test
 	public void testAddDeleteProductFromPurchaseOrder() {
+		//We did 2 tests in one to be sure the second one follow the first one
+		
+		//Arrange
 		Product product = new Product();
+		//Act
 		controller.addProductToPurchaseOrder(product, 2);
+		//Assert
 		assertTrue("The product should have been added to the PurchaseOrder", controller.isProductAlreadyInThePurchaseOrder(product));
+		
+		//Act
 		controller.deleteProductFromPurchaseOrder(product);
+		//Assert
 		assertFalse("The product should have been removed from the PurchaseOrder", controller.isProductAlreadyInThePurchaseOrder(product));
 
 	}

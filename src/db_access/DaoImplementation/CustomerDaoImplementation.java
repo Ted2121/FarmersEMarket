@@ -24,7 +24,7 @@ public class CustomerDaoImplementation implements CustomerDao {
 	            retrievedCustomer.setSaleOrders(linkedSaleOrder);
 	        }
             customerList.add(retrievedCustomer);
-    }
+		}
 
 		return customerList;
     }

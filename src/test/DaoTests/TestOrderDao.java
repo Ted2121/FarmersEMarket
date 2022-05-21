@@ -24,6 +24,7 @@ public class TestOrderDao {
 		Provider testProvider = DaoFactory.getProviderDao().findAllProviders(false).get(0);
 		orderToUpdate = new PurchaseOrder(testProvider);
 		orderToUpdate.setOrderPrice(10);
+		
 		orderDao.createOrder(orderToUpdate);
 		DaoFactory.getPurchaseOrderDao().createPurchaseOrder(orderToUpdate);
 		
@@ -34,7 +35,9 @@ public class TestOrderDao {
 	
 	@Test
 	public void testCreateEmptyOrder() throws SQLException {
+		
 		emptyOrderGeneratedId = orderDao.createEmptyOrder();
+		
 		assertTrue("Should return a generated id > 0", emptyOrderGeneratedId>0);
 	}
 	
@@ -45,7 +48,8 @@ public class TestOrderDao {
 		SaleOrder testSaleOrder = new SaleOrder(testCustomer);
 		
 		orderDao.createOrder(testSaleOrder);
-		generatedOrderId =  testSaleOrder.getId();
+		generatedOrderId = testSaleOrder.getId();
+		
 		assertTrue("Should return a generated id > 0", generatedOrderId>0);
 	}
 	
@@ -66,6 +70,7 @@ public class TestOrderDao {
 		
 		orderDao.deleteOrder(orderToDelete);
 		PurchaseOrder retrievedOrder = DaoFactory.getPurchaseOrderDao().findPurchaseOrderById(orderToDelete.getId(), false, false);
+		
 		assertNull("Shouldn't retrieve objects", retrievedOrder );
 		
 	}

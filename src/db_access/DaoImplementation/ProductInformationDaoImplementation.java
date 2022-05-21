@@ -118,7 +118,6 @@ public class ProductInformationDaoImplementation implements ProductInformationDa
 		statement.setInt(1, quantity);
 		statement.setInt(2, product.getId());
 		statement.executeUpdate();
-		
 	}
 
 	@Override
