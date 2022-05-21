@@ -49,25 +49,32 @@ public class TestCreateSaleOrderControllerImplementation {
     @Test
     public void testSearchCustomerUsingThisName() {
         String name = "Jo";
+        List<Customer> customersUsingTheName;
+
         customerSearchControllerPart.customerSearchRefreshData();
-        List<Customer> customersUsingTheName = customerSearchControllerPart.searchCustomerUsingThisName(name);
+        customersUsingTheName = customerSearchControllerPart.searchCustomerUsingThisName(name);
+
         assertTrue("Should return a list with more than 0 results", customersUsingTheName.size()>0);
     }
 
     @Test
     public void testSearchProductUsingThisName() {
         String name = "Ca";
+        List<Product> productsUsingTheName;
+
         productSearchControllerPart.productSearchRefreshData();
-        List<Product> productsUsingTheName = productSearchControllerPart.searchProductUsingThisName(name);
+        productsUsingTheName = productSearchControllerPart.searchProductUsingThisName(name);
+
         assertTrue("Should return a list with more than 0 results", productsUsingTheName.size()>0);
     }
 
     @Test
     public void testAddDeleteProductFromSaleOrder() throws Exception {
         Product product = new Product();
+
         controller.addProductToSaleOrder(product, 2);
-        assertTrue("The product should have been added to the SaleOrder", controller.isProductAlreadyInTheSaleOrder(product));
         controller.deleteProductFromSaleOrder(product);
+
         assertFalse("The product should have been removed from the SaleOrder", controller.isProductAlreadyInTheSaleOrder(product));
 
     }

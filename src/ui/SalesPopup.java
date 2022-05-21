@@ -317,7 +317,7 @@ public class SalesPopup extends PopupWindow{
 
 
                             productPanel.add(productWithQuantityPanel);
-                            }else{ System.out.println("test insufficient quantity");
+                            }else{ 
                                     JOptionPane.showMessageDialog(null, "Quantity unavailable for this product");}
                             } catch (Exception ex) {
                                 ex.printStackTrace();
