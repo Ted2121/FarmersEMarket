@@ -21,7 +21,18 @@ public class PurchasesPanel extends TablePanel{
 
 	public PurchasesPanel() {
 		table = getTable();
-		controller = ControllerFactory.getCRUDPurchaseOrderController();
+		getEditButton().setEnabled(false);
+		getDeleteButton().setEnabled(false);
+		getNewButton().setEnabled(false);
+		Thread gettingController = new Thread(() -> {
+			controller = ControllerFactory.getCRUDPurchaseOrderController();
+			refreshTable();
+			getEditButton().setEnabled(true);
+			getDeleteButton().setEnabled(true);
+			getNewButton().setEnabled(true);
+		});
+		gettingController.start();
+		
 		ProgramFrame.getFrame().setTitle("Purchases");
 		getNewButton().setText("New Purchase");
 		getNewButton().addActionListener(e -> {
@@ -29,9 +40,9 @@ public class PurchasesPanel extends TablePanel{
 			popup.setParent(this);
 		});
 		
-		refreshTable();
 		
-		getEditButton().setEnabled(true);
+		
+		
 		getEditButton().addActionListener(e -> {
 			
 			controller = ControllerFactory.getCRUDPurchaseOrderController();

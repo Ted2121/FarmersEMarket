@@ -16,7 +16,20 @@ public class ProductInfoPanel extends TablePanel{
 	
 	
 	public ProductInfoPanel() {
-		controller = ControllerFactory.getCRUDProductInformationController();
+		
+		getEditButton().setEnabled(false);
+		getDeleteButton().setEnabled(false);
+		getNewButton().setEnabled(false);
+		
+		Thread gettingController = new Thread(() -> {
+			controller = ControllerFactory.getCRUDProductInformationController();
+			refreshTable();
+			getEditButton().setEnabled(true);
+			getDeleteButton().setEnabled(true);
+			getNewButton().setEnabled(true);
+		});
+		gettingController.start();
+		
 		table = getTable();
 		ProgramFrame.getFrame().setTitle("Products");
 		getNewButton().setText("New Product");
@@ -25,7 +38,6 @@ public class ProductInfoPanel extends TablePanel{
 			popup.setPanel(this);
 		});
 		
-		refreshTable();
 		
 		getEditButton().addActionListener(e -> {
 			int numberOfSelectedRows = table.getSelectedRowCount();
