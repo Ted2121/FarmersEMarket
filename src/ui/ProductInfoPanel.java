@@ -59,8 +59,12 @@ public class ProductInfoPanel extends TablePanel{
 						
 				int choice = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this product?","Delete confirmation", JOptionPane.YES_NO_OPTION);
 				switch(choice) {
-					case 0 -> {controller.deleteProductInformationAndProduct(product);
-						refreshTable();
+					case 0 -> {
+						new Thread(() -> {
+							controller.deleteProductInformationAndProduct(product);
+							refreshTable();
+						}).start();
+						
 					}
 				}
 

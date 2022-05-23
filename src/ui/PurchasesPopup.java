@@ -66,16 +66,29 @@ public class PurchasesPopup extends PopupWindow{
 	public PurchasesPopup(PurchaseOrder purchaseOrder) {
 		setTitle("Edit Purchase");
 		
-		crudController = new CRUDPurchaseOrderControllerImplementation();
-		productSearchControllerPart = (SearchProductInterface) crudController;
-		providerSearchControllerPart = (SearchProviderInterface) crudController;
-		
-		this.purchaseOrder = purchaseOrder;
-		
 		initSpecificCRUDPurchaseOrderComponent();
 		initComponent();
 		
-		initComponentWithInformations();
+		createPurchaseOrderButton.setEnabled(false);
+		addProductButton.setEnabled(false);
+		
+		Thread controllerThread = new Thread(() -> {
+			crudController = new CRUDPurchaseOrderControllerImplementation();
+			productSearchControllerPart = (SearchProductInterface) crudController;
+			providerSearchControllerPart = (SearchProviderInterface) crudController;
+			
+			createPurchaseOrderButton.setEnabled(true);
+			addProductButton.setEnabled(true);
+			initComponentWithInformations();
+		});
+		controllerThread.start();
+		
+		this.purchaseOrder = purchaseOrder;
+		
+		
+		
+		
+		
 		
 	}
 
@@ -291,11 +304,13 @@ public class PurchasesPopup extends PopupWindow{
 		
 		createPurchaseOrderButton.addActionListener(e -> {
 			if(productPanel.getComponentCount()!=0) {
-				Provider selectedProvider = (Provider) providerSelectionComboBox.getSelectedItem();
-				createController.createPurchaseOrder(selectedProvider);
+				new Thread(() ->{
+					Provider selectedProvider = (Provider) providerSelectionComboBox.getSelectedItem();
+					createController.createPurchaseOrder(selectedProvider);
+					if (parent != null)
+						parent.refreshTable();
+				}).start();
 				dispose();
-				if (parent != null)
-					parent.refreshTable();
 			}else {
 				JOptionPane.showMessageDialog(null, "No products have been registered in the order");
 			}
@@ -340,11 +355,14 @@ public class PurchasesPopup extends PopupWindow{
 		
 		createPurchaseOrderButton.addActionListener(e -> {
 			if(productPanel.getComponentCount()!=0) {
-				Provider selectedProvider = (Provider) providerSelectionComboBox.getSelectedItem();
-				purchaseOrder.setProvider(selectedProvider);
-				crudController.updatePurchaseOrder(purchaseOrder);
-				if (parent != null)
-					parent.refreshTable();
+				new Thread(() -> {
+					Provider selectedProvider = (Provider) providerSelectionComboBox.getSelectedItem();
+					purchaseOrder.setProvider(selectedProvider);
+					crudController.updatePurchaseOrder(purchaseOrder);
+					if (parent != null)
+						parent.refreshTable();
+				}).start();
+				
 				dispose();
 			}else {
 				JOptionPane.showMessageDialog(null, "No products have been registered in the order");

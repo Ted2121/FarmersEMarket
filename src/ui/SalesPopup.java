@@ -282,13 +282,15 @@ public class SalesPopup extends PopupWindow{
         private void initSpecificCreateSaleOrderComponent () {
             createSaleOrderButton = new JButton("Create sale order");
             createSaleOrderButton.setEnabled(false);
-
+            
             createSaleOrderButton.addActionListener(e -> {
                         if (productPanel.getComponentCount() != 0) {
-                            Customer selectedCustomer = (Customer) customerSelectionComboBox.getSelectedItem();
-                            createController.createSaleOrder(selectedCustomer);
-                            dispose();
-                            parent.refreshTable();
+                        	new Thread(() ->{
+                        		Customer selectedCustomer = (Customer) customerSelectionComboBox.getSelectedItem();
+                                createController.createSaleOrder(selectedCustomer);
+                                parent.refreshTable();
+                        	}).start();
+                        	dispose();
                         } else {
                             JOptionPane.showMessageDialog(null, "No products have been registered in the order");
                         }

@@ -50,6 +50,8 @@ public class ProductInfoPopup extends PopupWindow{
 	
 	public ProductInfoPopup(Product product) {
 		setTitle("Edit Product");
+		
+//		Thread controllerThread = new Thread(() -> controller = ControllerFactory.getCRUDProductInformationController());
 		controller = ControllerFactory.getCRUDProductInformationController();
 		this.product = product;
 		
@@ -67,12 +69,6 @@ public class ProductInfoPopup extends PopupWindow{
 		gbl_panel.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
 		gbl_panel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		panel.setLayout(gbl_panel);
-		if(product == null) {
-			getSaveButton().setEnabled(false);
-		}
-		else {
-			getSaveButton().setEnabled(true);
-		}
 		
 		DocumentListener listener = new DocumentListener() {
 			  public void changedUpdate(DocumentEvent e) {
@@ -253,26 +249,33 @@ public class ProductInfoPopup extends PopupWindow{
 	public void saveOrEdit() {
 		getSaveButton().addActionListener(e -> {
 			if(product == null) {
-				controller.createProductInformationAndProduct(textFieldProductName.getText(), 
-						Double.parseDouble(textFieldPurchasingPrice.getText()), Double.parseDouble(textFieldSellingPrice.getText()), 
-						choiceUnit.getSelectedItem(), Integer.parseInt(choiceWeightCategory.getSelectedItem()), 
-						Integer.parseInt(textFieldLocationCode.getText()), 0);
+				new Thread(() -> {
+					controller.createProductInformationAndProduct(textFieldProductName.getText(), 
+							Double.parseDouble(textFieldPurchasingPrice.getText()), Double.parseDouble(textFieldSellingPrice.getText()), 
+							choiceUnit.getSelectedItem(), Integer.parseInt(choiceWeightCategory.getSelectedItem()), 
+							Integer.parseInt(textFieldLocationCode.getText()), 0);
+					panel.refreshTable();
+				}).start();
+				
 			}
 			else {
-				String weightCategory = "";
-				switch(Integer.parseInt(choiceWeightCategory.getSelectedItem())) {
-					case 1 -> weightCategory = "ONE";
-					case 5 -> weightCategory = "FIVE";
-					case 10 -> weightCategory = "TEN";
-				}
-				product.setProductName(textFieldProductName.getText());
-				product.setPurchasingPrice(Double.parseDouble(textFieldPurchasingPrice.getText()));
-				product.setSellingPrice(Double.parseDouble(textFieldSellingPrice.getText()));
-				product.setWeightCategory(WeightCategory.valueOf(weightCategory));
-				product.setUnit(Unit.valueOf(choiceUnit.getSelectedItem()));
-				controller.updateProductInformationAndProduct(product, Integer.parseInt(textFieldLocationCode.getText()), product.getRelatedProductInformation().getQuantity());
+				new Thread(() -> {
+					String weightCategory = "";
+					switch(Integer.parseInt(choiceWeightCategory.getSelectedItem())) {
+						case 1 -> weightCategory = "ONE";
+						case 5 -> weightCategory = "FIVE";
+						case 10 -> weightCategory = "TEN";
+					}
+					product.setProductName(textFieldProductName.getText());
+					product.setPurchasingPrice(Double.parseDouble(textFieldPurchasingPrice.getText()));
+					product.setSellingPrice(Double.parseDouble(textFieldSellingPrice.getText()));
+					product.setWeightCategory(WeightCategory.valueOf(weightCategory));
+					product.setUnit(Unit.valueOf(choiceUnit.getSelectedItem()));
+					controller.updateProductInformationAndProduct(product, Integer.parseInt(textFieldLocationCode.getText()), product.getRelatedProductInformation().getQuantity());
+					panel.refreshTable();
+				}).start();
 			}
-			panel.refreshTable();
+			
 			dispose();
 		});
 	}

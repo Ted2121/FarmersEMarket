@@ -20,10 +20,11 @@ public class PurchasesPanel extends TablePanel{
 	private JTable table;
 
 	public PurchasesPanel() {
-		table = getTable();
+		
 		getEditButton().setEnabled(false);
 		getDeleteButton().setEnabled(false);
 		getNewButton().setEnabled(false);
+		
 		Thread gettingController = new Thread(() -> {
 			controller = ControllerFactory.getCRUDPurchaseOrderController();
 			refreshTable();
@@ -33,6 +34,7 @@ public class PurchasesPanel extends TablePanel{
 		});
 		gettingController.start();
 		
+		table = getTable();
 		ProgramFrame.getFrame().setTitle("Purchases");
 		getNewButton().setText("New Purchase");
 		getNewButton().addActionListener(e -> {
@@ -44,9 +46,6 @@ public class PurchasesPanel extends TablePanel{
 		
 		
 		getEditButton().addActionListener(e -> {
-			
-			controller = ControllerFactory.getCRUDPurchaseOrderController();
-			
 			if(table.getSelectedRowCount() == 1) {
 				int id = Integer.parseInt(table.getValueAt(table.getSelectedRow(), 0).toString());
 				
@@ -59,22 +58,21 @@ public class PurchasesPanel extends TablePanel{
 			}else {
 				JOptionPane.showMessageDialog(null, "No line have been selected");
 			}
-			
 		});
 		
 		
 		getDeleteButton().addActionListener(e -> {
-			
-			controller = ControllerFactory.getCRUDPurchaseOrderController();
-			
 			if(table.getSelectedRowCount() == 1) {
 				int id = Integer.parseInt(table.getValueAt(table.getSelectedRow(), 0).toString());
 				PurchaseOrder purchaseOrder = idRelatedToPurchaseOrder.get(id);
 						
 				int choice = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this order?","Delete confirmation", JOptionPane.YES_NO_OPTION);
 				switch(choice) {
-					case 0 -> {controller.deletePurchaseOrder(purchaseOrder);
-						refreshTable();
+					case 0 -> {
+						new Thread(() ->{
+							controller.deletePurchaseOrder(purchaseOrder);
+							refreshTable();
+						}).start();
 					}
 				}
 
