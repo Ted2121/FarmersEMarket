@@ -181,11 +181,11 @@ public class TestPurchaseOrderDaoImplementation {
 	@Test
 	public void testCreatePurchaseOrder() throws Exception {
 		Provider testProvider = DaoFactory.getProviderDao().findAllProviders(false).get(0);
-		PurchaseOrder testSaleOrder = ModelFactory.getPurchaseOrderModel(generatedPurchaseOrderId, testProvider);
-		generatedPurchaseOrderId = DaoFactory.getOrderDao().createEmptyOrder();
+		PurchaseOrder testPurchaseOrder = ModelFactory.getPurchaseOrderModel(generatedPurchaseOrderId, testProvider);
+		DaoFactory.getOrderDao().createOrder(testPurchaseOrder);
 		
-		DaoFactory.getPurchaseOrderDao().createPurchaseOrder(testSaleOrder);
-		PurchaseOrder retrievedPurchaseOrder = DaoFactory.getPurchaseOrderDao().findPurchaseOrderById(generatedPurchaseOrderId, false, false);
+		DaoFactory.getPurchaseOrderDao().createPurchaseOrder(testPurchaseOrder);
+		PurchaseOrder retrievedPurchaseOrder = DaoFactory.getPurchaseOrderDao().findPurchaseOrderById(testPurchaseOrder.getId(), false, false);
 		
 		assertNotNull("Should not return a null object", retrievedPurchaseOrder);
 	}
