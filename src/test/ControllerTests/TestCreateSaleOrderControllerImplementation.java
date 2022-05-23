@@ -119,7 +119,7 @@ public class TestCreateSaleOrderControllerImplementation {
         for(LineItem lineItem : DaoFactory.getLineItemDao().findLineItemsByOrder(saleOrder, true)) {
             lineItem.setOrder(saleOrder);
             DaoFactory.getLineItemDao().deleteLineItem(lineItem);
-            DaoFactory.getProductInformationDao().removeQuantityToProduct(lineItem.getProduct(), quantityOfEachLineItem);
+            DaoFactory.getProductInformationDao().addQuantityToProduct(lineItem.getProduct(), quantityOfEachLineItem);
         }
 
         DaoFactory.getSaleOrderDao().deleteSaleOrder(saleOrder);
