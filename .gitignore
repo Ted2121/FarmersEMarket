@@ -24,4 +24,4 @@ hs_err_pid*
 /bin/
 .idea/libraries/junit.xml
 Semester2Project.iml
-src/db_access/DBConnection.java
+
