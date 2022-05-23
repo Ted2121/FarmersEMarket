@@ -10,6 +10,8 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 import controller.ControllerFactory;
 import controller.ControllerInterfaces.CRUDProductInformationController;
@@ -19,16 +21,18 @@ import model.Product.Unit;
 import model.Product.WeightCategory;
 
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.ActionEvent;
+import java.awt.Choice;
 
 public class ProductInfoPopup extends PopupWindow{
 	private JTextField textFieldProductName;
 	private JTextField textFieldPurchasingPrice;
 	private JTextField textFieldSellingPrice;
-	private JTextField textFieldUnit;
-	private JTextField textFieldWeightCategory;
-	private JTextField textFieldQuantity;
 	private JTextField textFieldLocationCode;
+	private Choice choiceUnit;
+	private Choice choiceWeightCategory;
 	private Product product;
 	private CRUDProductInformationController controller;
 	private ProductInfoPanel panel;
@@ -63,6 +67,36 @@ public class ProductInfoPopup extends PopupWindow{
 		gbl_panel.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
 		gbl_panel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		panel.setLayout(gbl_panel);
+		if(product == null) {
+			getSaveButton().setEnabled(false);
+		}
+		else {
+			getSaveButton().setEnabled(true);
+		}
+		
+		DocumentListener listener = new DocumentListener() {
+			  public void changedUpdate(DocumentEvent e) {
+				    enableButton();
+				  }
+				  public void removeUpdate(DocumentEvent e) {
+				    enableButton();
+				  }
+				  public void insertUpdate(DocumentEvent e) {
+				    enableButton();
+				}
+
+				public void enableButton() {
+				     if (textFieldProductName.getText().equals("") || textFieldLocationCode.getText().equals("")
+				    		 || textFieldPurchasingPrice.getText().equals("") || textFieldSellingPrice.getText().equals(""))
+				     {
+				        getSaveButton().setEnabled(false);
+				     }
+				     else
+				     {
+				    	 getSaveButton().setEnabled(true);
+				     }
+				 }
+		};
 		
 		JLabel labelProductName = new JLabel("Product Name", SwingConstants.RIGHT);
 		GridBagConstraints gbc_labelProductName = new GridBagConstraints();
@@ -77,6 +111,7 @@ public class ProductInfoPopup extends PopupWindow{
 		else {
 			textFieldProductName = new JTextField(product.getProductName());
 		}
+		textFieldProductName.getDocument().addDocumentListener(listener);
 		GridBagConstraints gbc_textFieldProductName = new GridBagConstraints();
 		gbc_textFieldProductName.insets = new Insets(0, 0, 5, 0);
 		gbc_textFieldProductName.fill = GridBagConstraints.HORIZONTAL;
@@ -98,6 +133,7 @@ public class ProductInfoPopup extends PopupWindow{
 		else {
 			textFieldPurchasingPrice = new JTextField(Double.toString(product.getPurchasingPrice()));
 		}
+		textFieldPurchasingPrice.getDocument().addDocumentListener(listener);
 		GridBagConstraints gbc_textFieldPurchasingPrice = new GridBagConstraints();
 		gbc_textFieldPurchasingPrice.insets = new Insets(0, 0, 5, 0);
 		gbc_textFieldPurchasingPrice.fill = GridBagConstraints.HORIZONTAL;
@@ -105,6 +141,14 @@ public class ProductInfoPopup extends PopupWindow{
 		gbc_textFieldPurchasingPrice.gridy = 2;
 		panel.add(textFieldPurchasingPrice, gbc_textFieldPurchasingPrice);
 		textFieldPurchasingPrice.setColumns(10);
+		textFieldPurchasingPrice.addKeyListener(new KeyAdapter() {
+		    public void keyTyped(KeyEvent e) {
+		        char c = e.getKeyChar();
+		        if (c!= '.' && ((c < '0') || (c > '9')) && (c != KeyEvent.VK_BACK_SPACE)) {
+		            e.consume();
+		        }
+		     }
+		});
 		
 		JLabel labelSellingPrice = new JLabel("Selling Price", SwingConstants.RIGHT);
 		GridBagConstraints gbc_labelSellingPrice = new GridBagConstraints();
@@ -119,6 +163,7 @@ public class ProductInfoPopup extends PopupWindow{
 		else {
 			textFieldSellingPrice = new JTextField(Double.toString(product.getSellingPrice()));
 		}
+		textFieldSellingPrice.getDocument().addDocumentListener(listener);
 		GridBagConstraints gbc_textFieldSellingPrice = new GridBagConstraints();
 		gbc_textFieldSellingPrice.insets = new Insets(0, 0, 5, 0);
 		gbc_textFieldSellingPrice.fill = GridBagConstraints.HORIZONTAL;
@@ -126,6 +171,14 @@ public class ProductInfoPopup extends PopupWindow{
 		gbc_textFieldSellingPrice.gridy = 4;
 		panel.add(textFieldSellingPrice, gbc_textFieldSellingPrice);
 		textFieldSellingPrice.setColumns(10);
+		textFieldSellingPrice.addKeyListener(new KeyAdapter() {
+		    public void keyTyped(KeyEvent e) {
+		        char c = e.getKeyChar();
+		        if (c!= '.' && ((c < '0') || (c > '9')) && (c != KeyEvent.VK_BACK_SPACE)) {
+		            e.consume();
+		        }
+		     }
+		});
 		
 		JLabel labelUnit = new JLabel("Unit", SwingConstants.RIGHT);
 		GridBagConstraints gbc_labelUnit = new GridBagConstraints();
@@ -134,19 +187,17 @@ public class ProductInfoPopup extends PopupWindow{
 		gbc_labelUnit.gridy = 6;
 		panel.add(labelUnit, gbc_labelUnit);
 		
-		if(product == null) {
-			textFieldUnit = new JTextField();
+		choiceUnit = new Choice();
+		choiceUnit.add("KG");
+		choiceUnit.add("L");
+		if(product != null) {
+			choiceUnit.select(product.getUnit());
 		}
-		else {
-			textFieldUnit = new JTextField(product.getUnit());
-		}
-		GridBagConstraints gbc_textFieldUnit = new GridBagConstraints();
-		gbc_textFieldUnit.insets = new Insets(0, 0, 5, 0);
-		gbc_textFieldUnit.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textFieldUnit.gridx = 4;
-		gbc_textFieldUnit.gridy = 6;
-		panel.add(textFieldUnit, gbc_textFieldUnit);
-		textFieldUnit.setColumns(10);
+		GridBagConstraints gbc_choice = new GridBagConstraints();
+		gbc_choice.insets = new Insets(0, 0, 5, 0);
+		gbc_choice.gridx = 4;
+		gbc_choice.gridy = 6;
+		panel.add(choiceUnit, gbc_choice);
 		
 		JLabel labelWeightCategory = new JLabel("Weight Category", SwingConstants.RIGHT);
 		GridBagConstraints gbc_labelWeightCategory = new GridBagConstraints();
@@ -155,47 +206,25 @@ public class ProductInfoPopup extends PopupWindow{
 		gbc_labelWeightCategory.gridy = 8;
 		panel.add(labelWeightCategory, gbc_labelWeightCategory);
 		
-		if(product == null) {
-			textFieldWeightCategory = new JTextField();
+		choiceWeightCategory = new Choice();
+		choiceWeightCategory.add("1");
+		choiceWeightCategory.add("5");
+		choiceWeightCategory.add("10");
+		if(product != null) {
+			choiceWeightCategory.select(String.valueOf(product.getWeightCategory()));
 		}
-		else {
-			textFieldWeightCategory = new JTextField(Integer.toString(product.getWeightCategory()));
-		}
-		GridBagConstraints gbc_textFieldWeightCategory = new GridBagConstraints();
-		gbc_textFieldWeightCategory.insets = new Insets(0, 0, 5, 0);
-		gbc_textFieldWeightCategory.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textFieldWeightCategory.gridx = 4;
-		gbc_textFieldWeightCategory.gridy = 8;
-		panel.add(textFieldWeightCategory, gbc_textFieldWeightCategory);
-		textFieldWeightCategory.setColumns(10);
+		GridBagConstraints gbc_choice_1 = new GridBagConstraints();
+		gbc_choice_1.insets = new Insets(0, 0, 5, 0);
+		gbc_choice_1.gridx = 4;
+		gbc_choice_1.gridy = 8;
+		panel.add(choiceWeightCategory, gbc_choice_1);
 		
-		JLabel labelQuantity = new JLabel("Quantity", SwingConstants.RIGHT);
+		JLabel labelLocationCode = new JLabel("Location Code", SwingConstants.RIGHT);
 		GridBagConstraints gbc_labelQuantity = new GridBagConstraints();
 		gbc_labelQuantity.insets = new Insets(0, 0, 5, 5);
 		gbc_labelQuantity.gridx = 2;
 		gbc_labelQuantity.gridy = 10;
-		panel.add(labelQuantity, gbc_labelQuantity);
-		
-		if(product == null) {
-			textFieldQuantity = new JTextField();
-		}
-		else {
-			textFieldQuantity = new JTextField(Integer.toString(product.getRelatedProductInformation().getQuantity()));
-		}
-		GridBagConstraints gbc_textFieldQuantity = new GridBagConstraints();
-		gbc_textFieldQuantity.insets = new Insets(0, 0, 5, 0);
-		gbc_textFieldQuantity.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textFieldQuantity.gridx = 4;
-		gbc_textFieldQuantity.gridy = 10;
-		panel.add(textFieldQuantity, gbc_textFieldQuantity);
-		textFieldQuantity.setColumns(10);
-		
-		JLabel labelLocationCode = new JLabel("Location Code", SwingConstants.RIGHT);
-		GridBagConstraints gbc_labelLocationCode = new GridBagConstraints();
-		gbc_labelLocationCode.insets = new Insets(0, 0, 0, 5);
-		gbc_labelLocationCode.gridx = 2;
-		gbc_labelLocationCode.gridy = 12;
-		panel.add(labelLocationCode, gbc_labelLocationCode);
+		panel.add(labelLocationCode, gbc_labelQuantity);
 		
 		if(product == null) {
 			textFieldLocationCode = new JTextField();
@@ -203,13 +232,22 @@ public class ProductInfoPopup extends PopupWindow{
 		else {
 			textFieldLocationCode = new JTextField(Integer.toString(product.getRelatedProductInformation().getLocationCode()));
 		}
+		textFieldLocationCode.getDocument().addDocumentListener(listener);
 		GridBagConstraints gbc_textFieldLocationCode = new GridBagConstraints();
+		gbc_textFieldLocationCode.insets = new Insets(0, 0, 5, 0);
 		gbc_textFieldLocationCode.fill = GridBagConstraints.HORIZONTAL;
 		gbc_textFieldLocationCode.gridx = 4;
-		gbc_textFieldLocationCode.gridy = 12;
+		gbc_textFieldLocationCode.gridy = 10;
 		panel.add(textFieldLocationCode, gbc_textFieldLocationCode);
 		textFieldLocationCode.setColumns(10);
-		//TODO
+		textFieldLocationCode.addKeyListener(new KeyAdapter() {
+		    public void keyTyped(KeyEvent e) {
+		        char c = e.getKeyChar();
+		        if (c!= '.' && ((c < '0') || (c > '9')) && (c != KeyEvent.VK_BACK_SPACE)) {
+		            e.consume();
+		        }
+		     }
+		});
 	}
 	
 	public void saveOrEdit() {
@@ -217,12 +255,12 @@ public class ProductInfoPopup extends PopupWindow{
 			if(product == null) {
 				controller.createProductInformationAndProduct(textFieldProductName.getText(), 
 						Double.parseDouble(textFieldPurchasingPrice.getText()), Double.parseDouble(textFieldSellingPrice.getText()), 
-						textFieldUnit.getText(), Integer.parseInt(textFieldWeightCategory.getText()), 
-						Integer.parseInt(textFieldLocationCode.getText()), Integer.parseInt(textFieldQuantity.getText()));
+						choiceUnit.getSelectedItem(), Integer.parseInt(choiceWeightCategory.getSelectedItem()), 
+						Integer.parseInt(textFieldLocationCode.getText()), 0);
 			}
 			else {
 				String weightCategory = "";
-				switch(Integer.parseInt(textFieldWeightCategory.getText())) {
+				switch(Integer.parseInt(choiceWeightCategory.getSelectedItem())) {
 					case 1 -> weightCategory = "ONE";
 					case 5 -> weightCategory = "FIVE";
 					case 10 -> weightCategory = "TEN";
@@ -231,8 +269,8 @@ public class ProductInfoPopup extends PopupWindow{
 				product.setPurchasingPrice(Double.parseDouble(textFieldPurchasingPrice.getText()));
 				product.setSellingPrice(Double.parseDouble(textFieldSellingPrice.getText()));
 				product.setWeightCategory(WeightCategory.valueOf(weightCategory));
-				product.setUnit(Unit.valueOf(textFieldUnit.getText()));
-				controller.updateProductInformationAndProduct(product, Integer.parseInt(textFieldLocationCode.getText()), Integer.parseInt(textFieldQuantity.getText()));
+				product.setUnit(Unit.valueOf(choiceUnit.getSelectedItem()));
+				controller.updateProductInformationAndProduct(product, Integer.parseInt(textFieldLocationCode.getText()), product.getRelatedProductInformation().getQuantity());
 			}
 			panel.refreshTable();
 			dispose();
