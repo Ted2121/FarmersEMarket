@@ -101,13 +101,13 @@ public class TestCRUDProductInformationControllerImplementation {
 	@Test
 	public void testRetrieveTableData() {
 		//Arrange
-		String [][] datas = null;
+		String [][] data = null;
 		
 		//Act
-		datas = crudProductInformationController.retrieveTableData();
+		data = crudProductInformationController.retrieveTableData();
 		
 		//Assert
-		assertNotNull("The method retrieve datas well", datas);
+		assertNotNull("The method retrieve datas well", data);
 	}
 	
 	@Test
@@ -123,10 +123,28 @@ public class TestCRUDProductInformationControllerImplementation {
 	}
 	
 	@AfterClass
-	public static void cleanUp() throws SQLException {
+	public static void cleanUp() throws Exception {
 		productInformationDao.deleteProductInformation(productInformationToCreate);
 		productDao.deleteProduct(productToCreate);
 		productInformationDao.deleteProductInformation(productInformationToUpdate);
 		productDao.deleteProduct(productToUpdate);
+		
+		List<ProductInformation> objectToDeleteList = productInformationDao.findProductInformationByProductName("ProductToDelete", false);
+		while(!objectToDeleteList.isEmpty()) {
+			productInformationDao.deleteProductInformation(objectToDeleteList.get(0));
+			Product productToDelete = ModelFactory.getProductEmptyModel();
+			productToDelete.setId(objectToDeleteList.get(0).getId());
+			productDao.deleteProduct(productToDelete);
+			objectToDeleteList = productInformationDao.findProductInformationByProductName("ProductToDelete", false);
+		}
+		
+		objectToDeleteList = productInformationDao.findProductInformationByProductName("ProductToUpdate", false);
+		while(!objectToDeleteList.isEmpty()) {
+			productInformationDao.deleteProductInformation(objectToDeleteList.get(0));
+			Product productToDelete = ModelFactory.getProductEmptyModel();
+			productToDelete.setId(objectToDeleteList.get(0).getId());
+			productDao.deleteProduct(productToDelete);
+			objectToDeleteList = productInformationDao.findProductInformationByProductName("ProductToUpdate", false);
+		}
 	}
 }

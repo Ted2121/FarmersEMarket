@@ -39,6 +39,7 @@ public class TestCreatePurchaseOrderControllerImplementation {
 	
 	@Test
 	public void testCreatePurchaseOrderTransaction() throws Exception {
+		controller = ControllerFactory.getCreatePurchaseOrderController();
 		int numberOfPurchaseOrderBeforeTest = DaoFactory.getPurchaseOrderDao().findAllPurchaseOrders(false, false).size();
 		for(Product product : DaoFactory.getProductDao().findAllProducts(false, false)) {
 			controller.addProductToPurchaseOrder(product, quantityOfEachLineItem);
@@ -126,23 +127,45 @@ public class TestCreatePurchaseOrderControllerImplementation {
 	public static void cleanUp() throws Exception {
 		CreatePurchaseOrderControllerImplementation controllerImplementation = (CreatePurchaseOrderControllerImplementation) controller;
 		PurchaseOrder purchaseOrder = controllerImplementation.getPurchaseOrder();
-		for(LineItem lineItem : DaoFactory.getLineItemDao().findLineItemsByOrder(purchaseOrder, true)) {
-			lineItem.setOrder(purchaseOrder);
-			DaoFactory.getLineItemDao().deleteLineItem(lineItem);
-			DaoFactory.getProductInformationDao().removeQuantityToProduct(lineItem.getProduct(), quantityOfEachLineItem);
+		
+		while(!DaoFactory.getLineItemDao().findLineItemsByOrder(purchaseOrder, true).isEmpty()) {
+			for(LineItem lineItem : DaoFactory.getLineItemDao().findLineItemsByOrder(purchaseOrder, true)) {
+				lineItem.setOrder(purchaseOrder);
+				DaoFactory.getLineItemDao().deleteLineItem(lineItem);
+				DaoFactory.getProductInformationDao().removeQuantityToProduct(lineItem.getProduct(), quantityOfEachLineItem);
+			}
 		}
 		
-		DaoFactory.getPurchaseOrderDao().deletePurchaseOrder(purchaseOrder);
-		DaoFactory.getOrderDao().deleteOrder(purchaseOrder);
+		while(DaoFactory.getPurchaseOrderDao().findPurchaseOrderById(purchaseOrder.getId(), false, false) != null) {
+			DaoFactory.getPurchaseOrderDao().deletePurchaseOrder(purchaseOrder);
+			DaoFactory.getOrderDao().deleteOrder(purchaseOrder);
+		}
 		
-		if(newProvider != null)
+			
+		while(DaoFactory.getProviderDao().findProviderById(newProvider.getId(), false) != null) {
 			DaoFactory.getProviderDao().deleteProvider(newProvider);
-		if(newProduct != null)
+		}
+		
+		while(DaoFactory.getProductDao().findProductById(newProduct.getId(), false, false) != null) {
 			DaoFactory.getProductDao().deleteProduct(newProduct);
+		}
+			
+		List<Product> productListToDelete = productSearchControllerPart.searchProductUsingThisName("curiousName");
+		while(!productListToDelete.isEmpty()) {
+	        for(Product product : productListToDelete) {
+	        	DaoFactory.getProductDao().deleteProduct(product);
+	        }
+	        productSearchControllerPart.productSearchRefreshData();
+	        productListToDelete = productSearchControllerPart.searchProductUsingThisName("curiousName");
+		}
 		
-		productSearchControllerPart.productSearchRefreshData();
-		providerSearchControllerPart.providerSearchRefreshData();
-		
-		
+		List<Provider> providerListToDelete = providerSearchControllerPart.searchProviderUsingThisName("curiousName");
+		while(!providerListToDelete.isEmpty()) {
+	        for(Provider provider : providerListToDelete) {
+	        	DaoFactory.getProviderDao().deleteProvider(provider);
+	        }
+	        providerSearchControllerPart.providerSearchRefreshData();
+	        providerListToDelete = providerSearchControllerPart.searchProviderUsingThisName("curiousName");
+		}
 	}
 }

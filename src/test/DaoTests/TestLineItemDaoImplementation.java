@@ -219,8 +219,11 @@ public class TestLineItemDaoImplementation {
 	
 	
 	@AfterClass
-	public static void cleanUp() throws SQLException {
-		lineItemDao.deleteLineItem(generatedLineItem);
+	public static void cleanUp() throws Exception {
+		while(lineItemDao.findLineItemByOrderAndProductId(generatedLineItem.getOrder().getId(), generatedLineItem.getProduct().getId(), true, true) != null) {
+			lineItemDao.deleteLineItem(generatedLineItem);
+			
+		}
 		lineItemDao.deleteLineItem(objectToUpdate);
 	}
 }

@@ -116,20 +116,49 @@ public class TestCreateSaleOrderControllerImplementation {
     public static void cleanUp() throws Exception {
         CreateSaleOrderControllerImplementation controllerImplementation = (CreateSaleOrderControllerImplementation) controller;
         SaleOrder saleOrder = controllerImplementation.getSaleOrder();
-        for(LineItem lineItem : DaoFactory.getLineItemDao().findLineItemsByOrder(saleOrder, true)) {
-            lineItem.setOrder(saleOrder);
-            DaoFactory.getLineItemDao().deleteLineItem(lineItem);
-            DaoFactory.getProductInformationDao().addQuantityToProduct(lineItem.getProduct(), quantityOfEachLineItem);
+        
+        while(!DaoFactory.getLineItemDao().findLineItemsByOrder(saleOrder, true).isEmpty()) {
+	        for(LineItem lineItem : DaoFactory.getLineItemDao().findLineItemsByOrder(saleOrder, true)) {
+	            lineItem.setOrder(saleOrder);
+	            DaoFactory.getLineItemDao().deleteLineItem(lineItem);
+	            DaoFactory.getProductInformationDao().addQuantityToProduct(lineItem.getProduct(), quantityOfEachLineItem);
+	        }
         }
 
-        DaoFactory.getSaleOrderDao().deleteSaleOrder(saleOrder);
-        DaoFactory.getOrderDao().deleteOrder(saleOrder);
-
-        if(newCustomer != null)
+        while(DaoFactory.getPurchaseOrderDao().findPurchaseOrderById(saleOrder.getId(), false, false) != null) {
+	        DaoFactory.getSaleOrderDao().deleteSaleOrder(saleOrder);
+	        DaoFactory.getOrderDao().deleteOrder(saleOrder);
+        }
+        
+        while(DaoFactory.getProviderDao().findProviderById(newCustomer.getId(), false) != null) {
             DaoFactory.getCustomerDao().deleteCustomer(newCustomer);
-        if(newProduct != null)
+        }
+        
+        while(DaoFactory.getProductDao().findProductById(newProduct.getId(), false, false) != null) {
             DaoFactory.getProductDao().deleteProduct(newProduct);
+        }
 
+        List<Product> productListToDelete = productSearchControllerPart.searchProductUsingThisName("curiousName");
+		while(!productListToDelete.isEmpty()) {
+	        for(Product product : productListToDelete) {
+	        	DaoFactory.getProductDao().deleteProduct(product);
+	        }
+	        productSearchControllerPart.productSearchRefreshData();
+	        productListToDelete = productSearchControllerPart.searchProductUsingThisName("curiousName");
+		}
+        
+		
+		List<Customer> customerListToDelete = customerSearchControllerPart.searchCustomerUsingThisName("testName");
+		while(!customerListToDelete.isEmpty()) {
+	        for(Customer customer : customerListToDelete) {
+	        	DaoFactory.getCustomerDao().deleteCustomer(customer);
+	        }
+	        customerSearchControllerPart.customerSearchRefreshData();
+	        customerListToDelete = customerSearchControllerPart.searchCustomerUsingThisName("curiousName");
+		}
+		
+        productSearchControllerPart.productSearchRefreshData();
+		customerSearchControllerPart.customerSearchRefreshData();
 
     }
 }
